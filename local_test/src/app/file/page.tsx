@@ -11,11 +11,15 @@ const UploadPage: React.FC = () => {
     setFileContent(content);
   };
 
+  const handleClearFileContent = () => {
+    setFileContent(null); // 清空文件内容
+  };
+
   return (
     <div>
       <p>上传代码文件</p>
       <FileUploadComponent onFileClick={handleFileClick} />
-      <FileReaderComponent fileContent={fileContent} />
+      <FileReaderComponent fileContent={fileContent} onClearFileContent={handleClearFileContent}/>
     </div>
   );
 };

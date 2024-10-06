@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 
 interface StoredData {
@@ -79,8 +77,8 @@ const FileUploadComponent: React.FC<{ onFileClick: (fileContent: string) => void
 
         request.onsuccess = () => {
           console.log('Data saved successfully');
-          setText('');
-          setFile(null);
+          setText(''); // 清空文本输入
+          setFile(null); // 清空文件输入
           loadFilesFromDB(db); // 提交后更新文件列表
         };
 
@@ -128,15 +126,19 @@ const FileUploadComponent: React.FC<{ onFileClick: (fileContent: string) => void
       </div>
       <div>
         <h3>Uploaded Files:</h3>
-        <ul>
-          {fileList.map((fileData) => (
-            <li key={fileData.id}>
-              <button onClick={() => handleFileClick(fileData.fileContent || null)}>
-                {fileData.fileName}
-              </button>
-            </li>
-          ))}
-        </ul>
+        {fileList.length > 0 ? (
+          <ul>
+            {fileList.map((fileData) => (
+              <li key={fileData.id}>
+                <button onClick={() => handleFileClick(fileData.fileContent || null)}>
+                  {fileData.fileName}
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No files uploaded yet.</p>
+        )}
       </div>
     </div>
   );
