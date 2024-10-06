@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import FileUploadComponent from './fileUpload';
+import FileInput from './fileUpload';
 import FileReaderComponent from './fileReader';
 
 const UploadPage: React.FC = () => {
@@ -18,7 +18,7 @@ const UploadPage: React.FC = () => {
   return (
     <div>
       <p>上传代码文件</p>
-      <FileUploadComponent onFileClick={handleFileClick} />
+      <FileInput/>
       <FileReaderComponent fileContent={fileContent} onClearFileContent={handleClearFileContent}/>
     </div>
   );
