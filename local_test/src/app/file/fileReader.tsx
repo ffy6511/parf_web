@@ -12,7 +12,6 @@ const FileReaderComponent: React.FC<FileReaderProps> = ({ fileContent, onClearFi
     <div>
       <h3>File Content:</h3>
       {fileContent ? (
-        
         <div>
             <button
                 onClick={onClearFileContent}
@@ -21,7 +20,6 @@ const FileReaderComponent: React.FC<FileReaderProps> = ({ fileContent, onClearFi
                 取消选中
             </button>
           <pre>{fileContent}</pre>
-          
         </div>
       ) : (
         <p>No file content to display</p>

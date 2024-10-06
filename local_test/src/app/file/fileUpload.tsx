@@ -35,8 +35,8 @@ const FileUploadComponent: React.FC<{ onFileClick: (fileContent: string) => void
   // 加载存储在IndexedDB中的文件
   const loadFilesFromDB = (db: IDBDatabase) => {
     const transaction = db.transaction(['files'], 'readonly');
-    const store = transaction.objectStore('files');
-    const request = store.getAll();
+    const store = transaction.objectStore('files');//获取对象存储空间
+    const request = store.getAll();//发起和获取存储在'files'存储空间的数据的请求
 
     request.onsuccess = () => {
       setFileList(request.result);
@@ -91,6 +91,25 @@ const FileUploadComponent: React.FC<{ onFileClick: (fileContent: string) => void
     }
   };
 
+  //删除文件
+  const handleDeleteFile = (fileId: number) =>{
+    if(db){
+      const transaction = db.transaction(['files'], 'readwrite');
+      const store = transaction.objectStore('files');
+      const request = store.delete(fileId);
+
+      request.onsuccess = () => {
+        console.log('File deleted successfully');
+        loadFilesFromDB(db); // 删除后更新文件列表
+      };
+
+      request.onerror = (event) => {
+        console.error('Error deleting data:', event);
+      };
+    }
+  }
+
+  
   const handleFileClick = (fileContent: ArrayBuffer | null) => {
     if (fileContent) {
       const blob = new Blob([fileContent]);
@@ -132,6 +151,9 @@ const FileUploadComponent: React.FC<{ onFileClick: (fileContent: string) => void
               <li key={fileData.id}>
                 <button onClick={() => handleFileClick(fileData.fileContent || null)}>
                   {fileData.fileName}
+                </button>
+                <button onClick={() => handleDeleteFile(fileData.id || 0)}>
+                  Delete
                 </button>
               </li>
             ))}
