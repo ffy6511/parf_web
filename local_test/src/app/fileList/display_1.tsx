@@ -11,7 +11,7 @@ interface FileData {
   fileContent: ArrayBuffer;
 }
 
-const FileInput: React.FC = () => {
+const Display_1: React.FC = () => {
   const [fileList, setFileList] = useState<FileData[]>([]);
   const [selectedFileId, setSelectedFileId] = useState<number | null>(null);
   const [selectedFileContent, setSelectedFileContent] = useState<string | null>(null);
@@ -112,4 +112,4 @@ const FileInput: React.FC = () => {
   );
 };
 
-export default FileInput;
+export default Display_1;
