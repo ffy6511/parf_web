@@ -144,7 +144,7 @@ const Display_1: React.FC = () => {
 
   return (
     <div>
-      <h2>文件列表</h2>
+      
       {fileList.length > 0 ? (
         <ul style={{ padding: 0, listStyle: 'none' }}>
           {fileList.map((file) => (
