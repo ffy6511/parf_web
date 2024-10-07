@@ -53,16 +53,10 @@ const FileEntry: React.FC<FileEntryProps> = ({
       <Menu.Item key="edit" icon={<EditOutlined />} onClick={onEdit}>
         修改
       </Menu.Item>
-      <Menu.Item key="delete" icon={<CloseCircleOutlined />}>
-        <Popconfirm
-          title="确定删除该文件？"
-          onConfirm={() => onDelete(fileId)}
-          okText="确定"
-          cancelText="取消"
-        >
-          删除
-        </Popconfirm>
-      </Menu.Item>
+      <Menu.Item key="delete" icon={<CloseCircleOutlined />} onClick={() => onDelete(fileId)}>
+      删除
+    </Menu.Item>
+
     </Menu>
   );
 
