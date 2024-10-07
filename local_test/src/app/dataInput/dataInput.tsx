@@ -1,7 +1,8 @@
-// InputPanel.tsx
 import React, { useState } from 'react';
 import { Col, InputNumber, Row, Slider, Space } from 'antd';
 
+
+//时间预算
 const TimeBudgetInput = () => {
   const [inputValue, setInputValue] = useState(1);
   
@@ -13,8 +14,8 @@ const TimeBudgetInput = () => {
     <Row>
       <Col span={12}>
         <Slider
-          min={1}
-          max={100} // You can adjust the max value according to your needs
+          min={0}
+          max={2000} 
           onChange={onChange}
           value={typeof inputValue === 'number' ? inputValue : 0}
           step={1}
@@ -22,8 +23,8 @@ const TimeBudgetInput = () => {
       </Col>
       <Col span={4}>
         <InputNumber
-          min={1}
-          max={100} // Same here for max value
+          min={0}
+          max={2000}
           style={{
             margin: '0 16px',
           }}
@@ -35,6 +36,8 @@ const TimeBudgetInput = () => {
   );
 };
 
+
+//核
 const CoreInput = () => {
   const [inputValue, setInputValue] = useState(1);
 
@@ -47,7 +50,7 @@ const CoreInput = () => {
       <Col span={12}>
         <Slider
           min={1}
-          max={64} // You can adjust the max value according to your needs
+          max={64}
           onChange={onChange}
           value={typeof inputValue === 'number' ? inputValue : 0}
           step={1}
@@ -68,6 +71,7 @@ const CoreInput = () => {
   );
 };
 
+//采样数量
 const SampleSizeInput = () => {
   const [inputValue, setInputValue] = useState(1);
 
@@ -80,7 +84,7 @@ const SampleSizeInput = () => {
       <Col span={12}>
         <Slider
           min={1}
-          max={1000} // You can adjust the max value according to your needs
+          max={1000} 
           onChange={onChange}
           value={typeof inputValue === 'number' ? inputValue : 0}
           step={1}
@@ -89,7 +93,7 @@ const SampleSizeInput = () => {
       <Col span={4}>
         <InputNumber
           min={1}
-          max={1000} // Same here for max value
+          max={1000} 
           style={{
             margin: '0 16px',
           }}
@@ -108,12 +112,22 @@ const InputPanel = () => (
     }}
     direction="vertical"
   >
-    <h3>时间预算</h3>
-    <TimeBudgetInput />
-    <h3>核</h3>
-    <CoreInput />
-    <h3>采样数量</h3>
-    <SampleSizeInput />
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h3 style={{ margin: 0 }}>时间预算(秒)</h3>
+        <TimeBudgetInput />
+    </div>
+
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h3 style={{ margin: 0 }}>核</h3>
+        <CoreInput />
+    </div>
+
+
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h3 style={{ margin: 0 }}>采样数量</h3>
+        <SampleSizeInput />
+    </div>
+    
   </Space>
 );
 

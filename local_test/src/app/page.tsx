@@ -20,7 +20,7 @@ const Page: React.FC = () => {
         <div style={{ flex: 3, padding: '20px' }}>
           <Display_1 key={reloadTrigger} />
         </div>
-        <div style={{ flex: 6, padding: '20px' }}>
+        <div style={{ flex: 5, padding: '20px' }}>
           <FileUploadContainer onFileUploadSuccess={handleFileUploadSuccess} />
         </div>
         <div style={{ flex: 2, padding: '20px' }}>
