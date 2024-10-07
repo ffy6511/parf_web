@@ -13,15 +13,46 @@ const Page: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
-      <div style={{ flex: 3, padding: '20px' }}>
-        <Display_1 key={reloadTrigger} />
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      {/* 主体内容部分 */}
+      <div style={{ flex: 1, display: 'flex' }}>
+        <div style={{ flex: 3, padding: '20px' }}>
+          <Display_1 key={reloadTrigger} />
+        </div>
+        <div style={{ flex: 6, padding: '20px' }}>
+          <FileUploadContainer onFileUploadSuccess={handleFileUploadSuccess} />
+        </div>
       </div>
-      <div style={{ flex: 6, padding: '20px' }}>
-        <FileUploadContainer onFileUploadSuccess={handleFileUploadSuccess} />
-      </div>
+
+      {/* 页脚部分 */}
+      <footer style={footerStyle}>
+        <a href="https://example.com" target="_blank" rel="noopener noreferrer">
+          Example Link 1
+        </a>
+        <a href="https://example2.com" target="_blank" rel="noopener noreferrer">
+          Example Link 2
+        </a>
+        <a href="https://example3.com" target="_blank" rel="noopener noreferrer">
+          Example Link 3
+        </a>
+      </footer>
     </div>
   );
+};
+
+// 页脚样式
+const footerStyle: React.CSSProperties = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '10px 0',
+  backgroundColor: '#f1f1f1',
+  position: 'relative',
+  bottom: 0,
+  width: '100%',
+  borderTop: '1px solid #e0e0e0',
+  marginTop: 'auto', // 确保页脚位于页面底部
+  gap: '20px',
 };
 
 export default Page;
