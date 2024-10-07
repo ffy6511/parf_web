@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import FileInput from './fileInput';
+import FileInput from './desplay_1';
 import FileReaderComponent from './fileReader';
 
 const UploadPage: React.FC = () => {
