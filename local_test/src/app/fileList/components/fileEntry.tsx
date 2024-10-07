@@ -68,7 +68,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
       style={{
         display: 'flex',
         alignItems: 'center',
-        padding: '10px',
+        padding: '5px',
         cursor: 'pointer',
         backgroundColor: isSelected ? '#e6f7ff' : isHovered ? '#E9E9E9' : 'white',
         transform: isSelected ? 'scale(1.03)' : isHovered ? 'scale(1.05)' : 'scale(1.0)',
@@ -109,9 +109,8 @@ const FileEntry: React.FC<FileEntryProps> = ({
             position: 'absolute',
             left: '0',
             right: '0',
-            bottom: '-4px',
-            height: '0.3px',
-            backgroundColor: '#ccc',
+            bottom: '0px',
+            height: '0px',
           }}
         ></div>
       </div>

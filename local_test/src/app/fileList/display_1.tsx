@@ -176,10 +176,12 @@ const Display_1: React.FC = () => {
             保存
           </Button>,
         ]}
+        width={800} // 调整宽度
+        style={{ top: 20 }} // 调整距离顶部的高度
       >
         <Input.TextArea
           value={selectedFileContent}
-          rows={6}
+          rows={25}
           onChange={(e) => setSelectedFileContent(e.target.value)}
         />
       </Modal>
@@ -190,6 +192,8 @@ const Display_1: React.FC = () => {
         visible={isPreviewModalVisible}
         onCancel={() => setIsPreviewModalVisible(false)}
         footer={null}
+        width={800} // 调整宽度
+        style={{ top: 20 }} // 调整距离顶部的高度
       >
         <pre>{selectedFileContent}</pre>
       </Modal>
