@@ -3,6 +3,7 @@
 import React , { useState, useEffect } from 'react';
 import FileUploadContainer from './fileUploader/display_2'; // 上传组件
 import Display_1 from './fileList/display_1';  // 文件列表组件
+import InputPanel from './dataInput/dataInput'
 
 const Page: React.FC = () => {
   const [reloadTrigger, setReloadTrigger] = useState(0);
@@ -21,6 +22,9 @@ const Page: React.FC = () => {
         </div>
         <div style={{ flex: 6, padding: '20px' }}>
           <FileUploadContainer onFileUploadSuccess={handleFileUploadSuccess} />
+        </div>
+        <div style={{ flex: 2, padding: '20px' }}>
+          <InputPanel />
         </div>
       </div>
 
