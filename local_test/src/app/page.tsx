@@ -1,9 +1,11 @@
 'use client';
+import styles from './index.module.css';
 
 import React , { useState, useEffect } from 'react';
 import FileUploadContainer from './fileUploader/display_2'; // 上传组件
 import Display_1 from './fileList/display_1';  // 文件列表组件
-import InputPanel from './dataInput/dataInput'
+import InputPanel from './dataInput/dataInput';
+import { DockerOutlined, GithubOutlined } from '@ant-design/icons';
 
 const Page: React.FC = () => {
   const [reloadTrigger, setReloadTrigger] = useState(0);
@@ -30,13 +32,13 @@ const Page: React.FC = () => {
 
       {/* 页脚部分 */}
       <footer style={footerStyle}>
-        <a href="https://hub.docker.com/r/parfdocker/parf" target="_blank" rel="noopener noreferrer">
-          Parfdocker
+        <a href="https://hub.docker.com/r/parfdocker/parf" target="_blank" rel="noopener noreferrer" className = {styles.link}>
+        <DockerOutlined />parfdocker
         </a>
-        <a href="https://example2.com" target="_blank" rel="noopener noreferrer">
-          Example Link 2
+        <a href="https://example2.com" target="_blank" rel="noopener noreferrer" className = {styles.link}>
+          <GithubOutlined />
         </a>
-        <a href="https://example3.com" target="_blank" rel="noopener noreferrer">
+        <a href="https://example3.com" target="_blank" rel="noopener noreferrer" className = {styles.link}>
           Example Link 3
         </a>
       </footer>
