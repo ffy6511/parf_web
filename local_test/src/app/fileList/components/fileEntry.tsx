@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { CloseCircleOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
-import { Button, Popconfirm, Modal } from 'antd';
+import { CloseCircleOutlined, EditOutlined, EyeOutlined, MoreOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Menu, Popconfirm } from 'antd';
 
 interface FileEntryProps {
   fileId: number;
@@ -8,12 +8,11 @@ interface FileEntryProps {
   lastModified: string | null;
   onClick: (fileId: number) => void;
   onDelete: (fileId: number) => void;
-  onEdit: () => void;  // 新增用于编辑的回调
-  onPreview: () => void;  // 新增用于预览的回调
+  onEdit: () => void;
+  onPreview: () => void;
   isSelected: boolean;
 }
 
-// 为图像生成随机颜色
 const getRandomColor = () => {
   const letters = '0123456789ABCDEF';
   let color = '#';
@@ -40,10 +39,32 @@ const FileEntry: React.FC<FileEntryProps> = ({
     setBorderColor(getRandomColor()); // 为图像生成随机颜色
   }, []);
 
-  const fileInitials = fileName.substring(0, 2); // 获取文件名的前两个字符
+  const fileInitials = fileName.substring(0, 2);
   const formattedTime = lastModified
     ? new Date(lastModified).toISOString().replace('T', ' ').slice(5, 19)
     : '';
+
+  // 创建下拉菜单项
+  const menu = (
+    <Menu>
+      <Menu.Item key="preview" icon={<EyeOutlined />} onClick={onPreview}>
+        预览
+      </Menu.Item>
+      <Menu.Item key="edit" icon={<EditOutlined />} onClick={onEdit}>
+        修改
+      </Menu.Item>
+      <Menu.Item key="delete" icon={<CloseCircleOutlined />}>
+        <Popconfirm
+          title="确定删除该文件？"
+          onConfirm={() => onDelete(fileId)}
+          okText="确定"
+          cancelText="取消"
+        >
+          删除
+        </Popconfirm>
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <div
@@ -100,53 +121,13 @@ const FileEntry: React.FC<FileEntryProps> = ({
           }}
         ></div>
       </div>
-      
-      {isHovered && (
-        <Popconfirm
-          title="确定删除该文件？"
-          onConfirm={() => onDelete(fileId)}
-          okText="确定"
-          cancelText="取消"
-        >
-          <Button danger icon={<CloseCircleOutlined />} style={{ marginRight: '10px' }}>
-            删除
-          </Button>
-        </Popconfirm>
-      )}
-      
-      {/* 编辑按钮 */}
-      {isHovered && (
-        <Button
-          icon={<EditOutlined />}
-          onClick={(e) => {
-            e.stopPropagation();
-            onEdit();
-          }}
-          style={{ marginRight: '10px' }}
-        >
-          修改
-        </Button>
-      )}
 
-      
-      {/* 预览按钮 */}
-      {isHovered && (
-      <Button
-        icon={<EyeOutlined />}
-        onClick={(e) => {
-          e.stopPropagation();
-          onPreview();
-        }}
-      >
-        预览
-      </Button>
-)}
-
-
-      
+      {/* 下拉菜单按钮 */}
+      <Dropdown overlay={menu} trigger={['click']}>
+        <Button icon={<MoreOutlined />} />
+      </Dropdown>
     </div>
   );
 };
-
 
 export default FileEntry;
