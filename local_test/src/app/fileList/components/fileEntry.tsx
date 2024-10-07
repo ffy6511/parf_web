@@ -115,18 +115,22 @@ const FileEntry: React.FC<FileEntryProps> = ({
       )}
       
       {/* 编辑按钮 */}
-      <Button
-        icon={<EditOutlined />}
-        onClick={(e) => {
-          e.stopPropagation();
-          onEdit();
-        }}
-        style={{ marginRight: '10px' }}
-      >
-        修改
-      </Button>
+      {isHovered && (
+        <Button
+          icon={<EditOutlined />}
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit();
+          }}
+          style={{ marginRight: '10px' }}
+        >
+          修改
+        </Button>
+      )}
 
+      
       {/* 预览按钮 */}
+      {isHovered && (
       <Button
         icon={<EyeOutlined />}
         onClick={(e) => {
@@ -136,6 +140,8 @@ const FileEntry: React.FC<FileEntryProps> = ({
       >
         预览
       </Button>
+)}
+
 
       
     </div>
