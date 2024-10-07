@@ -76,7 +76,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
         alignItems: 'center',
         padding: '10px',
         cursor: 'pointer',
-        backgroundColor: isSelected ? '#C8C8C8' : isHovered ? '#D9D9D9' : 'white',
+        backgroundColor: isSelected ? '#e6f7ff' : isHovered ? '#E9E9E9' : 'white',
         transform: isSelected ? 'scale(1.03)' : isHovered ? 'scale(1.05)' : 'scale(1.0)',
         transition: 'all 0.2s ease',
         position: 'relative',
@@ -122,10 +122,11 @@ const FileEntry: React.FC<FileEntryProps> = ({
         ></div>
       </div>
 
-      {/* 下拉菜单按钮 */}
-      <Dropdown overlay={menu} trigger={['click']}>
-        <Button icon={<MoreOutlined />} />
-      </Dropdown>
+      {isHovered && (
+        <Dropdown overlay={menu} trigger={['click']}>
+          <Button icon={<MoreOutlined />} />
+        </Dropdown>
+      )}
     </div>
   );
 };

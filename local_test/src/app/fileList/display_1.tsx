@@ -94,20 +94,30 @@ const Display_1: React.FC = () => {
     }
   };
 
-  // 删除文件
+  
+//删除文件
   const handleDeleteFile = (fileId: number) => {
+    console.log('删除文件ID:', fileId); // 确保删除ID正确
     if (db) {
       const transaction = db.transaction(['files'], 'readwrite');
       const store = transaction.objectStore('files');
-      store.delete(fileId).onsuccess = () => {
+      const request = store.delete(fileId);
+  
+      request.onsuccess = () => {
+        console.log('文件删除成功');
         setFileList((prevFiles) => prevFiles.filter((file) => file.id !== fileId));
         if (fileId === selectedFileId) {
           setSelectedFileId(null);
           setSelectedFileContent(null);
         }
       };
+  
+      request.onerror = (event) => {
+        console.error('删除文件时发生错误:', event);
+      };
     }
   };
+  
 
   // 保存编辑后的文件内容
   const handleSaveContent = () => {

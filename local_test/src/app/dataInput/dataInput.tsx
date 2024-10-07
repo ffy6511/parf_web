@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Slider, InputNumber, Space, Button, List, Input, notification } from 'antd';
+import { Row, Col, Slider, InputNumber, Space, Button, List, Input, message } from 'antd';
 
 // IndexedDB Setup
 const openDatabase = () => {
@@ -65,18 +65,15 @@ const InputPanel = () => {
     };
   }, []);
 
-  // 弹出通知
-  const openNotificationWithIcon = (type: 'success' | 'info' | 'warning' | 'error', message: string, description: string) => {
-    notification[type]({
-      message: message,
-      description: description,
-    });
+  // 显示提示
+  const showMessage = (type: 'success' | 'info' | 'warning', content: string) => {
+    message[type](content);
   };
 
   // 保存或更新参数组
   const handleSave = () => {
     if (!groupName) {
-      alert('请输入参数组名！');
+      message.error('请输入参数组名！');
       return;
     }
 
@@ -94,7 +91,7 @@ const InputPanel = () => {
       };
 
       store.put(data).onsuccess = () => {
-        openNotificationWithIcon('success', '保存成功', `参数组 "${groupName}" 已保存`);
+        showMessage('success', `参数组 "${groupName}" 已保存`);
         loadSavedGroups(db);
         setGroupName('');
       };
@@ -119,7 +116,7 @@ const InputPanel = () => {
     setTimeBudget(group.timeBudget);
     setCore(group.core);
     setSampleSize(group.sampleSize);
-    openNotificationWithIcon('info', '已选中', `参数组 "${group.groupName}" 已被选中`);
+    showMessage('info', `参数组 "${group.groupName}" 已被选中`);
   };
 
   // 删除参数组
@@ -131,7 +128,7 @@ const InputPanel = () => {
       const store = transaction.objectStore('parameters');
 
       store.delete(groupName).onsuccess = () => {
-        openNotificationWithIcon('warning', '删除成功', `参数组 "${groupName}" 已删除`);
+        showMessage('warning', `参数组 "${groupName}" 已删除`);
         loadSavedGroups(db);
       };
     };
