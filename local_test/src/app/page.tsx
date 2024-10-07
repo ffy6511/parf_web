@@ -1,20 +1,24 @@
 'use client';
 
-import React from 'react';
+import React , { useState, useEffect } from 'react';
 import FileUploadContainer from './fileUploader/fileUploadContainer'; // 上传组件
 import Display_1 from './fileList/display_1';  // 文件列表组件
 
 const Page: React.FC = () => {
+  const [reloadTrigger, setReloadTrigger] = useState(0);
+
+  const handleFileUploadSuccess = () => {
+    // 当文件上传成功时，触发重新加载
+    setReloadTrigger((prev) => prev + 1);
+  };
+
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
-      {/* 左侧：文件列表组件 */}
-      <div style={{ flex: 1, borderRight: '1px solid #ccc' }}>
-        <Display_1 />
+      <div style={{ flex: 1, padding: '20px' }}>
+        <Display_1 key={reloadTrigger} />
       </div>
-
-      {/* 右侧：文件上传或手动输入组件 */}
-      <div style={{ flex: 1 }}>
-        <FileUploadContainer />
+      <div style={{ flex: 1, padding: '20px' }}>
+        <FileUploadContainer onFileUploadSuccess={handleFileUploadSuccess} />
       </div>
     </div>
   );

@@ -1,14 +1,18 @@
+// FileUploadContainer.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
-const FileUploadContainer: React.FC = () => {
-  const [activeComponent, setActiveComponent] = useState<'upload' | 'input' | null>(null);
+interface FileUploadContainerProps {
+  onFileUploadSuccess: () => void; // 文件上传成功后的回调
+}
+
+const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadSuccess }) => {
   const [db, setDb] = useState<IDBDatabase | null>(null);
-  const [fileName, setFileName] = useState<string>('');
-  const [fileContent, setFileContent] = useState<string>('');
+  const [fileName, setFileName] = useState<string>(''); // 手动输入的文件名
+  const [fileContent, setFileContent] = useState<string>(''); // 手动输入的文件内容
 
   useEffect(() => {
     const request = indexedDB.open('FileStorage', 1);
@@ -23,6 +27,7 @@ const FileUploadContainer: React.FC = () => {
     };
   }, []);
 
+  // 文件上传处理
   const handleUpload = (file: File) => {
     if (db) {
       const reader = new FileReader();
@@ -37,25 +42,28 @@ const FileUploadContainer: React.FC = () => {
         };
         store.add(data).onsuccess = () => {
           message.success(`文件 ${file.name} 上传成功`);
+          onFileUploadSuccess(); // 上传成功后调用回调函数，通知Display_1刷新
         };
       };
       reader.readAsArrayBuffer(file);
     }
   };
 
+  // 手动输入提交
   const handleManualInputSubmit = () => {
     if (db && fileName && fileContent) {
       const transaction = db.transaction(['files'], 'readwrite');
       const store = transaction.objectStore('files');
       const data = {
         fileName: fileName,
-        fileContent: new TextEncoder().encode(fileContent).buffer,
+        fileContent: new TextEncoder().encode(fileContent).buffer, // 将文本内容转为 ArrayBuffer
         lastModified: new Date().toISOString(),
       };
       store.add(data).onsuccess = () => {
         message.success(`文件 ${fileName} 已手动输入`);
-        setFileName('');
-        setFileContent('');
+        setFileName(''); // 清空文件名输入框
+        setFileContent(''); // 清空文件内容输入框
+        onFileUploadSuccess(); // 上传成功后调用回调函数，通知Display_1刷新
       };
     } else {
       message.error('请填写文件名和文件内容');
@@ -65,58 +73,33 @@ const FileUploadContainer: React.FC = () => {
   return (
     <div style={{ padding: '20px' }}>
       <div>
-        <Button
-          type="primary"
-          onClick={() => setActiveComponent('upload')}
-          style={{ marginRight: '10px' }}
+        <Upload
+          beforeUpload={(file) => {
+            handleUpload(file);
+            return false; // 阻止默认上传行为
+          }}
         >
-          上传文件
-        </Button>
-        <Button
-          type="default"
-          onClick={() => setActiveComponent('input')}
-        >
-          手动输入
-        </Button>
+          <Button icon={<UploadOutlined />}>选择文件上传</Button>
+        </Upload>
       </div>
 
-      {activeComponent === 'upload' && (
-        <div style={{ marginTop: '20px' }}>
-          <Upload
-            beforeUpload={(file) => {
-              handleUpload(file);
-              return false;
-            }}
-            multiple={false}
-          >
-            <Button icon={<UploadOutlined />}>选择文件</Button>
-          </Upload>
-        </div>
-      )}
-
-      {activeComponent === 'input' && (
-        <div style={{ marginTop: '20px' }}>
-          <Input
-            placeholder="文件名"
-            value={fileName}
-            onChange={(e) => setFileName(e.target.value)}
-            style={{ marginBottom: '10px' }}
-          />
-          <Input.TextArea
-            placeholder="文件内容"
-            rows={6}
-            value={fileContent}
-            onChange={(e) => setFileContent(e.target.value)}
-          />
-          <Button
-            type="primary"
-            onClick={handleManualInputSubmit}
-            style={{ marginTop: '10px' }}
-          >
-            提交
-          </Button>
-        </div>
-      )}
+      <div style={{ marginTop: '20px' }}>
+        <Input
+          placeholder="文件名"
+          value={fileName}
+          onChange={(e) => setFileName(e.target.value)}
+          style={{ marginBottom: '10px' }}
+        />
+        <Input.TextArea
+          placeholder="文件内容"
+          rows={6}
+          value={fileContent}
+          onChange={(e) => setFileContent(e.target.value)}
+        />
+        <Button type="primary" onClick={handleManualInputSubmit} style={{ marginTop: '10px' }}>
+          提交手动输入
+        </Button>
+      </div>
     </div>
   );
 };

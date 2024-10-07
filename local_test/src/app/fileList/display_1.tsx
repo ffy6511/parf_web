@@ -1,3 +1,4 @@
+// Display_1.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -33,6 +34,7 @@ const Display_1: React.FC = () => {
     };
   }, []);
 
+  // 加载文件列表
   const loadFilesFromDB = (db: IDBDatabase) => {
     const transaction = db.transaction(['files'], 'readonly');
     const store = transaction.objectStore('files');
@@ -43,10 +45,12 @@ const Display_1: React.FC = () => {
     };
   };
 
+  // 点击选中文件
   const handleFileClick = (fileId: number) => {
-    setSelectedFileId(fileId); // 点击时仅标记为选中
+    setSelectedFileId(fileId);
   };
 
+  // 编辑文件
   const handleFileEdit = (fileId: number) => {
     if (db) {
       const transaction = db.transaction(['files'], 'readonly');
@@ -68,6 +72,7 @@ const Display_1: React.FC = () => {
     }
   };
 
+  // 预览文件
   const handleFilePreview = (fileId: number) => {
     if (db) {
       const transaction = db.transaction(['files'], 'readonly');
@@ -89,6 +94,7 @@ const Display_1: React.FC = () => {
     }
   };
 
+  // 删除文件
   const handleDeleteFile = (fileId: number) => {
     if (db) {
       const transaction = db.transaction(['files'], 'readwrite');
@@ -103,6 +109,7 @@ const Display_1: React.FC = () => {
     }
   };
 
+  // 保存编辑后的文件内容
   const handleSaveContent = () => {
     if (db && selectedFileId && selectedFileContent) {
       const transaction = db.transaction(['files'], 'readwrite');
