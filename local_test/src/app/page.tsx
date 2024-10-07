@@ -30,8 +30,8 @@ const Page: React.FC = () => {
 
       {/* 页脚部分 */}
       <footer style={footerStyle}>
-        <a href="https://example.com" target="_blank" rel="noopener noreferrer">
-          Example Link 1
+        <a href="https://hub.docker.com/r/parfdocker/parf" target="_blank" rel="noopener noreferrer">
+          Parfdocker
         </a>
         <a href="https://example2.com" target="_blank" rel="noopener noreferrer">
           Example Link 2
