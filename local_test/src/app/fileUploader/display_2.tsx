@@ -80,7 +80,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
           handleUpload(file);
           return false; // 阻止默认上传行为
         }}
-        style={{ marginBottom: '20px' }}
+        style={{ marginBottom: '20px'}}
         showUploadList={false} // 隐藏上传列表
       >
         <p className="ant-upload-drag-icon">

@@ -71,7 +71,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
         padding: '5px',
         cursor: 'pointer',
         backgroundColor: isSelected ? '#e6f7ff' : isHovered ? '#E9E9E9' : 'white',
-        transform: isSelected ? 'scale(1.03)' : isHovered ? 'scale(1.05)' : 'scale(1.0)',
+        transform: isHovered ? 'scale(1.08)' : isSelected ? 'scale(1.05)' : 'scale(1.0)',
         transition: 'all 0.2s ease',
         position: 'relative',
         marginBottom: '10px',
