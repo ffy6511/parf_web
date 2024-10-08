@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { CloseCircleOutlined, EditOutlined, EyeOutlined, MoreOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Menu, Popconfirm } from 'antd';
+import { CloseCircleOutlined, EditOutlined, EyeOutlined, MoreOutlined, PushpinOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Menu, Popconfirm, Tooltip } from 'antd';
 
 interface FileEntryProps {
   fileId: number;
@@ -114,7 +114,13 @@ const FileEntry: React.FC<FileEntryProps> = ({
           }}
         ></div>
       </div>
-
+      {isSelected && (
+        <div style={{ position: 'absolute', top: '10px', right: '40px', color:'#1890ff', fontSize: '20px' }}>
+          <Tooltip title="已选中该文件" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2}>
+          <PushpinOutlined />
+          </Tooltip>
+        </div>  
+      )}
       {isHovered && (
         <Dropdown overlay={menu} trigger={['click']}>
           <Button icon={<MoreOutlined />} />
