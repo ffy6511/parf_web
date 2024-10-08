@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Slider, InputNumber, Space, Button, List, Input, message } from 'antd';
+import { AlignLeftOutlined } from '@ant-design/icons';
 
 // IndexedDB Setup
 const openDatabase = () => {
+  
   const request = indexedDB.open('ParameterStorage', 1);
 
   request.onupgradeneeded = (event) => {
@@ -56,6 +58,8 @@ const InputPanel = () => {
   const [groupName, setGroupName] = useState<string>(''); // 参数组名称
   const [savedGroups, setSavedGroups] = useState<any[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null); // 当前选中的参数组
+  const [isHovered, setIsHovered] = useState(false);
+  const [isSelected,setIsSelected] = useState(false);
 
   useEffect(() => {
     const request = openDatabase();
@@ -136,20 +140,20 @@ const InputPanel = () => {
 
   return (
     <div>
-      <h1>参数设置</h1>
-      <Space style={{ width: '100%' }} direction="vertical">
+      <strong style={{ fontSize: '25px', marginTop: '5px' }}> <AlignLeftOutlined /> 参数设置</strong>
+      <Space style={{ width: '100%', marginTop: '35px' }} direction="vertical">
         <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
-          <p style={{ margin: 0, marginRight: '10px' }}>时间预算(秒)</p>
+          <strong style={{ margin: 0, marginRight: '10px' }}>时间预算(秒)</strong>
           <TimeBudgetInput value={timeBudget} onChange={setTimeBudget} />
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
-          <p style={{ margin: 0, marginRight: '10px' }}>核</p>
+          <strong style={{ margin: 0, marginRight: '10px' }}>核</strong>
           <CoreInput value={core} onChange={setCore} />
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
-          <p style={{ margin: 0, marginRight: '10px' }}>采样数量</p>
+          <strong style={{ margin: 0, marginRight: '10px' }}>采样数量</strong>
           <SampleSizeInput value={sampleSize} onChange={setSampleSize} />
         </div>
 
@@ -171,6 +175,8 @@ const InputPanel = () => {
         <List
           bordered
           dataSource={savedGroups}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
           renderItem={(item) => (
             <List.Item
               actions={[
@@ -180,8 +186,11 @@ const InputPanel = () => {
               ]}
               onClick={() => handleSelectGroup(item)}
               style={{
-                backgroundColor: selectedGroup === item.groupName ? '#e6f7ff' : 'white', // 高亮选中的组
+                backgroundColor: selectedGroup === item.groupName ? '#e6f7ff' : isHovered? '#E9E9E9' : 'white', // 高亮选中的组
                 cursor: 'pointer',
+                transform: isHovered ? 'scale(1.08)' : selectedGroup === item.groupName ? 'scale(1.05)' : 'scale(1.0)',
+                transition: 'all 0.2s ease',
+                borderLeft: selectedGroup === item.groupName ? '3px solid #D9D9D9' : '#ccc',
               }}
             >
               <div>

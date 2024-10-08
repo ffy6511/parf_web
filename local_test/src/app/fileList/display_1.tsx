@@ -148,7 +148,7 @@ const Display_1: React.FC = () => {
       {fileList.length > 0 ? (
         <ul style={{ padding: 0, listStyle: 'none' }}>
           {fileList.map((file) => (
-            <li key={file.id} style={{ marginBottom: '10px' }}>
+            <li key={file.id} style={{ marginBottom: '10px', }}>
               <FileEntry
                 fileId={file.id}
                 fileName={file.fileName}

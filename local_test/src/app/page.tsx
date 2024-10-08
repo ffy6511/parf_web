@@ -26,7 +26,7 @@ const Page: React.FC = () => {
       {/* 主体内容部分 */}
       <div style={{ display: 'flex', flex: 1 }}>
         {/* 控制按钮和文件列表的容器 */}
-        <div style={{ display: 'flex', position: 'relative' }}>
+        <div style={{ display: 'flex', position: 'relative',backgroundColor: '#F5F5F5', }}>
           {/* 控制按钮固定在左侧 */}
           <div
             style={{
@@ -47,16 +47,17 @@ const Page: React.FC = () => {
           >
             {isFileListVisible ? (
               // 当文件列表展开时显示图标和“文件列表”文本
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center',fontSize: '25px',marginTop: '5px' }}>
                 <Tooltip title="收起文件列表" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2}>
-                  <MenuFoldOutlined style={{ fontSize: '20px' }} />
+                  <MenuFoldOutlined style={{ fontSize: '25px' }} />
+                  <strong style={{ marginLeft: '8px'}}>文件列表</strong>
                 </Tooltip>
-                <span style={{ marginLeft: '8px', fontSize: '16px' }}>文件列表</span>
+                
               </div>
             ) : (
               // 当文件列表收起时，只显示图标，通过 Tooltip 实现悬停提示
               <Tooltip title="展开文件列表" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2}>
-                <MenuUnfoldOutlined style={{ fontSize: '20px' }} />
+                <MenuUnfoldOutlined style={{ fontSize: '25px' }} />
               </Tooltip>
             )}
           </div>
@@ -64,7 +65,7 @@ const Page: React.FC = () => {
           {/* 文件列表 */}
           <div
             style={{
-              marginTop: '10px',
+              marginTop: '35px',
               marginLeft: '10px', // 确保文件列表和按钮之间有足够的距离
               flex: isFileListVisible ? 1 : 0, // 控制文件列表的显示/隐藏
               padding: isFileListVisible ? '20px' : '0',
@@ -91,7 +92,6 @@ const Page: React.FC = () => {
           padding: '20px', 
           transition: 'flex 0.5s ease',
           borderLeft: '1.5px solid #e0e0e0',
-
           }}>
           <InputPanel />
         </div>
