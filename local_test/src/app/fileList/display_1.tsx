@@ -146,7 +146,12 @@ const Display_1: React.FC = () => {
     <div>
       
       {fileList.length > 0 ? (
-        <ul style={{ padding: 0, listStyle: 'none' }}>
+        <ul style={{ padding: 15, listStyle: 'none',
+          overflowY:'scroll',
+          maxHeight:'90vh',
+          overflowX:'hidden',
+          scrollbarWidth: 'thin',
+         }}>
           {fileList.map((file) => (
             <li key={file.id} style={{ marginBottom: '10px', }}>
               <FileEntry
