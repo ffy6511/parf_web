@@ -125,8 +125,16 @@ const FileEntry: React.FC<FileEntryProps> = ({
         </div>  
       )}
       {isHovered && (
-        <Dropdown overlay={menu} trigger={['click']}>
-          <Button icon={<MoreOutlined />} />
+        <Dropdown overlay={menu} trigger={['click']} >
+          <Button icon={<MoreOutlined />} style={{ 
+            position: 'absolute',
+             right:'15px',
+             borderradius:'50%',
+             border:'none',
+             padding:'10',
+             backgroundColor:'transparent',
+             fontSize:'25px',
+              }} />
         </Dropdown>
       )}
     </div>
