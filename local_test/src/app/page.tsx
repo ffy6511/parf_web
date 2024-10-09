@@ -49,8 +49,8 @@ const Page: React.FC = () => {
               // 当文件列表展开时显示图标和“文件列表”文本
               <div style={{ display: 'flex', alignItems: 'center',fontSize: '25px',marginTop: '5px' }}>
                 <Tooltip title="收起文件列表" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2}>
-                  <MenuFoldOutlined style={{ fontSize: '25px' }} />
-                  <strong style={{ marginLeft: '8px'}}>文件列表</strong>
+                  <MenuFoldOutlined style={{  textShadow: '2px 2px 4px #a49f9f  '}} />
+                  <strong style={{ marginLeft: '8px', textShadow: '2px 2px 4px #a49f9f  ' }}>文件列表</strong>
                 </Tooltip>
                 
               </div>

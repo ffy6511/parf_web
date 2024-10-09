@@ -74,7 +74,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
 
   return (
     <div style={{ padding: '0px' }}>
-      <h2 style={{ marginTop: '3px', marginLeft: '40px' }}>文件上传与 Parf 调用</h2>
+      <h2 style={{ marginTop: '3px', marginLeft: '40px', textShadow: '2px 2px 4px #a49f9f  ' }}>文件上传与 Parf 调用</h2>
       {/* 拖动文件上传 */}
       <Dragger
         beforeUpload={(file) => {

@@ -140,7 +140,7 @@ const InputPanel = () => {
 
   return (
     <div>
-      <strong style={{ fontSize: '25px', marginTop: '5px' }}> <AlignLeftOutlined /> 参数设置</strong>
+      <strong style={{ fontSize: '25px', marginTop: '5px', textShadow: '2px 2px 4px #a49f9f  ' }}> <AlignLeftOutlined /> 参数设置</strong>
       <Space style={{ width: '100%', marginTop: '35px' }} direction="vertical">
         <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
           <strong style={{ margin: 0, marginRight: '10px' }}>时间预算(秒)</strong>
@@ -171,7 +171,7 @@ const InputPanel = () => {
         </div>
 
         {/* 显示已保存的参数组 */}
-        <h3>已保存的参数组</h3>
+        <h3 style={{ textShadow: '1px 1px 5px #a49f9f  '}}>已保存的参数组</h3>
         <List
           bordered
           dataSource={savedGroups}
