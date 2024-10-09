@@ -185,13 +185,21 @@ const InputPanel = () => {
                 </Button>,
               ]}
               onClick={() => handleSelectGroup(item)}
-              style={{
-                backgroundColor: selectedGroup === item.groupName ? '#e6f7ff' : isHovered? '#E9E9E9' : 'white', // 高亮选中的组
-                cursor: 'pointer',
-                transform: isHovered ? 'scale(1.08)' : selectedGroup === item.groupName ? 'scale(1.05)' : 'scale(1.0)',
-                transition: 'all 0.2s ease',
-                borderLeft: selectedGroup === item.groupName ? '3px solid #D9D9D9' : '#ccc',
-              }}
+              style={{  
+                backgroundColor: selectedGroup === item.groupName ? '#e6f7ff' : isHovered ? '#E9E9E9' : 'white',  
+                cursor: 'pointer',  
+                transform: isHovered ? 'scale(1.08)' : selectedGroup === item.groupName ? 'scale(1.05)' : 'scale(1.0)',  
+                transition: 'all 0.2s ease',  
+                borderRight: selectedGroup === item.groupName ? '3px solid #D9D9D9' : '#ccc',  
+                display: 'flex',  
+                alignItems: 'center',  
+                padding: '9px', 
+                left:'8px',
+                position: 'relative',  
+                marginBottom: '10px',  
+                borderBottom: selectedGroup === item.groupName ? '5px solid #D9D9D9' : '2px solid #ccc',  
+                borderRadius: selectedGroup === item.groupName ? '10px' : isHovered ? '20px' : '10px'  
+              }}  
             >
               <div>
                 <strong>{item.groupName}</strong>: 时间预算 - {item.timeBudget} 秒, 核 - {item.core}, 采样数量 - {item.sampleSize}
