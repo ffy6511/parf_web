@@ -6,6 +6,7 @@ import styles from './dataInput.module.css';
 // IndexedDB Setup
 const openDatabase = () => {
   
+  
   const request = indexedDB.open('ParameterStorage', 1);
 
   request.onupgradeneeded = (event) => {

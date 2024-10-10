@@ -27,6 +27,7 @@ const Page: React.FC = () => {
       <div style={{ display: 'flex', flex: 1 }}>
         {/* 控制按钮和文件列表的容器 */}
         <div style={{ display: 'flex', position: 'relative',backgroundColor: '#F5F5F5', }}>
+        <div style={{ display: 'flex', position: 'relative',backgroundColor: '#F5F5F5', }}>
           {/* 控制按钮固定在左侧 */}
           <div
             style={{
@@ -48,10 +49,12 @@ const Page: React.FC = () => {
             {isFileListVisible ? (
               // 当文件列表展开时显示图标和“文件列表”文本
               <div style={{ display: 'flex', alignItems: 'center',fontSize: '25px',marginTop: '5px' }}>
+              <div style={{ display: 'flex', alignItems: 'center',fontSize: '25px',marginTop: '5px' }}>
                 <Tooltip title="收起文件列表" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2}>
                   <MenuFoldOutlined style={{  textShadow: '2px 2px 4px #a49f9f  '}} />
                   <strong style={{ marginLeft: '8px', textShadow: '2px 2px 4px #a49f9f  ' }}>文件列表</strong>
                 </Tooltip>
+                
                 
               </div>
             ) : (
