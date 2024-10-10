@@ -35,7 +35,7 @@ const Page: React.FC = () => {
               top: '10px', // 距离顶部的距离
               display: 'flex',
               alignItems: 'center',
-              cursor: 'pointer',
+              cursor: 'none',
               scale: isHovered ? 1.1 : 1,
               justifyContent: 'center',
               transition: 'all 0.3s ease', // 过渡效果

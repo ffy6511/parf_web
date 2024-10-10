@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CloseCircleOutlined, EditOutlined, EyeOutlined, MoreOutlined, PushpinFilled } from '@ant-design/icons';
+import { CloseCircleOutlined, EditOutlined, EyeOutlined, MoreOutlined, PushpinOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu, Popconfirm, Tooltip } from 'antd';
 
 interface FileEntryProps {
@@ -117,10 +117,15 @@ const FileEntry: React.FC<FileEntryProps> = ({
           }}
         ></div>
       </div>
-      {isSelected && (
-        <div style={{ position: 'absolute', top: '25px', left: '43px', color:'#1890ff', fontSize: '15px' }}>
+      {(isHovered || isSelected) && (
+        <div style={{ position: 'absolute',
+           top: '25px', 
+           left: '43px',
+           color:isSelected?'#1890ff':'grey', 
+           fontSize: '15px',
+           }}>
           <Tooltip title="已选中该文件" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2}>
-          <PushpinFilled />
+          <PushpinOutlined />
           </Tooltip>
         </div>  
       )}

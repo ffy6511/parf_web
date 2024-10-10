@@ -1,0 +1,39 @@
+/* container 是外部包裹容器 */
+.container {
+  padding: 20px;
+  border: 2px solid #ccc;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  max-width: 600px; /* 设定一个最大宽度，确保内容不超出 */
+  margin: 0 auto; /* 居中容器 */
+}
+
+.container:hover {
+  border-color: #40a9ff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(1.03);
+}
+
+/* inputRow 用于单行输入布局 */
+.inputRow {
+  display: flex;
+  justify-content: space-between; /* 在两端对齐 */
+  align-items: center;
+  padding: 10px 0;
+  margin-bottom: 15px;
+}
+
+/* 输入框和标签的布局 */
+.inputRow strong {
+  min-width: 120px; /* 为标签设置最小宽度，保持对齐 */
+}
+
+.inputRow .ant-input-number, .inputRow .ant-slider {
+  flex: 1; /* 让输入框和滑动条占据剩余空间 */
+  max-width: 400px; /* 给输入框和滑块一个最大宽度 */
+}
+
+.inputRow .ant-input-number {
+  margin-left: 10px;
+  width: 100px; /* 确保输入框宽度合适 */
+}

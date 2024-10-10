@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Slider, InputNumber, Space, Button, List, Input, message } from 'antd';
 import { AlignLeftOutlined } from '@ant-design/icons';
+import styles from './dataInput.module.css';
 
 // IndexedDB Setup
 const openDatabase = () => {
@@ -139,82 +140,87 @@ const InputPanel = () => {
   };
 
   return (
-    <div>
-      <strong style={{ fontSize: '25px', marginTop: '5px', textShadow: '2px 2px 4px #a49f9f  ' }}> <AlignLeftOutlined /> 参数设置</strong>
-      <Space style={{ width: '100%', marginTop: '35px' }} direction="vertical">
-        <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
-          <strong style={{ margin: 0, marginRight: '10px' }}>时间预算(秒)</strong>
+  <div>
+    <strong style={{ fontSize: '25px', marginTop: '5px', textShadow: '2px 2px 4px #a49f9f' }}>
+      <AlignLeftOutlined /> 参数设置
+    </strong>
+    <Space style={{ width: '100%', marginTop: '35px' }} direction="vertical">
+      <div className={styles.container}>
+        
+        <div className={styles.inputRow}>
+          <strong>时间预算(秒)</strong>
           <TimeBudgetInput value={timeBudget} onChange={setTimeBudget} />
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
-          <strong style={{ margin: 0, marginRight: '10px' }}>核</strong>
+        <div className={styles.inputRow}>
+          <strong>核</strong>
           <CoreInput value={core} onChange={setCore} />
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
-          <strong style={{ margin: 0, marginRight: '10px' }}>采样数量</strong>
+        <div className={styles.inputRow}>
+          <strong>采样数量</strong>
           <SampleSizeInput value={sampleSize} onChange={setSampleSize} />
         </div>
+      </div>
 
-        {/* 保存或更新参数组 */}
-        <div style={{ display: 'flex', alignItems: 'center', marginTop: '20px' }}>
-          <Input
-            placeholder="输入参数组名"
-            value={groupName}
-            onChange={(e) => setGroupName(e.target.value)}
-            style={{ marginRight: '10px', width: '200px' }}
-          />
-          <Button type="primary" onClick={handleSave}>
-            {selectedGroup ? '更新参数组' : '保存参数组'}
-          </Button>
-        </div>
-
-        {/* 显示已保存的参数组 */}
-        <h3 style={{ textShadow: '1px 1px 5px #a49f9f  '}}>已保存的参数组</h3>
-        <List
-          
-          dataSource={savedGroups}
-          renderItem={(item) => {
-            const isHovered = hoveredGroup === item.groupName;
-            const isSelected = selectedGroup === item.groupName;
-
-            return (
-              <List.Item
-                actions={[
-                  <Button type="link" onClick={() => handleDeleteGroup(item.groupName)} danger>
-                    删除
-                  </Button>,
-                ]}
-                onMouseEnter={() => setHoveredGroup(item.groupName)}
-                onMouseLeave={() => setHoveredGroup(null)}
-                onClick={() => handleSelectGroup(item)}
-                style={{
-                  backgroundColor: isSelected ? '#e6f7ff' : isHovered ? '#E9E9E9' : 'white',
-                  cursor: 'pointer',
-                  transform: isHovered ? 'scale(1.08)' : isSelected ? 'scale(1.05)' : 'scale(1.0)',
-                  transition: 'all 0.2s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '9px',
-                  left: '8px',
-                  position: 'relative',
-                  marginBottom: '10px',
-                  borderRight: isHovered ? '3px solid #D9D9D9' : '#ccc',
-                  borderLeft: isHovered ? '3px solid #D9D9D9' : '#ccc',
-                  borderBottom: isSelected ? '6px solid #D9D9D9' : '2px solid #ccc',
-                  borderRadius: isSelected ? '15px' : isHovered ? '20px' : '10px',
-                }}
-              >
-                <div>
-                  <strong>{item.groupName}</strong>: 时间预算 - {item.timeBudget} 秒, 核 - {item.core}, 采样数量 - {item.sampleSize}
-                </div>
-              </List.Item>
-            );
-          }}
-        />
-      </Space>
+    {/* 保存或更新参数组 */}
+    <div style={{ display: 'flex', alignItems: 'center', marginTop: '20px' }}>
+      <Input
+        placeholder="输入参数组名"
+        value={groupName}
+        onChange={(e) => setGroupName(e.target.value)}
+        style={{ marginRight: '10px', width: '200px' }}
+      />
+      <Button type="primary" onClick={handleSave}>
+        {selectedGroup ? '更新参数组' : '保存参数组'}
+      </Button>
     </div>
+
+    {/* 显示已保存的参数组 */}
+    <h3 style={{ textShadow: '1px 1px 5px #a49f9f' }}>已保存的参数组</h3>
+    <List
+      dataSource={savedGroups}
+      renderItem={(item) => {
+        const isHovered = hoveredGroup === item.groupName;
+        const isSelected = selectedGroup === item.groupName;
+
+        return (
+          <List.Item
+            actions={[
+              <Button type="link" onClick={() => handleDeleteGroup(item.groupName)} danger>
+                删除
+              </Button>,
+            ]}
+            onMouseEnter={() => setHoveredGroup(item.groupName)}
+            onMouseLeave={() => setHoveredGroup(null)}
+            onClick={() => handleSelectGroup(item)}
+            style={{
+              backgroundColor: isSelected ? '#e6f7ff' : isHovered ? '#E9E9E9' : 'white',
+              cursor: 'pointer',
+              transform: isHovered ? 'scale(1.08)' : isSelected ? 'scale(1.05)' : 'scale(1.0)',
+              transition: 'all 0.2s ease',
+              display: 'flex',
+              alignItems: 'center',
+              padding: '9px',
+              left: '8px',
+              position: 'relative',
+              marginBottom: '10px',
+              borderRight: isHovered ? '3px solid #D9D9D9' : '#ccc',
+              borderLeft: isHovered ? '3px solid #D9D9D9' : '#ccc',
+              borderBottom: isSelected ? '6px solid #D9D9D9' : '2px solid #ccc',
+              borderRadius: isSelected ? '15px' : isHovered ? '20px' : '10px',
+            }}
+          >
+            <div>
+              <strong>{item.groupName}</strong>: 时间预算 - {item.timeBudget} 秒, 核 - {item.core}, 采样数量 - {item.sampleSize}
+            </div>
+          </List.Item>
+        );
+      }}
+    />
+  </Space>
+</div>
+
   );
 };
 
