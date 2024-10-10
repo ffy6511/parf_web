@@ -65,7 +65,7 @@ const Page: React.FC = () => {
           {/* 文件列表 */}
           <div
             style={{
-              marginTop: '35px',
+              marginTop: '45px',
               marginLeft: '10px', // 确保文件列表和按钮之间有足够的距离
               flex: isFileListVisible ? 1 : 0, // 控制文件列表的显示/隐藏
               padding: isFileListVisible ? '20px' : '0',
