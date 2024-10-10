@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import FileEntry from './components/fileEntry'; // 导入FileEntry组件
 import { Modal, Input, Button, message } from 'antd';
+import styles from './fileList.module.css';
 
 interface FileData {
   id: number;
@@ -143,7 +144,7 @@ const Display_1: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       
       {fileList.length > 0 ? (
         <ul style={{ padding: 15, listStyle: 'none',
@@ -203,6 +204,7 @@ const Display_1: React.FC = () => {
         <pre>{selectedFileContent}</pre>
       </Modal>
     </div>
+    
   );
 };
 

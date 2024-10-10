@@ -1,0 +1,14 @@
+/* container 是外部包裹容器 */
+.container {
+    padding: 1px;
+    border: 2px solid #ccc;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    max-width: 900px; /* 设定一个最大宽度，确保内容不超出 */
+    margin: 0 auto; /* 居中容器 */
+  }
+  
+  .container:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
+  }
