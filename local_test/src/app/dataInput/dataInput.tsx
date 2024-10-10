@@ -19,11 +19,11 @@ const openDatabase = () => {
 // 时间预算输入
 const TimeBudgetInput = ({ value, onChange }) => (
   <Row style={{ width: '100%' }}>
-    <Col span={18}>
+    <Col span={16}>
       <Slider min={0} max={2000} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
     </Col>
     <Col span={6}>
-      <InputNumber min={0} max={2000} value={value} onChange={onChange} style={{ width: '100px', marginLeft: '5px' }} />
+      <InputNumber min={0} max={2000} value={value} onChange={onChange} style={{ width: '100%', marginLeft: '5px' }} />
     </Col>
   </Row>
 );
@@ -35,7 +35,7 @@ const CoreInput = ({ value, onChange }) => (
       <Slider min={1} max={64} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
     </Col>
     <Col span={6}>
-      <InputNumber min={1} max={64} value={value} onChange={onChange} style={{ width: '100px', marginLeft: '5px' }} />
+      <InputNumber min={1} max={64} value={value} onChange={onChange} style={{ width: '100%', marginLeft: '5px' }} />
     </Col>
   </Row>
 );
@@ -47,7 +47,7 @@ const SampleSizeInput = ({ value, onChange }) => (
       <Slider min={1} max={1000} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
     </Col>
     <Col span={6}>
-      <InputNumber min={1} max={1000} value={value} onChange={onChange} style={{ width: '100px', marginLeft: '5px' }} />
+      <InputNumber min={1} max={1000} value={value} onChange={onChange} style={{ width: '100%', marginLeft: '5px' }} />
     </Col>
   </Row>
 );
