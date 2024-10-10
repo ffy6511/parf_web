@@ -24,7 +24,7 @@ const Page: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       {/* 主体内容部分 */}
-      <div style={{ display: 'flex', flex: 1 }}>
+      <div style={{ display: 'flex', flex: 1,maxHeight: '97vh', }}>
         {/* 控制按钮和文件列表的容器 */}
         <div style={{ display: 'flex', position: 'relative',backgroundColor: '#F5F5F5', }}>
           {/* 控制按钮固定在左侧 */}
@@ -123,14 +123,16 @@ const footerStyle: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  padding: '3px 0',
+  fontSize: '14px',
+  padding: '0px 0',  // 增加 padding 使页脚更大
   backgroundColor: '#f1f1f1',
-  position: 'relative',
-  bottom: 0,
   width: '100%',
-  borderTop: '2px solid #e0e0e0',
-  marginTop: 'auto', // 确保页脚位于页面底部
+  borderTop: '1px solid #e0e0e0',
+  marginTop: '0px',  // 增加 margin-top 来调整页脚和内容之间的间距
   gap: '35px',
+  flexShrink: 0,  // 确保页脚不会被压缩
 };
+
+
 
 export default Page;

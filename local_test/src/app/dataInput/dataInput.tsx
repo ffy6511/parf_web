@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Row, Col, Slider, InputNumber, Space, Button, List, Input, message } from 'antd';
 import { AlignLeftOutlined } from '@ant-design/icons';
 import styles from './dataInput.module.css';
-
+import "~/styles/globals.css";
 // IndexedDB Setup
 const openDatabase = () => {
   
@@ -141,10 +141,10 @@ const InputPanel = () => {
 
   return (
   <div>
-    <strong style={{ fontSize: '25px', marginTop: '5px', textShadow: '2px 2px 4px #a49f9f' }}>
+    <strong style={{ fontSize: '25px', marginTop: '3px', textShadow: '2px 2px 4px #a49f9f' }}>
       <AlignLeftOutlined /> 参数设置
     </strong>
-    <Space style={{ width: '100%', marginTop: '35px' }} direction="vertical">
+    <Space style={{ width: '100%', marginTop: '15px' }} direction="vertical">
       <div className={styles.container}>
         
         <div className={styles.inputRow}>
@@ -164,7 +164,7 @@ const InputPanel = () => {
       </div>
 
     {/* 保存或更新参数组 */}
-    <div style={{ display: 'flex', alignItems: 'center', marginTop: '20px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px' }}>
       <Input
         placeholder="输入参数组名"
         value={groupName}
@@ -177,47 +177,60 @@ const InputPanel = () => {
     </div>
 
     {/* 显示已保存的参数组 */}
-    <h3 style={{ textShadow: '1px 1px 5px #a49f9f' }}>已保存的参数组</h3>
-    <List
-      dataSource={savedGroups}
-      renderItem={(item) => {
-        const isHovered = hoveredGroup === item.groupName;
-        const isSelected = selectedGroup === item.groupName;
-
-        return (
-          <List.Item
-            actions={[
-              <Button type="link" onClick={() => handleDeleteGroup(item.groupName)} danger>
-                删除
-              </Button>,
-            ]}
-            onMouseEnter={() => setHoveredGroup(item.groupName)}
-            onMouseLeave={() => setHoveredGroup(null)}
-            onClick={() => handleSelectGroup(item)}
-            style={{
-              backgroundColor: isSelected ? '#e6f7ff' : isHovered ? '#E9E9E9' : 'white',
-              cursor: 'pointer',
-              transform: isHovered ? 'scale(1.08)' : isSelected ? 'scale(1.05)' : 'scale(1.0)',
-              transition: 'all 0.2s ease',
-              display: 'flex',
-              alignItems: 'center',
-              padding: '9px',
-              left: '8px',
-              position: 'relative',
-              marginBottom: '10px',
-              borderRight: isHovered ? '3px solid #D9D9D9' : '#ccc',
-              borderLeft: isHovered ? '3px solid #D9D9D9' : '#ccc',
-              borderBottom: isSelected ? '6px solid #D9D9D9' : '2px solid #ccc',
-              borderRadius: isSelected ? '15px' : isHovered ? '20px' : '10px',
-            }}
-          >
-            <div>
-              <strong>{item.groupName}</strong>: 时间预算 - {item.timeBudget} 秒, 核 - {item.core}, 采样数量 - {item.sampleSize}
-            </div>
-          </List.Item>
-        );
+    <h3 style={{ textShadow: '1px 1px 5px #a49f9f',marginTop: '3px' }}>已保存的参数组</h3>
+    <div
+      style={{
+        maxHeight: '40vh',        // 限制最大高度
+        overflowY: 'auto',      // 启用垂直滚动
+        overflowX: 'hidden',      // 禁止水平滚动
+        padding: '3px',
+        marginTop: '-10px',
+        listStyle: 'none',
+        scrollbarWidth: 'thin',   // 用于 Firefox 的细滚动条
       }}
-    />
+>
+  <List
+    dataSource={savedGroups}
+    renderItem={(item) => {
+      const isHovered = hoveredGroup === item.groupName;
+      const isSelected = selectedGroup === item.groupName;
+
+      return (
+        <List.Item
+          actions={[
+            <Button type="link" onClick={() => handleDeleteGroup(item.groupName)} danger>
+              删除
+            </Button>,
+          ]}
+          onMouseEnter={() => setHoveredGroup(item.groupName)}
+          onMouseLeave={() => setHoveredGroup(null)}
+          onClick={() => handleSelectGroup(item)}
+          style={{
+            backgroundColor: isSelected ? '#e6f7ff' : isHovered ? '#E9E9E9' : 'white',
+            cursor: 'pointer',
+            transform: isHovered ? 'scale(1.08)' : isSelected ? 'scale(1.05)' : 'scale(1.0)',
+            transition: 'all 0.2s ease',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '9px',
+            left: '8px',
+            position: 'relative',
+            marginBottom: '10px',
+            borderRight: isHovered ? '3px solid #D9D9D9' : '#ccc',
+            borderLeft: isHovered ? '3px solid #D9D9D9' : '#ccc',
+            borderBottom: isSelected ? '6px solid #D9D9D9' : '2px solid #ccc',
+            borderRadius: isSelected ? '15px' : isHovered ? '20px' : '10px',
+          }}
+        >
+          <div>
+            <strong>{item.groupName}</strong>: 时间预算 - {item.timeBudget} 秒, 核 - {item.core}, 采样数量 - {item.sampleSize}
+          </div>
+        </List.Item>
+      );
+    }}
+  />
+</div>
+
   </Space>
 </div>
 

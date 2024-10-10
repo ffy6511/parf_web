@@ -18,13 +18,13 @@
   display: flex;
   justify-content: space-between; /* 在两端对齐 */
   align-items: center;
-  padding: 10px 0;
-  margin-bottom: 15px;
+  padding: 5px 0;
+  margin-bottom: 2px;
 }
 
 /* 输入框和标签的布局 */
 .inputRow strong {
-  min-width: 120px; /* 为标签设置最小宽度，保持对齐 */
+  min-width: 100px; /* 为标签设置最小宽度，保持对齐 */
 }
 
 .inputRow .ant-input-number, .inputRow .ant-slider {
@@ -33,6 +33,6 @@
 }
 
 .inputRow .ant-input-number {
-  margin-left: 10px;
-  width: 100px; /* 确保输入框宽度合适 */
+  margin-right: 10px;
+  width: 60px; /* 确保输入框宽度合适 */
 }

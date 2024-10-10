@@ -147,9 +147,9 @@ const Display_1: React.FC = () => {
     <div className={styles.container}>
       
       {fileList.length > 0 ? (
-        <ul style={{ padding: 15, listStyle: 'none',
+        <ul style={{ padding: 10, listStyle: 'none',
           overflowY:'scroll',
-          maxHeight:'90vh',
+          maxHeight:'78vh',
           overflowX:'hidden',
           scrollbarWidth: 'thin',
          }}>
