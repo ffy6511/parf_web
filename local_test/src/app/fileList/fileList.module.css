@@ -1,7 +1,7 @@
 /* container 是外部包裹容器 */
 .container {
     padding: 1px;
-    border: 2px solid #ccc;
+    border: 2px solid #e6e4e4;
     border-radius: 15px;
     transition: all 0.3s ease;
     max-width: 900px; /* 设定一个最大宽度，确保内容不超出 */
