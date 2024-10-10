@@ -123,14 +123,14 @@ const footerStyle: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  padding: '10px 0',
+  padding: '3px 0',
   backgroundColor: '#f1f1f1',
   position: 'relative',
   bottom: 0,
   width: '100%',
-  borderTop: '1px solid #e0e0e0',
+  borderTop: '2px solid #e0e0e0',
   marginTop: 'auto', // 确保页脚位于页面底部
-  gap: '20px',
+  gap: '35px',
 };
 
 export default Page;
