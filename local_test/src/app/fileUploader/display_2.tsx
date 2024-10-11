@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, Input, Upload, message, Modal } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import styles from './fileUpload.module.css';
+import TextArea from 'antd/lib/input/TextArea'; 
 
-const { Dragger } = Upload;
 
 interface FileUploadContainerProps {
   onFileUploadSuccess: () => void;
@@ -79,8 +79,8 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
       </h2>
       <div className={styles.uploader}>
         {/* 拖动文件上传 */}
-        <Dragger
-          beforeUpload={(file) => {
+        <Upload
+          beforeUpload={(file: File) => {
             handleUpload(file);
             return false; // 阻止默认上传行为
           }}
@@ -92,7 +92,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
           </p>
           <p className="ant-upload-text" style={{ marginTop: '-50px' }}>点击或拖拽代码文件到此处上传</p>
           <p className="ant-upload-hint" style={{ marginTop: '3px' }}>支持单个代码文件或批量上传。</p>
-        </Dragger>
+        </Upload>
       </div>
 
       {/* 弹出手动输入表单的按钮 */}
@@ -116,9 +116,9 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
           onChange={(e) => setFileName(e.target.value)}
           style={{ marginBottom: '10px' }}
         />
-        <Input.TextArea
+        <TextArea
           placeholder="文件内容"
-          rows={6}
+          rows={15}
           value={fileContent}
           onChange={(e) => setFileContent(e.target.value)}
         />

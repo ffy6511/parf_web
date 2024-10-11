@@ -14,7 +14,7 @@ export const runPythonScript = (name: string): Promise<string> => {
 
     exec(command, (error, stdout, stderr) => {
       if (error) {
-        reject(`Error: ${stderr || error.message}`);
+        reject(new Error(`Error: ${stderr || error.message}`));
       } else {
         resolve(stdout.trim());
       }

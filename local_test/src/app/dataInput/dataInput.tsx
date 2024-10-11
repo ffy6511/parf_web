@@ -16,8 +16,13 @@ const openDatabase = () => {
   return request;
 };
 
+interface TimeBudgetInputProps {
+  value: number; // value 是一个 number 类型
+  onChange: (value: number) => void; // onChange 是一个接受 number 参数并返回 void 的函数
+}
+
 // 时间预算输入
-const TimeBudgetInput = ({ value, onChange }) => (
+const TimeBudgetInput: React.FC<TimeBudgetInputProps> = ({ value, onChange }) => (
   <Row style={{ width: '100%' }}>
     <Col span={16}>
       <Slider min={0} max={2000} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
@@ -28,8 +33,13 @@ const TimeBudgetInput = ({ value, onChange }) => (
   </Row>
 );
 
+interface CoreInputProps {
+  value: number; // value 是一个 number 类型
+  onChange: (value: number) => void; // onChange 是一个接受 number 参数并返回 void 的函数
+}
+
 // 核输入
-const CoreInput = ({ value, onChange }) => (
+const CoreInput : React.FC<CoreInputProps> = ({ value, onChange }) => (
   <Row style={{ width: '100%' }}>
     <Col span={18}>
       <Slider min={1} max={64} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
@@ -40,8 +50,14 @@ const CoreInput = ({ value, onChange }) => (
   </Row>
 );
 
+
+interface SampleSizeInputProps {
+  value: number; // value 是一个 number 类型
+  onChange: (value: number) => void; // onChange 是一个接受 number 参数并返回 void 的函数
+}
+
 // 采样数量输入
-const SampleSizeInput = ({ value, onChange }) => (
+const SampleSizeInput : React.FC<SampleSizeInputProps> = ({ value, onChange }) => (
   <Row style={{ width: '100%' }}>
     <Col span={18}>
       <Slider min={1} max={1000} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
@@ -70,7 +86,7 @@ const InputPanel = () => {
   }, []);
 
   // 显示提示
-  const showMessage = (type: 'success' | 'info' | 'warning', content: string) => {
+  const showMessage = (type: 'success' | 'info' | 'error', content: string) => {
     message[type](content);
   };
 
@@ -132,7 +148,7 @@ const InputPanel = () => {
       const store = transaction.objectStore('parameters');
 
       store.delete(groupName).onsuccess = () => {
-        showMessage('warning', `参数组 "${groupName}" 已删除`);
+        showMessage('info', `参数组 "${groupName}" 已删除`);
         loadSavedGroups(db);
       };
     };
@@ -214,7 +230,7 @@ const InputPanel = () => {
                   <div>
                     <strong>{item.groupName}</strong>: 时间预算 - {item.timeBudget} 秒, 核 - {item.core}, 采样数量 - {item.sampleSize}
                   </div>
-                  <Button type="link" onClick={() => handleDeleteGroup(item.groupName)} danger>
+                  <Button type="link" shape="circle" size="small" onClick={() => handleDeleteGroup(item.groupName)}>
                     删除
                   </Button>
                 </li>

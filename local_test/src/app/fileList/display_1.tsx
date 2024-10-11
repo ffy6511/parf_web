@@ -3,8 +3,9 @@
 
 import React, { useState, useEffect } from 'react';
 import FileEntry from './components/fileEntry'; // 导入FileEntry组件
-import { Modal, Input, Button, message } from 'antd';
+import { Modal, Button, message } from 'antd';
 import styles from './fileList.module.css';
+import TextArea from 'antd/lib/input/TextArea'; 
 
 interface FileData {
   id: number;
@@ -185,10 +186,10 @@ const Display_1: React.FC = () => {
         width={800} // 调整宽度
         style={{ top: 20 }} // 调整距离顶部的高度
       >
-        <Input.TextArea
+        <TextArea
           value={selectedFileContent}
           rows={25}
-          onChange={(e) => setSelectedFileContent(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setSelectedFileContent(e.target.value)}
         />
       </Modal>
 

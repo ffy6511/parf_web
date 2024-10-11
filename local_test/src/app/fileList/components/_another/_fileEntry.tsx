@@ -59,7 +59,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
       <Button
         style={{ backgroundColor: 'transparent', border: 'none', color: 'grey' }}
-        onClick={(e) => {
+        onClick={(e: React.MouseEvent) => {
           e.stopPropagation(); // 阻止点击冒泡
           onDelete(fileId);
         }}
