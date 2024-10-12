@@ -3,7 +3,7 @@ import { Button, Input, Upload, message, Modal } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import styles from './fileUpload.module.css';
 import TextArea from 'antd/lib/input/TextArea'; 
-
+import CurrentInput from '../currentInput/currentInput';
 
 interface FileUploadContainerProps {
   onFileUploadSuccess: () => void;
@@ -73,45 +73,50 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
   };
 
   return (
-    <div style={{ padding: '0px' }}>
-      <h2 style={{ marginTop: '3px', marginLeft: '40px', textShadow: '2px 2px 4px #a49f9f' }}>
-        文件上传与 Parf 调用
-      </h2>
-      <div className={styles.uploader}>
-        {/* 拖动文件上传 */}
-        <Upload
-          action='NULL'
-          beforeUpload={(file: File) => {
-            handleUpload(file);
-            return false; // 阻止默认上传行为
-          }}
-          showUploadList={false}
-        >
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-
-          <p className={styles.logo}>
-            <InboxOutlined />
-          </p>
-          <p className="ant-upload-text" style={{ marginTop: '10px' }}>
-            点击或拖拽代码文件到此处上传
-          </p>
-          <p className="ant-upload-hint" style={{ marginTop: '1px' }}>
-            （支持单个代码文件或批量上传）
-          </p>
-
+    <div className={styles.fileUploadContainer}>
+      {/* 左侧文件上传区域 */}
+      <div className={styles.uploadSection}>
+        <strong style={{ fontSize: '25px', marginBottom: '10px', textShadow: '2px 2px 4px #a49f9f' }}>
+          文件上传与 Parf 调用
+        </strong>
+        <div className={styles.uploader}>
+          <Upload
+            action='NULL'
+            beforeUpload={(file: File) => {
+              handleUpload(file);
+              return false; // 阻止默认上传行为
+            }}
+            showUploadList={false}
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <p className={styles.logo}>
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text" style={{ marginTop: '10px' }}>
+                点击或拖拽代码文件到此处上传
+              </p>
+              <p className="ant-upload-hint" style={{ marginTop: '1px' }}>
+                （支持单个代码文件或批量上传）
+              </p>
+            </div>
+          </Upload>
         </div>
-        </Upload>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center',marginTop: '10px' }}>
-      {/* 弹出手动输入表单的按钮 */}
-        <Button
-          type="primary"
-          onClick={() => setShowManualInput(true)}
-          className={styles.buttonCustom}
-        >
-          手动输入
-        </Button>
+      {/* 右侧 CurrentInput 和 手动输入区域 */}
+      <div className={styles.rightSection}>
+        <div className={styles.currentInputWrapper}>
+          <CurrentInput />
+        </div>
+        <div className={styles.manualInputButtonWrapper}>
+          <Button
+            type="primary"
+            onClick={() => setShowManualInput(true)}
+            className={styles.buttonCustom}
+          >
+            手动输入
+          </Button>
+        </div>
       </div>
 
       {/* 手动输入表单弹窗 */}

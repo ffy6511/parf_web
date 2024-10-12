@@ -1,11 +1,12 @@
 .currentInputContainer {
   display: flex;
+  flex-direction: column; /* 修改为竖直排列 */
   padding: 15px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background: #ffffff; /* 整体容器的背景 */
   width: 100%;
-  max-width: 600px; /* 增加宽度，确保内容可以适应 */
+  max-width: 400px; /* 调整宽度，确保更紧凑 */
   margin-bottom: 20px;
   transition: all 0.3s ease;
 }
@@ -17,20 +18,16 @@
 
 .titleSection {
   background-color: #f0f0f0; /* 灰色背景 */
-  padding: 15px;
-  border-radius: 8px 0 0 8px; /* 左上角和左下角的圆角 */
-  width: 150px; /* 固定宽度，确保标题区域较为紧凑 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 10px;
+  border-radius: 8px 8px 0 0; /* 顶部的圆角 */
   text-align: center;
   font-weight: bold;
-  border-right: 2px solid #ccc; /* 分隔线 */
+  border-bottom: 2px solid #ccc; /* 分隔线 */
 }
 
 .detailsSection {
   flex: 1;
-  padding-left: 20px; /* 确保右侧有足够的空间 */
+  padding: 15px 0; /* 确保顶部和底部有足够的空间 */
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -38,7 +35,16 @@
 
 .groupSection,
 .fileSection {
-  margin-bottom: 10px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background: #f8f9fa; /* 使每个部分有轻微的背景色区分 */
+  transition: background-color 0.3s ease;
+}
+
+.noFile,
+.noGroup {
+  font-size: 0.9em;
+  color: #999;
 }
 
 .groupName,

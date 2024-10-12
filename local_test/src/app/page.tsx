@@ -83,9 +83,8 @@ const Page: React.FC = () => {
         </div>
 
         {/* 中间部分：文件上传组件 */}
-        <div style={{ flex: isFileListVisible ? 5 : 6, padding: '15px', transition: 'flex 0.5s ease' }}>
+        <div style={{ flex: isFileListVisible ? 5 : 6, padding: '0px', transition: 'flex 0.5s ease' }}>
           <FileUploadContainer onFileUploadSuccess={handleFileUploadSuccess} />
-          <CurrentInput />
         </div>
 
         {/* 右侧部分：数据输入组件 */}
