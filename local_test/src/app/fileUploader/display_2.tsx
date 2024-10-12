@@ -85,24 +85,33 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
             handleUpload(file);
             return false; // 阻止默认上传行为
           }}
-          style={{ marginBottom: '20px' }}
           showUploadList={false}
         >
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
           <p className={styles.logo}>
             <InboxOutlined />
           </p>
-          <p className="ant-upload-text" style={{ marginTop: '-50px' }}>点击或拖拽代码文件到此处上传</p>
-          <p className="ant-upload-hint" style={{ marginTop: '3px' }}>支持单个代码文件或批量上传。</p>
+          <p className="ant-upload-text" style={{ marginTop: '10px' }}>
+            点击或拖拽代码文件到此处上传
+          </p>
+          <p className="ant-upload-hint" style={{ marginTop: '1px' }}>
+            （支持单个代码文件或批量上传）
+          </p>
+
+        </div>
         </Upload>
       </div>
 
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center',marginTop: '10px' }}>
       {/* 弹出手动输入表单的按钮 */}
-      <Button
-        onClick={() => setShowManualInput(true)}
-        style={{ marginTop: '10px' }}
-      >
-        手动输入
-      </Button>
+        <Button
+          onClick={() => setShowManualInput(true)}
+          className={styles.buttonCustom}
+        >
+          手动输入
+        </Button>
+      </div>
 
       {/* 手动输入表单弹窗 */}
       <Modal
@@ -124,9 +133,8 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
           onChange={(e) => setFileContent(e.target.value)}
         />
         <Button
-          type="primary"
           onClick={handleManualInputSubmit}
-          style={{ marginTop: '10px' }}
+          className={styles.buttonCustom}
         >
           提交手动输入
         </Button>
