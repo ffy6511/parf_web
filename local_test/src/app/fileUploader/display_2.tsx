@@ -80,6 +80,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
       <div className={styles.uploader}>
         {/* 拖动文件上传 */}
         <Upload
+          action='NULL'
           beforeUpload={(file: File) => {
             handleUpload(file);
             return false; // 阻止默认上传行为

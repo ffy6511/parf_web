@@ -134,7 +134,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
           <Button icon={<MoreOutlined />} style={{ 
             position: 'absolute',
              right:'15px',
-             borderradius:'50%',
+             borderRadius:'50%',
              border:'none',
              padding:'10',
              backgroundColor:'transparent',
