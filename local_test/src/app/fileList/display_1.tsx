@@ -50,6 +50,11 @@ const Display_1: React.FC = () => {
   // 点击选中文件
   const handleFileClick = (fileId: number) => {
     setSelectedFileId(fileId);
+    
+    const selectedFile = fileList.find((file) => file.id === fileId);
+    if (selectedFile) {
+      localStorage.setItem('selectedFile', JSON.stringify(selectedFile));
+    }
   };
 
   // 编辑文件

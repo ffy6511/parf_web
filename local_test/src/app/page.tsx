@@ -1,9 +1,10 @@
 'use client';
 import styles from './index.module.css';
 import React, { useState } from 'react';
+import CurrentInput from './currentInput/currentInput';
 import FileUploadContainer from './fileUploader/display_2'; // 上传组件
 import Display_1 from './fileList/display_1';  // 文件列表组件
-import InputPanel from './dataInput/dataInput';
+import InputPanel from './paraInput/paraInput';
 import { DockerOutlined, GithubOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd'; // 导入 Tooltip 组件
 
@@ -84,6 +85,7 @@ const Page: React.FC = () => {
         {/* 中间部分：文件上传组件 */}
         <div style={{ flex: isFileListVisible ? 5 : 6, padding: '15px', transition: 'flex 0.5s ease' }}>
           <FileUploadContainer onFileUploadSuccess={handleFileUploadSuccess} />
+          <CurrentInput />
         </div>
 
         {/* 右侧部分：数据输入组件 */}

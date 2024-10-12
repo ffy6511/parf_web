@@ -57,6 +57,7 @@ export interface TooltipProps extends React.HTMLAttributes<HTMLDivElement>{
     color?: string; // 假设你要添加额外的 color 类型    
     mouseEnterDelay?: number; // 假设你要添加额外的 mouseEnterDelay 类型
     mouseLeaveDelay?: number; // 假设你要添加额外的 mouseLeaveDelay 类型
+    overlayInnerStyle?: React.CSSProperties; // 假设你要添加额外的 overlayInnerStyle 类型
 }
 
 export interface DropdownProps extends React.HTMLAttributes<HTMLDivElement>{

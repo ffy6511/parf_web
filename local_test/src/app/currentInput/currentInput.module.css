@@ -1,0 +1,85 @@
+.currentInputContainer {
+  display: flex;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #ffffff; /* 整体容器的背景 */
+  width: 100%;
+  max-width: 600px; /* 增加宽度，确保内容可以适应 */
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.currentInputContainer:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: scale(1.02);
+}
+
+.titleSection {
+  background-color: #f0f0f0; /* 灰色背景 */
+  padding: 15px;
+  border-radius: 8px 0 0 8px; /* 左上角和左下角的圆角 */
+  width: 150px; /* 固定宽度，确保标题区域较为紧凑 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+  border-right: 2px solid #ccc; /* 分隔线 */
+}
+
+.detailsSection {
+  flex: 1;
+  padding-left: 20px; /* 确保右侧有足够的空间 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.groupSection,
+.fileSection {
+  margin-bottom: 10px;
+}
+
+.groupName,
+.fileName {
+  cursor: pointer;
+  font-weight: bold;
+  color: #0077b6;
+  display: inline-block;
+  padding: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.groupName:hover,
+.fileName:hover {
+  background-color: #e6f7ff;
+}
+
+.tooltipContent {
+  background-color: #000000; /* 设置为黑色背景 */
+  padding: 5px;
+  font-size: 0.9em;
+  color: #ffffff; /* 设置文本为白色 */
+  border-radius: 5px; /* 使 tooltip 内容有一定的圆角 */
+}
+
+/* 增加文字淡入淡出动画 */
+@keyframes slideFade {
+  0% {
+    opacity: 0;
+    transform: translateX(-20%);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animateText {
+  animation: slideFade 0.5s ease-in-out;
+}

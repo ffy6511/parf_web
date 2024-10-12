@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Slider, InputNumber, Button, Input, message } from 'antd';
 import { AlignLeftOutlined } from '@ant-design/icons';
-import styles from './dataInput.module.css';
+import styles from './paraInput.module.css';
 import "~/styles/globals.css";
 
 // IndexedDB Setup
@@ -136,7 +136,10 @@ const InputPanel = () => {
     setTimeBudget(group.timeBudget);
     setCore(group.core);
     setSampleSize(group.sampleSize);
-    showMessage('info', `参数组 "${group.groupName}" 已被选中`);
+    showMessage('info', `已选择参数组 "${group.groupName}" `);
+
+    // 保存到 localStorage
+    localStorage.setItem('selectedGroup', JSON.stringify(group));
   };
 
   // 删除参数组

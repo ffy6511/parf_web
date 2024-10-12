@@ -1,0 +1,52 @@
+.parfInputContainer {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f0faff;
+    width: 100%;
+    margin-top: 15px;
+  }
+  
+  .displayMonitor {
+    background: #fff;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .displayMonitor strong {
+    color: #0077b6;
+  }
+  
+  .codeBlock {
+    background-color: #f7f7f7;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    max-height: 200px;
+    overflow-y: auto;
+    color: #333;
+  }
+  
+  .submitButton {
+    background: #0077b6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .submitButton:hover {
+    background: #005f86;
+  }
+  
+  .submitButton:disabled {
+    background: #999;
+    cursor: not-allowed;
+  }
+  
