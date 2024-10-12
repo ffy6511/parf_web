@@ -9,7 +9,6 @@ declare module 'antd' {
   export interface ColProps extends React.HTMLAttributes<HTMLDivElement>{
     children?: React.ReactNode; // 假设你要添加额外的 children 类型
     style?: React.CSSProperties; // 假设你要添加额外的 style 类型
-    span?: number; // 假设你要添加额外的 span 类型
   }
 
   export interface InputNumberProps extends React.HTMLAttributes<HTMLDivElement>{

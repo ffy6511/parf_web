@@ -28,13 +28,13 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
-      "*": ["types/*"]
+      "@types/*": ["src/types/*"]
     }
   },
   "include": [
+    "src/types/**/*",
     ".eslintrc.cjs",
     "next-env.d.ts",
-    "src/**/*",
     "**/*.ts",
     "**/*.tsx",
     "**/*.cjs",

@@ -24,10 +24,10 @@ interface TimeBudgetInputProps {
 // 时间预算输入
 const TimeBudgetInput: React.FC<TimeBudgetInputProps> = ({ value, onChange }) => (
   <Row style={{ width: '100%' }}>
-    <Col span={16}>
+    <Col span={'16'}>
       <Slider min={0} max={2000} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
     </Col>
-    <Col span={6}>
+    <Col span={'6'}>
       <InputNumber min={0} max={2000} value={value} onChange={onChange} style={{ width: '100%', marginLeft: '5px' }} />
     </Col>
   </Row>
@@ -41,10 +41,10 @@ interface CoreInputProps {
 // 核输入
 const CoreInput : React.FC<CoreInputProps> = ({ value, onChange }) => (
   <Row style={{ width: '100%' }}>
-    <Col span={18}>
+    <Col span={'18'}>
       <Slider min={1} max={64} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
     </Col>
-    <Col span={6}>
+    <Col span={'6'}>
       <InputNumber min={1} max={64} value={value} onChange={onChange} style={{ width: '100%', marginLeft: '5px' }} />
     </Col>
   </Row>
@@ -59,10 +59,10 @@ interface SampleSizeInputProps {
 // 采样数量输入
 const SampleSizeInput : React.FC<SampleSizeInputProps> = ({ value, onChange }) => (
   <Row style={{ width: '100%' }}>
-    <Col span={18}>
+    <Col span={'18'}>
       <Slider min={1} max={1000} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
     </Col>
-    <Col span={6}>
+    <Col span={'6'}>
       <InputNumber min={1} max={1000} value={value} onChange={onChange} style={{ width: '100%', marginLeft: '5px' }} />
     </Col>
   </Row>
