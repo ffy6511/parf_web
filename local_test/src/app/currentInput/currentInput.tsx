@@ -80,54 +80,51 @@ const CurrentInput: React.FC = () => {
         <strong>当前设置</strong>
       </div>
 
-      {/* 右侧显示参数组和文件 */}
-      <div className={styles.detailsSection}>
-        {selectedGroup ? (
-          <div className={styles.groupSection}>
-            {/* 参数组名称部分 */}
-            <Tooltip
-              title={
-                groupDetails ? (
-                  <div>
-                    <p>时间预算: {groupDetails.timeBudget} 秒</p>
-                    <p>核数: {groupDetails.core}</p>
-                    <p>采样数量: {groupDetails.sampleSize}</p>
-                  </div>
-                ) : (
-                  '加载中...'
-                )
-              }
-              overlayInnerStyle={{ backgroundColor: 'grey', color: '#ffffff' }}
+      {/* 文件名称部分 */}
+      {selectedFile ? (
+        <div className={styles.fileSection}>
+          <Tooltip title={selectedFile.fileName} overlayInnerStyle={{ backgroundColor: 'grey', color: '#ffffff' }}>
+            <span
+              className={`${styles.fileName} ${isFileAnimating ? styles.animateText : ''}`}
+              onAnimationEnd={() => setIsFileAnimating(false)} // Reset file animation flag after animation ends
             >
-              <span
-                onMouseEnter={handleMouseEnterGroup}
-                className={`${styles.groupName} ${isGroupAnimating ? styles.animateText : ''}`}
-                onAnimationEnd={() => setIsGroupAnimating(false)} // Reset group animation flag after animation ends
-              >
-                参数组: {selectedGroup.groupName}
-              </span>
-            </Tooltip>
-          </div>
-        ) : (
-          <p>没有选中的参数组</p>
-        )}
+              文件: {selectedFile.fileName.length > 7 ? `${selectedFile.fileName.slice(0, 7)}...` : selectedFile.fileName}
+            </span>
+          </Tooltip>
+        </div>
+      ) : (
+        <p className={styles.noFile}>没有选中的文件</p>
+      )}
 
-        {selectedFile ? (
-          <div className={styles.fileSection}>
-            {/* 文件名称部分 */}
-            <Tooltip title={selectedFile.fileName} overlayInnerStyle={{ backgroundColor: 'grey', color: '#ffffff' }}>
-              <span
-                className={`${styles.fileName} ${isFileAnimating ? styles.animateText : ''}`}
-                onAnimationEnd={() => setIsFileAnimating(false)} // Reset file animation flag after animation ends
-              >
-                文件: {selectedFile.fileName.length > 7 ? `${selectedFile.fileName.slice(0, 7)}...` : selectedFile.fileName}
-              </span>
-            </Tooltip>
-          </div>
-        ) : (
-          <p>没有选中的文件</p>
-        )}
-      </div>
+      {/* 参数组名称部分 */}
+      {selectedGroup ? (
+        <div className={styles.groupSection}>
+          <Tooltip
+            title={
+              groupDetails ? (
+                <div>
+                  <p>时间预算: {groupDetails.timeBudget} 秒</p>
+                  <p>核数: {groupDetails.core}</p>
+                  <p>采样数量: {groupDetails.sampleSize}</p>
+                </div>
+              ) : (
+                '加载中...'
+              )
+            }
+            overlayInnerStyle={{ backgroundColor: 'grey', color: '#ffffff' }}
+          >
+            <span
+              onMouseEnter={handleMouseEnterGroup}
+              className={`${styles.groupName} ${isGroupAnimating ? styles.animateText : ''}`}
+              onAnimationEnd={() => setIsGroupAnimating(false)} // Reset group animation flag after animation ends
+            >
+              参数组: {selectedGroup.groupName}
+            </span>
+          </Tooltip>
+        </div>
+      ) : (
+        <p className={styles.noGroup}>没有选中的参数组</p>
+      )}
     </div>
   );
 };
