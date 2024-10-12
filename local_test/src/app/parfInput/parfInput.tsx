@@ -1,52 +1,58 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import styles from './parfInput.module.css';
 
 const ParfInput: React.FC = () => {
   const [displayData, setDisplayData] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [selectedGroup, setSelectedGroup] = useState<any>(null);
 
-  // 从 localStorage 获取当前选中的参数组
-  const selectedGroup = localStorage.getItem('selectedGroup') ? JSON.parse(localStorage.getItem('selectedGroup') as string) : null;
+  useEffect(() => {
+    // Only access localStorage if in the browser environment
+    if (typeof window !== 'undefined') {
+      const groupData = localStorage.getItem('selectedGroup');
+      if (groupData) {
+        setSelectedGroup(JSON.parse(groupData));
+      }
+    }
+  }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!selectedGroup) {
       alert('请选择一个参数组！');
       return;
     }
 
     setLoading(true);
-    try {
-      // 调用后端 API
-      const response = await axios.post('/execute', {
-        groupName: selectedGroup.groupName,
-        timeBudget: selectedGroup.timeBudget,
-        core: selectedGroup.core,
-        sampleSize: selectedGroup.sampleSize,
-      });
 
-      setDisplayData(response.data); // 显示返回的数据
-    } catch (error) {
-      console.error('提交数据时出错:', error);
-      setDisplayData('执行命令时发生错误');
-    } finally {
+    // 模拟数据处理逻辑 - 暂时取消与后端交互
+    setTimeout(() => {
+      const simulatedResponse = `参数组名: ${selectedGroup.groupName}\n时间预算: ${selectedGroup.timeBudget} 秒\n核数: ${selectedGroup.core}\n采样数量: ${selectedGroup.sampleSize}`;
+      setDisplayData(simulatedResponse);
       setLoading(false);
-    }
+      setIsExpanded(true); // 接受返回数据时变宽
+    }, 1000); // 模拟延迟 1 秒钟
   };
+
+  useEffect(() => {
+    if (!displayData) {
+      setIsExpanded(false); // 如果没有数据，保持初始宽度
+    }
+  }, [displayData]);
 
   return (
     <div className={styles.parfInputContainer}>
       {/* 显示器部分 */}
-      <div className={styles.displayMonitor}>
-        <strong>数据显示器</strong>
+      <div className={`${styles.displayMonitor} ${isExpanded ? styles.expanded : ''}`}>
+        <strong>调用返回区</strong>
         <pre className={styles.codeBlock}>
           {displayData ? displayData : '等待数据返回...'}
         </pre>
       </div>
       
       {/* 提交按钮 */}
-      <button className={styles.submitButton} onClick={handleSubmit} disabled={loading}>
-        {loading ? '提交中...' : '提交数据'}
+      <button className={styles.submitButton} onClick={handleSubmit} disabled={loading} style={{ marginTop: '10px', marginLeft: '450px' }}>
+        {loading ? '提交中...' : '提交调用'}
       </button>
     </div>
   );

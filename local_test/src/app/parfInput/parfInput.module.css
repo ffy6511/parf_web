@@ -17,7 +17,7 @@
   }
   
   .displayMonitor strong {
-    color: #0077b6;
+    color: #838586;
   }
   
   .codeBlock {
@@ -32,17 +32,18 @@
   }
   
   .submitButton {
-    background: #0077b6;
+    background: #1394ea;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 10px 15px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
   }
   
   .submitButton:hover {
-    background: #005f86;
+    background: #7dcbea;
+    scale: 1.03;
   }
   
   .submitButton:disabled {

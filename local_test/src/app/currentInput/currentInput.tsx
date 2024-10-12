@@ -2,11 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { Tooltip } from 'antd';
 import styles from './currentInput.module.css';
 
+// 定义参数组和文件的类型
+interface GroupDetails {
+  groupName: string;
+  timeBudget: number;
+  core: number;
+  sampleSize: number;
+}
+
+interface FileDetails {
+  fileName: string;
+}
+
 const CurrentInput: React.FC = () => {
-  const [selectedGroup, setSelectedGroup] = useState<any>(null);
-  const [groupDetails, setGroupDetails] = useState<any>(null);
-  const [selectedFile, setSelectedFile] = useState<any>(null);
-  
+  const [selectedGroup, setSelectedGroup] = useState<GroupDetails | null>(null);
+  const [groupDetails, setGroupDetails] = useState<GroupDetails | null>(null);
+  const [selectedFile, setSelectedFile] = useState<FileDetails | null>(null);
+
   // 独立的动画控制状态
   const [isGroupAnimating, setIsGroupAnimating] = useState(false);
   const [isFileAnimating, setIsFileAnimating] = useState(false);
@@ -14,7 +26,7 @@ const CurrentInput: React.FC = () => {
   const loadSelectedData = () => {
     // 处理参数组数据
     const groupData = localStorage.getItem('selectedGroup');
-    const parsedGroupData = groupData ? JSON.parse(groupData) : null;
+    const parsedGroupData: GroupDetails | null = groupData ? JSON.parse(groupData) : null;
 
     // 如果新数据与之前不同，才更新状态
     if (JSON.stringify(parsedGroupData) !== JSON.stringify(selectedGroup)) {
@@ -24,7 +36,7 @@ const CurrentInput: React.FC = () => {
 
     // 处理文件数据
     const fileData = localStorage.getItem('selectedFile');
-    const parsedFileData = fileData ? JSON.parse(fileData) : null;
+    const parsedFileData: FileDetails | null = fileData ? JSON.parse(fileData) : null;
 
     // 如果新数据与之前不同，才更新状态
     if (JSON.stringify(parsedFileData) !== JSON.stringify(selectedFile)) {
@@ -67,7 +79,7 @@ const CurrentInput: React.FC = () => {
         const request = store.get(selectedGroup.groupName);
 
         request.onsuccess = () => {
-          setGroupDetails(request.result);
+          setGroupDetails(request.result as GroupDetails);
         };
       };
     }

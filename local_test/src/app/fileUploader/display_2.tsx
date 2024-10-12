@@ -76,7 +76,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
     <div className={styles.fileUploadContainer}>
       {/* 左侧文件上传区域 */}
       <div className={styles.uploadSection}>
-        <strong style={{ fontSize: '25px', marginBottom: '10px', textShadow: '2px 2px 4px #a49f9f' }}>
+        <strong style={{ fontSize: '20px', marginBottom: '10px', textShadow: '2px 2px 4px #a49f9f' }}>
           文件上传与 Parf 调用
         </strong>
         <div className={styles.uploader}>

@@ -1,7 +1,7 @@
 'use client';
 import styles from './index.module.css';
 import React, { useState } from 'react';
-import CurrentInput from './currentInput/currentInput';
+import ParfInput from './parfInput/parfInput';
 import FileUploadContainer from './fileUploader/display_2'; // 上传组件
 import Display_1 from './fileList/display_1';  // 文件列表组件
 import InputPanel from './paraInput/paraInput';
@@ -48,7 +48,7 @@ const Page: React.FC = () => {
           >
             {isFileListVisible ? (
               // 当文件列表展开时显示图标和“文件列表”文本
-              <div style={{ display: 'flex', alignItems: 'center',fontSize: '25px',marginTop: '5px' }}>
+              <div style={{ display: 'flex', alignItems: 'center',fontSize: '20px',marginTop: '5px' }}>
                 <Tooltip title="收起文件列表" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2}>
                   <MenuFoldOutlined style={{  textShadow: '2px 2px 4px #a49f9f  '}} />
                   <strong style={{ marginLeft: '8px', textShadow: '2px 2px 4px #a49f9f  ' }}>文件列表</strong>
@@ -85,6 +85,7 @@ const Page: React.FC = () => {
         {/* 中间部分：文件上传组件 */}
         <div style={{ flex: isFileListVisible ? 5 : 6, padding: '0px', transition: 'flex 0.5s ease' }}>
           <FileUploadContainer onFileUploadSuccess={handleFileUploadSuccess} />
+          <ParfInput />
         </div>
 
         {/* 右侧部分：数据输入组件 */}
