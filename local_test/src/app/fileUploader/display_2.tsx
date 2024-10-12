@@ -106,6 +106,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center',marginTop: '10px' }}>
       {/* 弹出手动输入表单的按钮 */}
         <Button
+          type="primary"
           onClick={() => setShowManualInput(true)}
           className={styles.buttonCustom}
         >

@@ -186,7 +186,7 @@ const InputPanel = () => {
             onChange={(e) => setGroupName(e.target.value)}
             style={{ marginRight: '10px', width: '200px' }}
           />
-          <Button type="primary" onClick={handleSave}>
+          <Button type="primary" onClick={handleSave} className = {styles.buttonCustom}>
             {selectedGroup ? '更新参数组' : '保存参数组'}
           </Button>
         </div>
@@ -203,40 +203,37 @@ const InputPanel = () => {
             scrollbarWidth: 'thin', // 用于 Firefox 的细滚动条
           }}
         >
-          <ul style={{ padding: '0' }}>
-            {savedGroups.map((item) => {
-              const isHovered = hoveredGroup === item.groupName;
-              const isSelected = selectedGroup === item.groupName;
+        <ul className={styles.List}>
+          {savedGroups.map((item) => {
+          const isHovered = hoveredGroup === item.groupName;
+          const isSelected = selectedGroup === item.groupName;
 
-              return (
-                <li
-                  key={item.groupName}
-                  onMouseEnter={() => setHoveredGroup(item.groupName)}
-                  onMouseLeave={() => setHoveredGroup(null)}
-                  onClick={() => handleSelectGroup(item)}
-                  style={{
-                    backgroundColor: isSelected ? '#e6f7ff' : isHovered ? '#E9E9E9' : 'white',
-                    cursor: 'pointer',
-                    transform: isHovered ? 'scale(1.08)' : isSelected ? 'scale(1.05)' : 'scale(1.0)',
-                    transition: 'all 0.2s ease',
-                    padding: '9px',
-                    marginBottom: '10px',
-                    borderRight: isHovered ? '3px solid #D9D9D9' : '#ccc',
-                    borderLeft: isHovered ? '3px solid #D9D9D9' : '#ccc',
-                    borderBottom: isSelected ? '6px solid #D9D9D9' : '2px solid #ccc',
-                    borderRadius: isSelected ? '15px' : isHovered ? '20px' : '10px',
-                  }}
-                >
-                  <div>
-                    <strong>{item.groupName}</strong>: 时间预算 - {item.timeBudget} 秒, 核 - {item.core}, 采样数量 - {item.sampleSize}
-                  </div>
-                  <Button type="link" shape="circle" size="small" onClick={() => handleDeleteGroup(item.groupName)}>
-                    删除
-                  </Button>
-                </li>
-              );
-            })}
-          </ul>
+        return (
+          <li
+            key={item.groupName}
+            onMouseEnter={() => setHoveredGroup(item.groupName)}
+            onMouseLeave={() => setHoveredGroup(null)}
+            onClick={() => handleSelectGroup(item)}
+            className={`${styles.parameterListItem} ${isSelected ? styles.selected : ''}`}
+          >
+            <div className={styles.parameterContent}>
+              <strong>{item.groupName}</strong>
+              <div className={styles.parameterDetails}>
+                时间预算: {item.timeBudget} 秒 | 核数: {item.core} | 采样数量: {item.sampleSize}
+              </div>
+            </div>
+            <Button
+              shape="circle-outline"
+              size="small"
+              onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => { e.stopPropagation(); handleDeleteGroup(item.groupName); }}
+              className={styles.deleteButton}
+            >
+              删除
+            </Button>
+          </li>
+          );
+          })}
+         </ul>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 /* container 是外部包裹容器 */
 .container {
-  padding: 20px;
+  padding: 15px;
   border: 1px solid #ccc;
   border-radius: 15px;
   transition: all 0.3s ease;
@@ -36,3 +36,90 @@
   margin-right: 10px;
   width: 60px; /* 确保输入框宽度合适 */
 }
+
+.buttonCustom {
+  margin-top: 10px;
+  border-radius: 8px;
+  padding: 10px 10px;
+  background: linear-gradient(50deg ,#53595b, #c9d7e6); /* 初始渐变背景色 */
+  border: none;
+  box-shadow: 2px 4px 10px rgba(41, 61, 82, 0.5); /* 按钮阴影 */
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease; /* 平滑过渡效果 */
+}
+
+.buttonCustom:hover {
+  background: linear-gradient(90deg, #0056b3, #0096d6); /* 悬停时渐变背景色 */
+  transform: scale(1.1); /* 悬停时按钮放大 */
+}
+
+
+.List {
+  list-style: none; /* 去除默认列表样式 */
+  padding: 0;
+  margin: 0;
+}
+
+.parameterListItem {
+  background: #f9f9f9; /* 浅色背景，干净明亮 */
+  cursor: pointer;
+  transition: all 0.2s ease; /* 过渡时间较短，保证平滑 */
+  padding: 12px;
+  margin-bottom: 3px;
+  border: 1px solid #ddd; /* 使用浅灰色边框，保持柔和 */
+  border-radius: 8px;
+  color: #333; /* 深灰色字体，易于阅读 */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative; /* 为了配合删除按钮的定位 */
+}
+
+.parameterListItem:hover {
+  background: #f0faff; /* 悬停时背景稍微提亮并有轻微蓝色，增强交互感 */
+  border-color: #40a9ff; /* 边框变为蓝色，柔和地突出交互感 */
+  transform: translateY(-2px); /* 悬停时轻微浮起 */
+}
+
+.parameterListItem.selected {
+  background: #e6f7ff; /* 选中状态使用浅蓝色背景 */
+  border-color: #1890ff; /* 蓝色边框，用于选中状态 */
+}
+
+.parameterContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.parameterContent strong {
+  font-size: 1em; /* 标题大小 */
+  color: #0050b3; /* 使用蓝色强调标题内容 */
+}
+
+.parameterDetails {
+  margin-top: 4px;
+  font-size: 0.9em;
+  color: #666; /* 使用中灰色，以减弱参数信息的视觉重量 */
+}
+
+.parameterListItem .deleteButton {
+  position: absolute; /* 绝对定位 */
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0; /* 初始状态为隐藏 */
+  transition: opacity 0.3s ease; /* 在悬停时逐渐显示 */
+  color: #ff4d4f; /* 删除按钮的颜色 */
+}
+
+.parameterListItem:hover .deleteButton {
+  opacity: 1; /* 悬停时显示删除按钮 */
+}
+
+.parameterListItem .deleteButton:hover {
+  color: #ff7875 !important; /* 强制将颜色变为红色 */
+}
+

@@ -3,7 +3,7 @@
   border: 1px solid #ccc;
   border-radius: 15px;
   transition: all 0.3s ease;
-  width: 500px; /* 设定一个最大宽度，确保内容不超出 */
+  width: 300px; /* 设定一个最大宽度，确保内容不超出 */
   height: 200px;
   margin: 0 auto; /* 居中容器 */
   display: flex; /* 使用 Flexbox 使内部元素居中 */
@@ -23,7 +23,6 @@
   margin: 0 auto;
   cursor: pointer;
   border: none;
-  box-shadow: 2px 4px 10px rgba(41, 61, 82, 0.5);
   background: none;
   color: #333;
   transition: all 0.3s ease;
