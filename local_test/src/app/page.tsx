@@ -37,7 +37,7 @@ const Page: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               cursor: 'pointer',
-              scale: isHovered ? 1.1 : 1,
+              scale: isHovered ? 1.05 : 1,
               justifyContent: 'center',
               transition: 'all 0.3s ease', // 过渡效果
               color: isHovered ? '#1890ff' : 'black', // 悬浮时改变颜色
@@ -48,7 +48,7 @@ const Page: React.FC = () => {
           >
             {isFileListVisible ? (
               // 当文件列表展开时显示图标和“文件列表”文本
-              <div style={{ display: 'flex', alignItems: 'center',fontSize: '20px',marginTop: '5px' }}>
+              <div style={{ display: 'flex', alignItems: 'center',fontSize: '17px',marginTop: '3px' }}>
                 <Tooltip title="收起文件列表" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2}>
                   <MenuFoldOutlined style={{  textShadow: '2px 2px 4px #a49f9f  '}} />
                   <strong style={{ marginLeft: '8px', textShadow: '2px 2px 4px #a49f9f  ' }}>文件列表</strong>
@@ -58,7 +58,7 @@ const Page: React.FC = () => {
             ) : (
               // 当文件列表收起时，只显示图标，通过 Tooltip 实现悬停提示
               <Tooltip title="展开文件列表" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2}>
-                <MenuUnfoldOutlined style={{ fontSize: '25px',marginTop: '10px' }} />
+                <MenuUnfoldOutlined style={{ fontSize: '20px',marginTop: '2px' }} />
               </Tooltip>
             )}
           </div>
@@ -83,7 +83,7 @@ const Page: React.FC = () => {
         </div>
 
         {/* 中间部分：文件上传组件 */}
-        <div style={{ flex: isFileListVisible ? 5 : 6, padding: '0px', transition: 'flex 0.5s ease' }}>
+        <div style={{ flex: isFileListVisible ? 5 : 6, padding: '0px', transition: 'flex 0.7s ease' }}>
           <FileUploadContainer onFileUploadSuccess={handleFileUploadSuccess} />
           <ParfInput />
         </div>

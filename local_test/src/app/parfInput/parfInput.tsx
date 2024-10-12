@@ -51,7 +51,9 @@ const ParfInput: React.FC = () => {
       </div>
       
       {/* 提交按钮 */}
-      <button className={styles.submitButton} onClick={handleSubmit} disabled={loading} style={{ marginTop: '10px', marginLeft: '450px' }}>
+      <button className={styles.submitButton} onClick={handleSubmit} disabled={loading} style={{
+         marginTop: '10px', marginLeft: '400px'
+          }}>
         {loading ? '提交中...' : '提交调用'}
       </button>
     </div>

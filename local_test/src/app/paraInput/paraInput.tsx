@@ -159,7 +159,7 @@ const InputPanel = () => {
 
   return (
     <div>
-      <strong style={{ fontSize: '20px', marginTop: '3px', textShadow: '2px 2px 4px #a49f9f' }}>
+      <strong style={{ fontSize: '17px', marginTop: '2px', textShadow: '2px 2px 4px #a49f9f' }}>
         <AlignLeftOutlined /> 参数设置
       </strong>
 
