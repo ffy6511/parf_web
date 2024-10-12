@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CloseCircleOutlined, EditOutlined, EyeOutlined, MoreOutlined, PushpinOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Menu, Popconfirm, Tooltip } from 'antd';
+import { Button, Dropdown, Menu, Tooltip } from 'antd';
 
 interface FileEntryProps {
   fileId: number;

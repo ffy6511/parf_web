@@ -17,7 +17,7 @@ interface FileData {
 const Display_1: React.FC = () => {
   const [fileList, setFileList] = useState<FileData[]>([]);
   const [selectedFileId, setSelectedFileId] = useState<number | null>(null);
-  const [selectedFileContent, setSelectedFileContent] = useState<string | null>(null);
+  const [selectedFileContent, setSelectedFileContent] = useState<string>("");
   const [db, setDb] = useState<IDBDatabase | null>(null);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false); // 编辑弹窗
   const [isPreviewModalVisible, setIsPreviewModalVisible] = useState(false); // 预览弹窗
@@ -110,7 +110,7 @@ const Display_1: React.FC = () => {
         setFileList((prevFiles) => prevFiles.filter((file) => file.id !== fileId));
         if (fileId === selectedFileId) {
           setSelectedFileId(null);
-          setSelectedFileContent(null);
+          setSelectedFileContent("");
         }
       };
   
