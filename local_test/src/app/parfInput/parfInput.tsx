@@ -22,7 +22,7 @@ interface AnalyseResponse {
 const ParfInput: React.FC = () => {
   const [displayData, setDisplayData] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [isExpandedFully, setIsExpandedFully] = useState<boolean>(false);
   const [selectedGroup, setSelectedGroup] = useState<GroupDetails | null>(null);
   const [selectedFile, setSelectedFile] = useState<FileDetails | null>(null);
 
@@ -119,24 +119,26 @@ const ParfInput: React.FC = () => {
       setDisplayData('命令执行失败');
     } finally {
       setLoading(false);
-      setIsExpanded(true); // 接受返回数据时变宽
     }
   };
 
-  useEffect(() => {
-    if (!displayData) {
-      setIsExpanded(false); // 如果没有数据，保持初始宽度
-    }
-  }, [displayData]);
+  const toggleExpand = () => {
+    setIsExpandedFully(!isExpandedFully);
+  };
 
   return (
     <div className={styles.parfInputContainer}>
       {/* 显示器部分 */}
-      <div className={`${styles.displayMonitor} ${isExpanded ? styles.expanded : ''}`}>
+      <div className={`${styles.displayMonitor} ${isExpandedFully ? styles.expandedFully : ''}`}>
         <strong>调用返回区</strong>
         <pre className={styles.codeBlock}>
           {displayData ? displayData : '等待数据返回...'}
         </pre>
+        {displayData && (
+          <button onClick={toggleExpand} className={styles.expandButton}>
+            {isExpandedFully ? '折叠' : '展开'}
+          </button>
+        )}
       </div>
 
       {/* 提交按钮 */}
