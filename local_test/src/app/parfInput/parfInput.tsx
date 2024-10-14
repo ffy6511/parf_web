@@ -16,7 +16,7 @@ interface FileDetails {
 }
 
 interface AnalyseResponse {
-  result: string; // 这个类型根据你后端的返回内容来定义
+  result: string; 
 }
 
 const ParfInput: React.FC = () => {
