@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Modal, Button, Tooltip } from 'antd';
+import { ArrowsAltOutlined } from '@ant-design/icons';
 import styles from './parfInput.module.css';
 import { trpc } from '../../trpc/react'; // 导入 trpc 客户端
 
@@ -26,7 +28,6 @@ const ParfInput: React.FC = () => {
   const [selectedGroup, setSelectedGroup] = useState<GroupDetails | null>(null);
   const [selectedFile, setSelectedFile] = useState<FileDetails | null>(null);
 
-  // 获取 tRPC 的 mutation hook
   const mutation = trpc.analyse.executeCommand.useMutation();
 
   // 从localStorage加载文件和参数组
@@ -128,27 +129,46 @@ const ParfInput: React.FC = () => {
 
   return (
     <div className={styles.parfInputContainer}>
-      {/* 显示器部分 */}
-      <div className={`${styles.displayMonitor} ${isExpandedFully ? styles.expandedFully : ''}`}>
-        <strong>调用返回区</strong>
+      <div className={styles.displayMonitor}>
+        <strong>
+          调用返回区
+          {displayData && (
+            <Tooltip title="查看分析结果">
+              <ArrowsAltOutlined onClick={toggleExpand} className={styles.expandIcon} />
+            </Tooltip>
+          )}
+        </strong>
         <pre className={styles.codeBlock}>
-          {displayData ? displayData : '等待数据返回...'}
+          {displayData ? '点击查看详情' : '等待数据返回...'}
         </pre>
-        {displayData && (
-          <button onClick={toggleExpand} className={styles.expandButton}>
-            {isExpandedFully ? '折叠' : '展开'}
-          </button>
-        )}
       </div>
 
-      {/* 提交按钮 */}
-      <button className={styles.submitButton} onClick={handleSubmit} disabled={loading} style={{
-        marginTop: '10px', marginLeft: '400px'
-      }}>
+      <button 
+        className={styles.submitButton} 
+        onClick={handleSubmit} 
+        disabled={loading}
+      >
         {loading ? '提交中...' : '提交调用'}
       </button>
+
+      <Modal
+        title="查看返回数据"
+        visible={isExpandedFully}
+        onCancel={toggleExpand}
+        footer={[
+          <Button key="close" type="primary" onClick={toggleExpand}>
+            关闭
+          </Button>,
+        ]}
+        width={800}
+        style={{ top: 20 }}
+      >
+        <pre className={styles.modalCodeBlock}>{displayData}</pre>
+      </Modal>
     </div>
   );
 };
 
 export default ParfInput;
+
+

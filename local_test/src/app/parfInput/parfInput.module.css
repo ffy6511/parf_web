@@ -1,10 +1,11 @@
 .parfInputContainer {
-  padding: 15px;
+  padding: 5px;
   border: 1px solid #ccc;
   border-radius: 8px;
   background: #f0faff;
   width: 100%;
-  margin-top: 15px;
+  margin-top: 5px;
+  position: relative;
 }
 
 .displayMonitor {
@@ -12,19 +13,17 @@
   border: 1px solid #bbb;
   border-radius: 8px;
   padding: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-height: 300px; /* 默认最大高度为 300px */
+  height: 150px;
   overflow: hidden;
-  transition: max-height 0.3s ease;
-}
-
-.displayMonitor.expandedFully {
-  max-height: none; /* 展开状态时取消高度限制 */
+  position: relative;
 }
 
 .displayMonitor strong {
   color: #838586;
+  display: block;
+  margin-bottom: 10px;
 }
 
 .codeBlock {
@@ -33,9 +32,12 @@
   border-radius: 5px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.9em;
-  max-height: 200px; /* 保持内容在 200px 内显示 */
-  overflow-y: auto; /* 超出部分出现滚动条 */
+  height: calc(100% - 60px);
+  overflow-y: auto;
   color: #333;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .submitButton {
@@ -50,7 +52,7 @@
 
 .submitButton:hover {
   background: #7dcbea;
-  scale: 1.03;
+  transform: scale(1.03);
 }
 
 .submitButton:disabled {
@@ -58,18 +60,39 @@
   cursor: not-allowed;
 }
 
-.expandButton {
-  margin-top: 10px;
+.expandIcon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5em;
+  color: #1394ea;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.expandIcon:hover {
+  color: #7dcbea;
+  transform: scale(1.1);
+}
+
+.modalCodeBlock {
+  background-color: #f7f7f7;
+  padding: 10px;
+  border-radius: 5px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9em;
+  color: #333;
+  overflow-y: auto;
+  white-space: pre-wrap; /* 自动换行 */
+  word-wrap: break-word; /* 防止长单词溢出 */
+}
+
+.closeModalButton {
   background: #1394ea;
   color: white;
   border: none;
-  padding: 5px 10px;
+  padding: 10px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 0.8em;
-  transition: background 0.3s ease;
-}
-
-.expandButton:hover {
-  background: #7dcbea;
+  margin-top: 15px;
 }
