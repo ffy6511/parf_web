@@ -83,6 +83,7 @@ const ParfInput: React.FC = () => {
   // 处理提交按钮
   const handleSubmit = async () => {
     setSubmitted(true); // 用户点击了提交按钮，更新状态
+    setDisplayData("");//重置显示区数据
     if (!selectedGroup || !selectedFile) {
       alert('请选择一个参数组和文件！');
       return;
