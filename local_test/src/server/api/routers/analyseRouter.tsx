@@ -25,6 +25,7 @@ export const analyseRouter = createTRPCRouter({
         await fs.writeFile(tempFilePath, fileContent);
 
         const command = `opam switch 5.1.0 && eval $(opam env) && frama-c ${tempFilePath} -parf -parf-budget ${budget} -parf-process ${process} -parf-sample-num ${sampleNum}`;
+        // const command = `sleep 10 && echo ${tempFilePath} && echo ${budget} && echo ${process} && echo ${sampleNum}`;
 
         const { stdout, stderr } = await new Promise<{ stdout: string, stderr: string }>((resolve, reject) => {
           exec(command, { maxBuffer: 1024 * 1024 * 10 }, (error, stdout, stderr) => {
@@ -36,7 +37,11 @@ export const analyseRouter = createTRPCRouter({
         await fs.unlink(tempFilePath).catch(() => {});
 
         // 合并 stdout 和 stderr，但过滤掉无关的错误信息
-        const combinedOutput = `${stdout}\n\nWarnings/Errors:\n${stderr}`
+        // const combinedOutput = `${stdout}\n\nWarnings/Errors:\n${stderr}`
+        //   .split('\n')
+        //   .filter(line => !line.includes('.parf_temp_files'))
+        //   .join('\n');
+        const combinedOutput = `${stdout}${stderr}`
           .split('\n')
           .filter(line => !line.includes('.parf_temp_files'))
           .join('\n');

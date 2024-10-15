@@ -77,8 +77,12 @@ const ParfInput: React.FC = () => {
     });
   };
 
+  // 添加一个状态来跟踪是否已经点击了提交按钮
+  const [submitted, setSubmitted] = useState(false);
+
   // 处理提交按钮
   const handleSubmit = async () => {
+    setSubmitted(true); // 用户点击了提交按钮，更新状态
     if (!selectedGroup || !selectedFile) {
       alert('请选择一个参数组和文件！');
       return;
@@ -127,6 +131,13 @@ const ParfInput: React.FC = () => {
     setIsExpandedFully(!isExpandedFully);
   };
 
+  // 根据submitted和displayData的值决定返回区的显示内容
+  const returnMessage = submitted
+  ? displayData
+    ? '点击查看详情'
+    : '等待数据返回...'
+  : '尚无待分析任务';
+  
   return (
     <div className={styles.parfInputContainer}>
       <div className={styles.displayMonitor}>
@@ -138,8 +149,20 @@ const ParfInput: React.FC = () => {
             </Tooltip>
           )}
         </strong>
-        <pre className={styles.codeBlock}>
+        {/* <pre className={styles.codeBlock}>
           {displayData ? '点击查看详情' : '等待数据返回...'}
+        </pre> */}
+        {/* <pre className={styles.codeBlock} style={displayData ? { fontSize: '30px', color: 'green' } : { fontSize: '30px', color: 'grey' }}>
+          {displayData ? '点击查看详情' : '等待数据返回...'}
+        </pre> */}
+        <pre className={styles.codeBlock}
+          style={
+            submitted && displayData
+              ? { fontSize: '30px', color: 'green' }
+              : { fontSize: '30px', color: 'grey' }
+          }
+        >
+          {returnMessage}
         </pre>
       </div>
 
