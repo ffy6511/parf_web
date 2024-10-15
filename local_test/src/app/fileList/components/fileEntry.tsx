@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CloseCircleOutlined, EditOutlined, EyeOutlined, MoreOutlined, PushpinOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu, Tooltip } from 'antd';
+import styles from '../fileList.module.css'
 
 interface FileEntryProps {
   fileId: number;
@@ -131,15 +132,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
       )}
       {isHovered && (
         <Dropdown overlay={menu} trigger={['click']} >
-          <Button icon={<MoreOutlined />} style={{ 
-            position: 'absolute',
-             right:'15px',
-             borderRadius:'50%',
-             border:'none',
-             padding:'10',
-             backgroundColor:'transparent',
-             fontSize:'25px',
-              }} />
+          <button  className = {styles.menu}/>
         </Dropdown>
       )}
     </div>

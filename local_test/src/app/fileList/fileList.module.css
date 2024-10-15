@@ -12,3 +12,44 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     transform: scale(1.02);
   }
+
+  .menu {
+    position: absolute;
+    right: 15px;
+    color: #c2c1be;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #c2c1be;
+    border-radius: 50%;
+    width: 20px; /* 确保按钮是一个正方形 */
+    height: 20px;
+    padding: 0; /* 去除内边距 */
+    background-color: transparent;
+    transition: all 0.3s ease;
+  }
+  
+  .menu::before,
+  .menu::after {
+    content: '';
+    width: 3px; /* 小圆点的大小 */
+    height: 3px;
+    background-color: currentColor;
+    border-radius: 50%;
+    display: block;
+    margin: 0 2px; /* 点之间的间距 */
+  }
+  
+  .menu .dot {
+    width: 3px;
+    height: 3px;
+    background-color: currentColor;
+    border-radius: 50%;
+  }
+  
+  .menu:hover {
+    color: #fff;
+    background-color: #c2c1be;
+    border-color: #c2c1be;
+  }
+  
