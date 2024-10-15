@@ -1,21 +1,27 @@
 .parfInputContainer {
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background: #f0faff;
-  width: 100%;
-  margin-top: 5px;
+  padding: 2px;
+  border-radius: 15px;
+  width: 95%;
+  margin: 5px auto;
   position: relative;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
 }
+
+.parfInputContainer:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  transform: scale(1.03);
+}
+
 
 .displayMonitor {
   background: #fff;
   border: 1px solid #bbb;
   border-radius: 8px;
-  padding: 10px;
+  padding: 0px;
   margin-bottom: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  height: 150px;
+  height: 220px;
   overflow: hidden;
   position: relative;
 }
@@ -24,6 +30,10 @@
   color: #838586;
   display: block;
   margin-bottom: 10px;
+}
+
+.displayMonitor:hover{
+  border: 1px solid transparent;
 }
 
 .codeBlock {
@@ -48,6 +58,7 @@
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
+  float: right;
 }
 
 .submitButton:hover {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Tooltip } from 'antd';
+import { Modal, Button, Tooltip, Spin } from 'antd';
 import { ArrowsAltOutlined } from '@ant-design/icons';
 import styles from './parfInput.module.css';
 import { trpc } from '../../trpc/react'; // 导入 trpc 客户端
@@ -136,7 +136,7 @@ const ParfInput: React.FC = () => {
   const returnMessage = submitted
   ? displayData
     ? '点击查看详情'
-    : '等待数据返回...'
+    : <Spin/>
   : '尚无待分析任务';
   
   return (
@@ -156,24 +156,28 @@ const ParfInput: React.FC = () => {
         {/* <pre className={styles.codeBlock} style={displayData ? { fontSize: '30px', color: 'green' } : { fontSize: '30px', color: 'grey' }}>
           {displayData ? '点击查看详情' : '等待数据返回...'}
         </pre> */}
-        <pre className={styles.codeBlock}
+        <div className={styles.codeBlock}
           style={
             submitted && displayData
-              ? { fontSize: '30px', color: 'green' }
-              : { fontSize: '30px', color: 'grey' }
+              ? { fontSize: '20px', color: 'green', display:'flex',alignItems: 'center', justifyContent: 'center', height: '60%' }
+              : { fontSize: '20px', color: 'grey', display:'flex',alignItems: 'center', justifyContent: 'center', height: '60%'}
           }
         >
           {returnMessage}
-        </pre>
+        </div>
+        <div>
+          <button 
+          className={styles.submitButton} 
+          onClick={handleSubmit} 
+          disabled={loading}
+        >
+          {loading ? '提交中...' : '提交调用'}
+      </button>
+        </div>
+        
       </div>
 
-      <button 
-        className={styles.submitButton} 
-        onClick={handleSubmit} 
-        disabled={loading}
-      >
-        {loading ? '提交中...' : '提交调用'}
-      </button>
+
 
       <Modal
         title="查看返回数据"
