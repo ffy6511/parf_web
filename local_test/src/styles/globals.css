@@ -35,3 +35,23 @@ a {
 ::-webkit-scrollbar-track {
   background: #f1f1f1; /* 滚动条轨道颜色 */
 }
+
+
+.sendButton {
+  margin-top: 10px;
+  border-radius: 8px;
+  padding: 10px 20px; /* 调整按钮的内边距 */
+  background: linear-gradient(50deg, #53595b, #c9d7e6);
+  border: none;
+  box-shadow: 2px 4px 10px rgba(41, 61, 82, 0.5);
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sendButton:hover {
+  background: linear-gradient(90deg, #0056b3, #0096d6);
+  transform: scale(1.1);
+  box-shadow: 3px 6px 15px rgba(0, 102, 204, 0.5);
+}

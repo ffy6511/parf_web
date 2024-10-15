@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Row, Col, Slider, InputNumber, Button, Input, message } from 'antd';
 import { AlignLeftOutlined } from '@ant-design/icons';
 import styles from './paraInput.module.css';
+
 import "~/styles/globals.css";
 
 // IndexedDB Setup
@@ -189,7 +190,7 @@ const InputPanel = () => {
             onChange={(e) => setGroupName(e.target.value)}
             style={{ marginRight: '10px', width: '200px' }}
           />
-          <Button type="primary" onClick={handleSave} className = {styles.buttonCustom}>
+          <Button type="primary" onClick={handleSave} className = "sendButton">
             {selectedGroup ? '更新参数组' : '保存参数组'}
           </Button>
         </div>

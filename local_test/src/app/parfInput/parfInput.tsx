@@ -3,6 +3,7 @@ import { Modal, Button, Tooltip, Spin } from 'antd';
 import { ArrowsAltOutlined } from '@ant-design/icons';
 import styles from './parfInput.module.css';
 import { trpc } from '../../trpc/react'; // 导入 trpc 客户端
+import "~/styles/globals.css"
 
 // 定义 Group 和 File 的接口类型
 interface GroupDetails {
@@ -167,7 +168,7 @@ const ParfInput: React.FC = () => {
         </div>
         <div>
           <button 
-          className={styles.submitButton} 
+          className={styles.submitButton}
           onClick={handleSubmit} 
           disabled={loading}
         >

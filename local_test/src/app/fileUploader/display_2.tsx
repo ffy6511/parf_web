@@ -4,6 +4,8 @@ import { InboxOutlined } from '@ant-design/icons';
 import styles from './fileUpload.module.css';
 import TextArea from 'antd/lib/input/TextArea'; 
 import CurrentInput from '../currentInput/currentInput';
+import globalStyles from '../index.module.css' 
+import "~/styles/globals.css"
 
 interface FileUploadContainerProps {
   onFileUploadSuccess: () => void;
@@ -112,7 +114,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
           <Button
             type="primary"
             onClick={() => setShowManualInput(true)}
-            className={styles.buttonCustom}
+            className="sendButton"
           >
             手动输入
           </Button>

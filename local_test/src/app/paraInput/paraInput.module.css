@@ -37,23 +37,6 @@
   width: 60px; /* 确保输入框宽度合适 */
 }
 
-.buttonCustom {
-  margin-top: 10px;
-  border-radius: 8px;
-  padding: 10px 10px;
-  background: linear-gradient(50deg ,#53595b, #c9d7e6); /* 初始渐变背景色 */
-  border: none;
-  box-shadow: 2px 4px 10px rgba(41, 61, 82, 0.5); /* 按钮阴影 */
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease; /* 平滑过渡效果 */
-}
-
-.buttonCustom:hover {
-  background: linear-gradient(90deg, #0056b3, #0096d6); /* 悬停时渐变背景色 */
-  transform: scale(1.1); /* 悬停时按钮放大 */
-}
 
 
 .List {
