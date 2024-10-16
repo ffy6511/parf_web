@@ -1,15 +1,16 @@
 /* container 是外部包裹容器 */
 .container {
   padding: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid #F0ECF0;
   border-radius: 15px;
+  background: linear-gradient(50deg, #dae6ed,#F0ECF0);
   transition: all 0.3s ease;
   max-width: 600px; /* 设定一个最大宽度，确保内容不超出 */
   margin: 0 auto; /* 居中容器 */
+  box-shadow: 5px 10px 20px rgba(149, 149, 149, 0.2);
 }
 
 .container:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   transform: scale(1.03);
 }
 
