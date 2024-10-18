@@ -11,7 +11,7 @@ import { Tooltip } from 'antd'; // 导入 Tooltip 组件
 const Page: React.FC = () => {
   const [reloadTrigger, setReloadTrigger] = useState(0);
   const [isFileListVisible, setIsFileListVisible] = useState(true); // 控制文件列表显示
-  const [isFileListExpanded, setIsFileListExpanded] = useState(false); // 控制文件列表的展开动画
+  const [isFileListExpanded, setIsFileListExpanded] = useState(true); // 控制文件列表的展开动画
   const [isHovered, setIsHovered] = useState(false); // 控制悬浮状态
 
   const handleFileUploadSuccess = () => {

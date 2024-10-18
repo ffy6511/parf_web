@@ -190,7 +190,7 @@ const ParfInput: React.FC = () => {
           </Button>,
         ]}
         width={800}
-        style={{ top: 20 }}
+        style={{ top: 0 }}
       >
         <pre className={styles.modalCodeBlock}>{displayData}</pre>
       </Modal>

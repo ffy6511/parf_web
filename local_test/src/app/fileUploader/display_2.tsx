@@ -4,7 +4,6 @@ import { InboxOutlined } from '@ant-design/icons';
 import styles from './fileUpload.module.css';
 import TextArea from 'antd/lib/input/TextArea'; 
 import CurrentInput from '../currentInput/currentInput';
-import globalStyles from '../index.module.css' 
 import "~/styles/globals.css"
 
 interface FileUploadContainerProps {
@@ -78,9 +77,10 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
     <div className={styles.fileUploadContainer}>
       {/* 左侧文件上传区域 */}
       <div className={styles.uploadSection}>
-        <strong style={{ fontSize: '17px', marginBottom: '10px', textShadow: '2px 2px 4px #a49f9f' }}>
-          文件上传与 Parf 调用
-        </strong>
+      <div className={styles.gradient_text}>
+        文件上传与 Parf 调用
+      </div>
+
         <div className={styles.uploader}>
           <Upload
             action='NULL'

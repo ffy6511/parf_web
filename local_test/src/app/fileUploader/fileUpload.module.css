@@ -66,3 +66,17 @@
   color: #007bff;
   transform: scale(1.1);
 }
+
+/* 文字渐变色 */
+.gradient_text {
+  font-size: 25px;
+  font-weight: 1000;
+  margin-bottom: 10px;
+  background: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* 添加阴影实现模糊效果 */
+  filter: blur(0.2px); /* 可调节模糊程度 */
+}
+
+
