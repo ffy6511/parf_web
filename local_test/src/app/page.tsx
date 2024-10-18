@@ -23,11 +23,14 @@ const Page: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh',                                           
+     }}>
       {/* 主体内容部分 */}
       <div style={{ display: 'flex', flex: 1,maxHeight: '97vh', }}>
         {/* 控制按钮和文件列表的容器 */}
-        <div style={{ display: 'flex', position: 'relative',backgroundColor: '#F5F5F5', }}>
+        <div style={{ display: 'flex', position: 'relative',
+        background: 'linear-gradient(90deg, rgba(242, 242, 242, 0.5), rgba(241, 237, 234, 0.5), rgba(233, 226, 226, 0.5'
+, }}>
           {/* 控制按钮固定在左侧 */}
           <div
             style={{

@@ -6,7 +6,6 @@
     transition: all 0.3s ease;
     max-width: 900px; /* 设定一个最大宽度，确保内容不超出 */
     margin: 0 auto; /* 居中容器 */
-    
   }
   
   .container:hover {
@@ -52,6 +51,6 @@
     color: #fff;
     background-color: #c2c1be;
     border-color: #c2c1be;
-    cursor: pointer;
+    cursor:pointer;
   }
   
