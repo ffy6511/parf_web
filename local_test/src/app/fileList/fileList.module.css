@@ -1,17 +1,25 @@
 /* container 是外部包裹容器 */
+
 .container {
-    padding: 1px;
-    border: 2px solid #e6e4e4;
-    border-radius: 15px;
-    transition: all 0.3s ease;
-    max-width: 900px; /* 设定一个最大宽度，确保内容不超出 */
-    margin: 0 auto; /* 居中容器 */
+  padding: 1px;
+  border: 2px solid #e6e4e4;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  width: 90%; /* 使用百分比替代最大宽度 */
+  margin: 0 auto;
+}
+
+.container:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); /* 更大的阴影效果 */
+  transform: scale(1.02); /* 更大的放大效果 */
+}
+
+@media (max-width: 600px) {
+  .container {
+      width: 100%;
+      padding: 5px; /* 在小屏幕上增加内边距 */
   }
-  
-  .container:hover {
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    transform: scale(1.02);
-  }
+}
 
   .menu {
     position: absolute;
