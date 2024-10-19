@@ -26,7 +26,7 @@ interface TimeBudgetInputProps {
 const TimeBudgetInput: React.FC<TimeBudgetInputProps> = ({ value, onChange }) => (
   <Row style={{ width: '100%' }}>
     <Col span={'16'}>
-      <Slider min={0} max={2000} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
+      <Slider min={1} max={2000} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
     </Col>
     <Col span={'6'}>
       <InputNumber min={0} max={2000} value={value} onChange={onChange} style={{ width: '100%', marginLeft: '5px' }} />

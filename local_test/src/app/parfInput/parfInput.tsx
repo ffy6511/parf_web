@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Tooltip, Spin } from 'antd';
-import { ArrowsAltOutlined } from '@ant-design/icons';
+import { ArrowsAltOutlined, UploadOutlined, LoadingOutlined, StopOutlined } from '@ant-design/icons';
 import styles from './parfInput.module.css';
 import { trpc } from '../../trpc/react'; // 导入 trpc 客户端
 import "~/styles/globals.css"
@@ -30,6 +30,9 @@ const ParfInput: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<FileDetails | null>(null);
 
   const mutation = trpc.analyse.executeCommand.useMutation();
+
+  // 添加 AbortController 实例来管理请求的中止
+  const [abortController, setAbortController] = useState<AbortController | null>(null);
 
   // 从localStorage加载文件和参数组
   useEffect(() => {
@@ -84,13 +87,17 @@ const ParfInput: React.FC = () => {
   // 处理提交按钮
   const handleSubmit = async () => {
     setSubmitted(true); // 用户点击了提交按钮，更新状态
-    setDisplayData("");//重置显示区数据
+    setDisplayData(""); // 重置显示区数据
     if (!selectedGroup || !selectedFile) {
       alert('请选择一个参数组和文件！');
       return;
     }
 
     setLoading(true);
+
+    // 创建一个新的 AbortController 实例
+    const controller = new AbortController();
+    setAbortController(controller);
 
     try {
       // 获取文件内容
@@ -113,19 +120,33 @@ const ParfInput: React.FC = () => {
         {
           onSuccess: (response: AnalyseResponse) => {
             setDisplayData(response.result);
+            setLoading(false); // 停止加载状态
           },
           onError: (error) => {
-            console.error("Error executing command:", error);
-            setDisplayData('命令执行失败');
+            if (controller.signal.aborted) {
+              setDisplayData('调用已中止');
+            } else {
+              console.error("Error executing command:", error);
+              setDisplayData('命令执行失败');
+            }
+            setLoading(false); // 停止加载状态
           },
         }
       );
-
     } catch (error) {
       console.error("Error executing command:", error);
       setDisplayData('命令执行失败');
-    } finally {
+      setLoading(false); // 停止加载状态
+    }
+  };
+
+  // 处理中止调用
+  const handleAbort = () => {
+    if (abortController) {
+      abortController.abort(); // 取消当前的请求
       setLoading(false);
+      setSubmitted(false);
+      setDisplayData('调用已中止'); // 更新显示内容
     }
   };
 
@@ -133,13 +154,13 @@ const ParfInput: React.FC = () => {
     setIsExpandedFully(!isExpandedFully);
   };
 
-  // 根据submitted和displayData的值决定返回区的显示内容
+  // 根据 submitted 和 displayData 的值决定返回区的显示内容
   const returnMessage = submitted
-  ? displayData
-    ? '点击查看详情'
-    : <Spin/>
-  : '尚无待分析任务';
-  
+    ? displayData
+      ? '点击查看详情'
+      : <Spin />
+    : '尚无待分析任务';
+
   return (
     <div className={styles.parfInputContainer}>
       <div className={styles.displayMonitor}>
@@ -151,34 +172,30 @@ const ParfInput: React.FC = () => {
             </Tooltip>
           )}
         </strong>
-        {/* <pre className={styles.codeBlock}>
-          {displayData ? '点击查看详情' : '等待数据返回...'}
-        </pre> */}
-        {/* <pre className={styles.codeBlock} style={displayData ? { fontSize: '30px', color: 'green' } : { fontSize: '30px', color: 'grey' }}>
-          {displayData ? '点击查看详情' : '等待数据返回...'}
-        </pre> */}
-        <div className={styles.codeBlock}
+
+        <div
+          className={styles.codeBlock}
           style={
             submitted && displayData
-              ? { fontSize: '20px', color: 'green', display:'flex',alignItems: 'center', justifyContent: 'center', height: '60%' }
-              : { fontSize: '20px', color: 'grey', display:'flex',alignItems: 'center', justifyContent: 'center', height: '60%'}
+              ? { fontSize: '20px', color: 'green', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60%' }
+              : { fontSize: '20px', color: 'grey', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60%' }
           }
         >
           {returnMessage}
         </div>
         <div>
-          <button 
-          className={styles.submitButton}
-          onClick={handleSubmit} 
-          disabled={loading}
-        >
-          {loading ? '提交中...' : '提交调用'}
-      </button>
+          <Tooltip title={loading ? '中止调用' : '提交调用'}>
+            <button
+              className={styles.submitButton}
+              onClick={loading ? handleAbort : handleSubmit}
+              disabled={loading && !abortController}
+            >
+              {loading ? <StopOutlined /> : <UploadOutlined />}
+              {loading ? ' 中止' : ' 提交调用'}
+            </button>
+          </Tooltip>
         </div>
-        
       </div>
-
-
 
       <Modal
         title="查看返回数据"
@@ -199,5 +216,3 @@ const ParfInput: React.FC = () => {
 };
 
 export default ParfInput;
-
-
