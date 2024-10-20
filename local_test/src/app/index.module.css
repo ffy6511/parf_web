@@ -177,7 +177,7 @@
 }
 
 .link{
-  color: rgb(24, 23, 23); /* 这是链接的默认颜色 */  
+  color: #636261; 
   text-decoration: none; /* 去掉下划线 */  
   transition: color 0.3s; /* 添加颜色变化的过渡效果 */ 
 }

@@ -78,7 +78,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
       {/* 左侧文件上传区域 */}
       <div className={styles.uploadSection}>
       <div className={styles.gradient_text}>
-        文件上传与 Parf 调用
+        文件上传与 𝑷𝒂𝒓𝒇 调用
       </div>
 
         <div className={styles.uploader}>
