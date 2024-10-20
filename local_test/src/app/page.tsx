@@ -54,27 +54,32 @@ const Page: React.FC = () => {
               top: '10px',
               display: 'flex',
               alignItems: 'center',
-              cursor: 'pointer',
-              scale: isHovered ? 1.05 : 1,
               justifyContent: 'center',
               transition: 'all 0.3s ease',
               color: isHovered ? '#1890ff' : 'black',
             }}
-            onClick={toggleFileListVisibility}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            
           >
             {isFileListExpanded ? (
               // 当文件列表展开时显示图标和“文件列表”文本
               <div style={{ display: 'flex', alignItems: 'center', fontSize: '17px', marginTop: '3px' }}>
-                <Tooltip title="收起文件列表" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2}>
+                <Tooltip title="收起文件列表" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2} onClick={toggleFileListVisibility}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                cursor = 'pointer'
+                scale = 'isHovered ? 1.05 : 1'
+                >
                   <MenuFoldOutlined style={{ textShadow: '2px 2px 4px #a49f9f' }} />
-                  <strong style={{ marginLeft: '8px', textShadow: '2px 2px 4px #a49f9f' }}>文件列表</strong>
                 </Tooltip>
+                <strong style={{ marginLeft: '8px', textShadow: '2px 2px 4px #a49f9f', color:'#454543' }}>文件列表</strong>
               </div>
             ) : (
               // 当文件列表收起时，只显示图标，通过 Tooltip 实现悬停提示
-              <Tooltip title="展开文件列表" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2}>
+              <Tooltip title="展开文件列表" color="grey" 
+              mouseEnterDelay={0.1} mouseLeaveDelay={0.2}
+              onClick={toggleFileListVisibility}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}>
                 <MenuUnfoldOutlined style={{ fontSize: '20px', marginTop: '2px' }} />
               </Tooltip>
             )}

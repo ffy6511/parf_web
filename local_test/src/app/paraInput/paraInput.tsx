@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Slider, InputNumber, Button, Input, message } from 'antd';
-import { AlignLeftOutlined } from '@ant-design/icons';
+import { AlignLeftOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import styles from './paraInput.module.css';
 
 import "~/styles/globals.css";
@@ -196,7 +196,9 @@ const InputPanel = () => {
         </div>
 
         {/* 显示已保存的参数组 */}
-        <h3 style={{ textShadow: '1px 1px 5px #a49f9f', marginTop: '3px' }}>已保存的参数组</h3>
+        <strong style={{ textShadow: '1px 1px 4px #a49f9f', marginTop: '3px',fontSize: '15px', color:'#4f4e4e' }}>
+        <UnorderedListOutlined /> 已保存参数组
+          </strong>
         <div
           style={{
             maxHeight: '40vh', // 限制最大高度
