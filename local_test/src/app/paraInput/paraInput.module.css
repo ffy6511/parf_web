@@ -5,7 +5,7 @@
   border-radius: 15px;
   background: linear-gradient(50deg, rgba(23, 128, 163, 0.2), rgba(241, 240, 232, 0.924));
   transition: all 0.3s ease;
-  max-width: 600px; /* 设定一个最大宽度，确保内容不超出 */
+  max-width: 800px; /* 设定一个最大宽度，确保内容不超出 */
   margin: 0 auto; /* 居中容器 */
   box-shadow: 5px 10px 20px rgba(149, 149, 149, 0.2);
 }
@@ -26,11 +26,12 @@
 /* 输入框和标签的布局 */
 .inputRow strong {
   min-width: 100px; /* 为标签设置最小宽度，保持对齐 */
+  color: #6f6e6c ;
 }
 
 .inputRow .ant-input-number, .inputRow .ant-slider {
   flex: 1; /* 让输入框和滑动条占据剩余空间 */
-  max-width: 400px; /* 给输入框和滑块一个最大宽度 */
+  max-width: 600px; /* 给输入框和滑块一个最大宽度 */
 }
 
 .inputRow .ant-input-number {
@@ -47,13 +48,13 @@
 }
 
 .parameterListItem {
-  background: #f9f9f9; /* 浅色背景，干净明亮 */
+  background: #f9f9f9;
   cursor: pointer;
   transition: all 0.2s ease; /* 过渡时间较短，保证平滑 */
   padding: 12px;
   margin-bottom: 3px;
   border: 1px solid #ddd; /* 使用浅灰色边框，保持柔和 */
-  border-radius: 8px;
+  border-radius: 5px;
   color: #333; /* 深灰色字体，易于阅读 */
   display: flex;
   align-items: center;
@@ -63,7 +64,7 @@
 
 .parameterListItem:hover {
   background: #f0faff; /* 悬停时背景稍微提亮并有轻微蓝色，增强交互感 */
-  border-color: #40a9ff; /* 边框变为蓝色，柔和地突出交互感 */
+  border-color: #7ba9ce; /* 边框变为蓝色，柔和地突出交互感 */
   transform: translateY(-2px); /* 悬停时轻微浮起 */
 }
 
@@ -80,7 +81,7 @@
 
 .parameterContent strong {
   font-size: 1em; /* 标题大小 */
-  color: #0050b3; /* 使用蓝色强调标题内容 */
+  color: #2f82e8; /* 使用蓝色强调标题内容 */
 }
 
 .parameterDetails {
@@ -92,11 +93,13 @@
 .parameterListItem .deleteButton {
   position: absolute; /* 绝对定位 */
   right: 10px;
-  top: 50%;
+  font-weight: 700;
+  top: 40%;
   transform: translateY(-50%);
   opacity: 0; /* 初始状态为隐藏 */
-  transition: opacity 0.3s ease; /* 在悬停时逐渐显示 */
-  color: #ff4d4f; /* 删除按钮的颜色 */
+  transition: all 0.3s ease; /* 在悬停时逐渐显示 */
+  color: #6f6e6c; /* 删除按钮的颜色 */
+  border-color: #6f6e6c;
 }
 
 .parameterListItem:hover .deleteButton {
@@ -105,5 +108,6 @@
 
 .parameterListItem .deleteButton:hover {
   color: #ff7875 !important; /* 强制将颜色变为红色 */
+  scale: 1.03;
 }
 

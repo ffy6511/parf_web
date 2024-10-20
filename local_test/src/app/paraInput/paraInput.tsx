@@ -25,7 +25,7 @@ interface TimeBudgetInputProps {
 // 时间预算输入
 const TimeBudgetInput: React.FC<TimeBudgetInputProps> = ({ value, onChange }) => (
   <Row style={{ width: '100%' }}>
-    <Col span={'16'}>
+    <Col span={'18'}>
       <Slider min={1} max={2000} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
     </Col>
     <Col span={'6'}>
@@ -164,7 +164,7 @@ const InputPanel = () => {
         <AlignLeftOutlined /> 参数设置
       </strong>
 
-      <div style={{ width: '100%', marginTop: '15px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div style={{ width: '100%', marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <div className={styles.container}>
           <div className={styles.inputRow}>
             <strong>时间预算(秒)</strong>
@@ -223,7 +223,7 @@ const InputPanel = () => {
             <div className={styles.parameterContent}>
               <strong>{item.groupName}</strong>
               <div className={styles.parameterDetails}>
-                时间预算: {item.timeBudget} 秒 | 核数: {item.core} | 采样数量: {item.sampleSize}
+                时间预算: {item.timeBudget} 秒   核数: {item.core}   采样数量: {item.sampleSize}
               </div>
             </div>
             <Button
@@ -232,7 +232,7 @@ const InputPanel = () => {
               onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => { e.stopPropagation(); handleDeleteGroup(item.groupName); }}
               className={styles.deleteButton}
             >
-              删除
+              Delete
             </Button>
           </li>
           );
