@@ -104,7 +104,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
       <div style={{ flex: 1, paddingLeft: '5px', paddingRight: '10px', position: 'relative' }}>
         <strong>
-          {fileName.length > 7 ? fileName.substring(0, 7) + '.c' : fileName}
+          {fileName.length > 7 ? fileName.substring(0, 11) + '..' : fileName}
         </strong>
         <div style={{ color: '#888', fontSize: '12px' }}>{formattedTime}</div>
         <div

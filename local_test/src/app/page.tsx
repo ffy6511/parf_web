@@ -67,11 +67,11 @@ const Page: React.FC = () => {
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 cursor = 'pointer'
-                scale = 'isHovered ? 1.05 : 1'
+                scale = 'isHovered ? 1.03 : 1'
                 >
-                  <MenuFoldOutlined style={{ textShadow: '2px 2px 4px #a49f9f' }} />
+                  <MenuFoldOutlined style={{ filter: 'drop-shadow(3px 5px 3px grey)' }} />
                 </Tooltip>
-                <strong style={{ marginLeft: '8px', textShadow: '2px 2px 4px #a49f9f', color:'#454543' }}>文件列表</strong>
+                <strong style={{ marginLeft: '8px', textShadow: '2px 3px 4px #a49f9f', color:'#454543' }}>文件列表</strong>
               </div>
             ) : (
               // 当文件列表收起时，只显示图标，通过 Tooltip 实现悬停提示
@@ -80,7 +80,7 @@ const Page: React.FC = () => {
               onClick={toggleFileListVisibility}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}>
-                <MenuUnfoldOutlined style={{ fontSize: '20px', marginTop: '2px' }} />
+                <MenuUnfoldOutlined style={{ fontSize: '20px', marginTop: '2px',filter: 'drop-shadow(3px 5px 3px grey)' }} />
               </Tooltip>
             )}
           </div>

@@ -4,6 +4,7 @@
   padding: 1px;
   border: 2px solid #e6e4e4;
   border-radius: 15px;
+  text-align: center;
   transition: all 0.3s ease;
   width: 90%; /* 使用百分比替代最大宽度 */
   margin: 0 auto;

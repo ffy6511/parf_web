@@ -153,7 +153,7 @@ const Display_1: React.FC = () => {
     <div className={styles.container}>
       
       {fileList.length > 0 ? (
-        <ul style={{ padding: 10, listStyle: 'none',
+        <ul style={{ padding: 3, listStyle: 'none',
           overflowY:'scroll',
           maxHeight:'78vh',
           overflowX:'hidden',
@@ -175,7 +175,7 @@ const Display_1: React.FC = () => {
           ))}
         </ul>
       ) : (
-        <p>没有文件</p>
+        <div style  = {{color:'#6f6e6c'}}> 𝐄𝐦𝐩𝐭𝐲 𝐋𝐢𝐬𝐭 </div>
       )}
 
       {/* 编辑弹窗 */}
