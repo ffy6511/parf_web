@@ -43,6 +43,7 @@ const Page: React.FC = () => {
           style={{
             display: 'flex',
             position: 'relative',
+            boxShadow: '1px 0 5px rgba(0, 0, 0, 0.3)',  
             background: 'linear-gradient(90deg, rgba(242, 242, 242, 0.5), rgba(241, 237, 234, 0.5), rgba(233, 226, 226, 0.5))',
           }}
         >

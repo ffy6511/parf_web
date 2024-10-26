@@ -90,6 +90,17 @@
   color: #666; /* 使用中灰色，以减弱参数信息的视觉重量 */
 }
 
+@keyframes fadeInDown {  
+  from {  
+    opacity: 0.3;  
+    transform: translateX(10px);  
+  }  
+  to {  
+    opacity: 1;  
+    transform: translateX(0);  
+  }  
+} 
+
 .parameterListItem .deleteButton {
   position: absolute; /* 绝对定位 */
   right: 10px;
@@ -102,8 +113,9 @@
   border-color: #6f6e6c;
 }
 
+
 .parameterListItem:hover .deleteButton {
-  opacity: 1; /* 悬停时显示删除按钮 */
+  animation: fadeInDown 0.5s ease forwards;
 }
 
 .parameterListItem .deleteButton:hover {

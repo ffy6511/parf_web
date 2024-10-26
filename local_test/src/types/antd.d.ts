@@ -65,6 +65,7 @@ export interface TooltipProps extends React.HTMLAttributes<HTMLDivElement>{
 export interface DropdownProps extends React.HTMLAttributes<HTMLDivElement>{
     children?: React.ReactNode; // 假设你要添加额外的 children 类型
     style?: React.CSSProperties; // 假设你要添加额外的 style 类型
+    overlayClassName?:string;
 }
 
 export interface ButtonProps extends React.HTMLAttributes<HTMLDivElement>{

@@ -48,13 +48,13 @@ const FileEntry: React.FC<FileEntryProps> = ({
   // 创建下拉菜单项
   const menu = (
     <Menu>
-      <Menu.Item key="preview" icon={<EyeOutlined />} onClick={onPreview}>
+      <Menu.Item key="preview" icon={<EyeOutlined />} onClick={onPreview} className={styles.menu_turnOut} >
         预览
       </Menu.Item>
-      <Menu.Item key="edit" icon={<EditOutlined />} onClick={onEdit}>
+      <Menu.Item key="edit" icon={<EditOutlined />} onClick={onEdit} className={styles.menu_turnOut} >
         修改
       </Menu.Item>
-      <Menu.Item key="delete" icon={<CloseCircleOutlined />} onClick={() => onDelete(fileId)}>
+      <Menu.Item key="delete" icon={<CloseCircleOutlined />} onClick={() => onDelete(fileId)} className={styles.menu_turnOut_delete}>
       删除
     </Menu.Item>
 
@@ -131,7 +131,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
         </div>  
       )}
       {isHovered && (
-        <Dropdown overlay={menu} trigger={['click']} >
+        <Dropdown overlay={menu} trigger={['click']} className={styles.ant_dropdown} >
           <button  className = {styles.menu}/>
         </Dropdown>
       )}

@@ -22,6 +22,28 @@
   }
 }
 
+@keyframes fadeInDown {  
+  from {  
+    opacity: 0;  
+    transform: translateX(10px);  
+  }  
+  to {  
+    opacity: 1;  
+    transform: translateX(0);  
+  }  
+}  
+
+@keyframes turnOut {  
+  from {  
+    opacity: 0.3;  
+    transform: translateY(-10px);  
+  }  
+  to {  
+    opacity: 1;  
+    transform: translateY(0);  
+  }  
+}  
+
   .menu {
     position: absolute;
     right: 15px;
@@ -64,3 +86,23 @@
     cursor:pointer;
   }
   
+  .ant_dropdown {  
+    animation: fadeInDown 0.5s ease forwards;  
+  }
+
+  .menu_turnOut{
+    animation: turnOut 0.5s ease forwards;
+  }
+
+  .menu_turnOut:hover{
+    color: rgb(60, 141, 168) !important;
+  }
+
+  .menu_turnOut_delete{
+    animation: turnOut 0.5s ease forwards;
+  }
+
+  .menu_turnOut_delete:hover{
+    color:red !important;
+  }
+
