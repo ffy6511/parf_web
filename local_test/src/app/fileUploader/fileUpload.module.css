@@ -5,6 +5,8 @@
   padding: 20px;
   max-width: 1200px; /* 设置最大宽度 */
   margin: 0 auto; /* 居中容器 */
+  
+  
 }
 
 .uploadSection {
@@ -34,7 +36,7 @@
 
 .uploader {
   padding: 10px;
-  border: 1px solid rgba(241, 240, 232, 0.924);
+  border: 0.5px solid rgba(255, 255, 255, 0.8); /* 半透明白色边框 */
   border-radius: 15px;
   transition: all 0.3s ease;
   width: 300px; /* 最大宽度，确保内容不超出 */

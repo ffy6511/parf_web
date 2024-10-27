@@ -7,6 +7,18 @@ body {
   overflow: hidden; /* 防止页面滚动 */
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    background-color: rgba(255, 230, 153, 0.05); /* 设置背景颜色为半透明 */
+    background-image:
+    
+        /* 添加上下对称的渐变 */
+        radial-gradient(at 11% 68%, hsla(59, 61%, 75%, 0.1) 0px, transparent 50%),
+        radial-gradient(at 32% 91%, hsla(347, 88%, 74%, 0.1) 0px, transparent 50%),
+        radial-gradient(at 67% 90%, hsla(132, 87%, 77%, 0.1) 0px, transparent 50%),
+        radial-gradient(at 18% 73%, hsla(13, 60%, 66%, 0.1) 0px, transparent 50%),
+        radial-gradient(at 34% 18%, hsla(225, 76%, 71%, 0.1) 0px, transparent 50%),
+        radial-gradient(at 75% 42%, hsla(159, 71%, 77%, 0.1) 0px, transparent 50%),
+        radial-gradient(at 78% 90%, hsla(295, 87%, 65%, 0.1) 0px, transparent 50%);
+    
 }
 
 a {

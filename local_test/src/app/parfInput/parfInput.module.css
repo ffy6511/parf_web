@@ -1,11 +1,11 @@
 .parfInputContainer {
-  padding: 2px;
+  padding: 0px;
   border-radius: 15px;
   width: 95%;
+  border:none;
   margin: 5px auto;
   position: relative;
   transition: all 0.3s ease;
-  border: 1px solid transparent;
 }
 
 .parfInputContainer:hover {
@@ -14,9 +14,45 @@
 }
 
 
+
+.parfInputContainer:before {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(-45deg, #F3F4F7 0%, #CACCD1 100% );
+  transform: translate3d(0px, 20px, 0) scale(0.95);
+  filter: blur(20px);
+  opacity: var(0.7);
+  transition: opacity 0.3s;
+  border-radius: inherit;
+}
+
+/* 
+* Prevents issues when the parent creates a 
+* stacking context. (For example, using the transform
+* property )
+*/
+.parfInputContainer::after {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: inherit;
+  border-radius: inherit;
+}
+      
+      
+      
+
 .displayMonitor {
   background: #fff;
-  border: 1px solid #bbb;
   border-radius: 8px;
   padding: 0px;
   text-align: center;
