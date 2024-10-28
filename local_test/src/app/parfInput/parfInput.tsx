@@ -158,7 +158,7 @@ const ParfInput: React.FC = () => {
   const returnMessage = submitted
     ? displayData
       ? '点击查看详情'
-      :  <span className={styles.blinking_text}><Spin/> 正在分析</span>
+      :  <span className={styles.blinking_text}><Spin/> 正在调用𝑷𝒂𝒓𝒇分析</span>
     : '尚无待分析任务';
 
   return (

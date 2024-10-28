@@ -146,26 +146,32 @@
   margin-top: 15px;
 }
 
-@keyframes blinking {
-  0%, 100% {
-      opacity: 1;
+@keyframes move {
+  0% {
+      background-position: 200%; /* 从左侧开始 */
   }
-  50% {
-      opacity: 0.3;
+  100% {
+      background-position: -200%; /* 向右移动 */
   }
 }
 
-@keyframes move {
-  0% {
-      transform: translateX(0);
+@keyframes fade {
+  0%, 100% {
+      opacity: 0.7; /* 开始和结束时的不透明度 */
   }
-  100% {
-      transform: translateX(100%);
+  50% {
+      opacity: 1; /* 中间时的不透明度 */
   }
 }
 
 .blinking_text {
   display: inline-block; /* 使文本块可以移动 */
-  color: #202122; /* 设置字体颜色为银色 */
-  animation: blinking 1.3s infinite; /* 应用闪烁和移动动画 */
+  color: transparent; /* 文字本身设置为透明 */
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%); /* 深色渐变 */
+  background-size: 200% 100%; /* 背景大小设置为200%以实现移动效果 */
+  animation: move 3s linear infinite, fade 3s linear infinite; /* 应用移动和闪烁动画 */
+  -webkit-background-clip: text; /* 仅对文本应用背景 */
+  background-clip: text; /* 仅对文本应用背景 */
+  font-size: 1em; /* 设置字体大小 */
 }
+
