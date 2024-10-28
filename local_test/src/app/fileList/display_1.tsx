@@ -21,6 +21,7 @@ const Display_1: React.FC = () => {
   const [db, setDb] = useState<IDBDatabase | null>(null);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false); // 编辑弹窗
   const [isPreviewModalVisible, setIsPreviewModalVisible] = useState(false); // 预览弹窗
+  const [isAnyHovered, setIsAnyHovered] = useState(false);
 
   useEffect(() => {
     const request = indexedDB.open('FileStorage', 1);
@@ -149,23 +150,25 @@ const Display_1: React.FC = () => {
     }
   };
 
-  const [isAnyHovered, setIsAnyHovered] = useState(false);
-
   return (
     <div className={styles.container}>
       
       {fileList.length > 0 ? (
         <ul style={{ 
-          padding: 8, 
+          padding: 13, 
           listStyle: 'none',
-          margin:8,
+          margin:7,
           overflowY:'scroll',
           maxHeight:'78vh',
           overflowX:'hidden',
           scrollbarWidth: 'thin',
          }}>
           {fileList.map((file) => (
-            <li key={file.id} style={{ marginBottom: '10px', }}>
+            <li key={file.id} 
+            style={{ marginBottom: '10px', }}
+            onMouseEnter={()=>setIsAnyHovered(true)}
+            onMouseLeave={()=>setIsAnyHovered(false)}
+            >
               <FileEntry
                 fileId={file.id}
                 fileName={file.fileName}
@@ -175,6 +178,7 @@ const Display_1: React.FC = () => {
                 onEdit={() => handleFileEdit(file.id)} // 传递编辑回调
                 onPreview={() => handleFilePreview(file.id)} // 传递预览回调
                 isSelected={selectedFileId === file.id}
+                isAnyHovered={isAnyHovered} // 传递悬停状态
               />
             </li>
           ))}

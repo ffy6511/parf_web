@@ -12,6 +12,7 @@ interface FileEntryProps {
   onEdit: () => void;
   onPreview: () => void;
   isSelected: boolean;
+  isAnyHovered:boolean; // 实现文件夹样式
 }
 
 const getRandomColor = () => {
@@ -32,6 +33,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
   onEdit,
   onPreview,
   isSelected,
+  isAnyHovered,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [borderColor, setBorderColor] = useState('');
@@ -71,16 +73,16 @@ const FileEntry: React.FC<FileEntryProps> = ({
         alignItems: 'center',
         padding: '0px',
         cursor: 'pointer',
-        backgroundColor: isSelected ? '#e6f7ff' : isHovered ? '#E9E9E9' : 'white',
-        transform: isHovered ? 'scale(0.97)' : isSelected ? 'scale(1.02)' : 'scale(1.0)',
+        backgroundColor: isSelected ? '#e6f7ff' : isHovered ? '#E9E9E9' : 'rgba(255, 255, 255, 0.4)',
+        borderLeft:'1px solid #d6d9d9',
+        transform: isHovered ? 'scale(1.07)' : isSelected ? 'scale(1.01)' : 'scale(1.0)',
         transition: 'all 0.3s ease',
         position: 'relative',
-        marginBottom: isHovered? '-5px' : '-20px', //文件夹效果
-        borderLeft: isSelected ? '4px solid #D9D9D9' : '#ccc',
+        zIndex: isHovered ? 10 : 1,
+        marginBottom: isAnyHovered? '-11px' : '-21px', //文件夹效果
         borderBottom: isSelected? '5px solid #D9D9D9' : '2px solid #ccc',
         marginLeft: '-3px',
-        borderRadius:isSelected? '10px':isHovered? '20px' : '10px',
-        border:'2px solid #e8e8e8'
+        borderRadius: '10px',
       }}
     >
       <div
@@ -88,7 +90,8 @@ const FileEntry: React.FC<FileEntryProps> = ({
           width: '50px',
           height: '50px',
           borderRadius: '50%',
-          backgroundColor: 'white',
+          backgroundColor: 'rgba(255, 255, 255, 0.2)' ,
+          backdropFilter: 'blur(3px)', //模糊效果
           color: borderColor,
           display: 'flex',
           alignItems: 'center',
@@ -103,11 +106,18 @@ const FileEntry: React.FC<FileEntryProps> = ({
         {fileInitials}
       </div>
 
-      <div style={{ flex: 1, paddingLeft: '5px', paddingRight: '10px', position: 'relative' }}>
-        <strong>
-          {fileName.length > 7 ? fileName.substring(0, 11) + '..' : fileName}
-        </strong>
-        <div style={{ color: '#888', fontSize: '12px' }}>{formattedTime}</div>
+      <div style={{ flex: 1, paddingLeft: '5px', paddingRight: '35px', position: 'relative',marginTop:'5px',paddingTop:'11px' }}>
+        <div
+          style={{
+            color:isHovered || isSelected? `${borderColor}`: '#888',
+            transition:'all 0.3s ease',
+            fontSize:'15px',
+          }}
+        >
+          {fileName.length > 18 ? fileName.substring(0, 18) + '..' : fileName}
+        </div>
+        
+        <div style={{ color: isAnyHovered? '#888' : 'transparent', fontSize: '12px', transition:'all 0.3s ease' }}>{formattedTime}</div>
         <div
           style={{
             content: '',
