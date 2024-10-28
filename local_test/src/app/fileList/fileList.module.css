@@ -106,3 +106,23 @@
     color:red !important;
   }
 
+  .modalCodeBlock {
+    background-color: #141010 !important;
+    padding: 5px;
+    border-radius: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    color: #f5f2f2;
+    overflow-y: auto;
+    overflow-x: auto;
+  }
+
+  /*没有效果*/
+.customModal {
+  backdrop-filter: blur(10px); /* 添加模糊背景效果 */
+}
+
+.customModal .ant-modal-content {
+  background: rgba(255, 255, 255, 0.3); /* 半透明背景 */
+  border-radius: 10px; /* 可选：圆角 */
+}

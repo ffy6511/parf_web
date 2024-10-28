@@ -149,11 +149,16 @@ const Display_1: React.FC = () => {
     }
   };
 
+  const [isAnyHovered, setIsAnyHovered] = useState(false);
+
   return (
     <div className={styles.container}>
       
       {fileList.length > 0 ? (
-        <ul style={{ padding: 3, listStyle: 'none',
+        <ul style={{ 
+          padding: 8, 
+          listStyle: 'none',
+          margin:8,
           overflowY:'scroll',
           maxHeight:'78vh',
           overflowX:'hidden',
@@ -189,10 +194,11 @@ const Display_1: React.FC = () => {
           </Button>,
         ]}
         width={800} // 调整宽度
-        style={{ top: 20 }} // 调整距离顶部的高度
+        style={{ top: 10 }} // 调整距离顶部的高度
       >
         <TextArea
           value={selectedFileContent}
+          className= { styles.modalCodeBlock}
           rows={25}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setSelectedFileContent(e.target.value)}
         />
@@ -205,9 +211,13 @@ const Display_1: React.FC = () => {
         onCancel={() => setIsPreviewModalVisible(false)}
         footer={null}
         width={800} // 调整宽度
-        style={{ top: 20 }} // 调整距离顶部的高度
+        style={{ 
+          top: '10px',
+          borderRadius:'10px',
+        }} 
+        className={styles.customModal}// 调整距离顶部的高度
       >
-        <pre>{selectedFileContent}</pre>
+        <pre  className= { styles.modalCodeBlock}>{selectedFileContent}</pre>
       </Modal>
     </div>
     
