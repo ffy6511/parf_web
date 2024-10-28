@@ -35,7 +35,7 @@
 
 @keyframes turnOut {  
   from {  
-    opacity: 0.3;  
+    opacity: 0;  
     transform: translateY(-10px);  
   }  
   to {  
@@ -95,11 +95,11 @@
   }
 
   .menu_turnOut:hover{
-    color: rgb(60, 141, 168) !important;
+    color: #1ea0f2 !important;
   }
 
   .menu_turnOut_delete{
-    animation: turnOut 0.5s ease forwards;
+    animation: turnOut 0.6s ease forwards;
   }
 
   .menu_turnOut_delete:hover{

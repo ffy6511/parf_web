@@ -145,3 +145,27 @@
   cursor: pointer;
   margin-top: 15px;
 }
+
+@keyframes blinking {
+  0%, 100% {
+      opacity: 1;
+  }
+  50% {
+      opacity: 0.3;
+  }
+}
+
+@keyframes move {
+  0% {
+      transform: translateX(0);
+  }
+  100% {
+      transform: translateX(100%);
+  }
+}
+
+.blinking_text {
+  display: inline-block; /* 使文本块可以移动 */
+  color: #202122; /* 设置字体颜色为银色 */
+  animation: blinking 1.3s infinite; /* 应用闪烁和移动动画 */
+}

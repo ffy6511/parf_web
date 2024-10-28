@@ -63,14 +63,21 @@ const Page: React.FC = () => {
           >
             {isFileListExpanded ? (
               // 当文件列表展开时显示图标和“文件列表”文本
-              <div style={{ display: 'flex', alignItems: 'center', fontSize: '17px', marginTop: '3px' }}>
-                <Tooltip title="收起文件列表" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2} onClick={toggleFileListVisibility}
+              <div 
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
-                cursor = 'pointer'
-                scale = 'isHovered ? 1.03 : 1'
+                style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                fontSize: '17px', 
+                marginTop: '3px',
+
+                }}>
+                <Tooltip title="收起文件列表" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2} onClick={toggleFileListVisibility}
+                scale = 'isHovered ? 1.1 : 1'
+                cursor = 'pointer' 
                 >
-                  <MenuFoldOutlined style={{ filter: 'drop-shadow(3px 5px 3px grey)' }} />
+                  <MenuFoldOutlined style={{ filter: 'drop-shadow(2px 2px 10px grey)',color:'#1ea0f2' }} />
                 </Tooltip>
                 <strong style={{ marginLeft: '8px', textShadow: '2px 3px 4px #a49f9f', color:'#454543' }}>文件列表</strong>
               </div>
@@ -81,7 +88,7 @@ const Page: React.FC = () => {
               onClick={toggleFileListVisibility}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}>
-                <MenuUnfoldOutlined style={{ fontSize: '20px', marginTop: '2px',filter: 'drop-shadow(3px 5px 3px grey)' }} />
+                <MenuUnfoldOutlined style={{ fontSize: '20px', marginTop: '2px',filter: 'drop-shadow(3px 3px 5px grey)' }} />
               </Tooltip>
             )}
           </div>

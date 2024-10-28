@@ -79,7 +79,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
         transition: 'all 0.3s ease',
         position: 'relative',
         zIndex: isHovered ? 10 : 1,
-        marginBottom: isAnyHovered? '-11px' : '-21px', //文件夹效果
+        marginBottom: isAnyHovered? '-4px' : '-21px', //文件夹效果
         borderBottom: isSelected? '5px solid #D9D9D9' : '2px solid #ccc',
         marginLeft: '-3px',
         borderRadius: '10px',
@@ -109,7 +109,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
       <div style={{ flex: 1, paddingLeft: '5px', paddingRight: '35px', position: 'relative',marginTop:'5px',paddingTop:'11px' }}>
         <div
           style={{
-            color:isHovered || isSelected? `${borderColor}`: '#888',
+            color:isSelected? `${borderColor}`: isHovered? '#202122':'#888',
             transition:'all 0.3s ease',
             fontSize:'15px',
           }}
