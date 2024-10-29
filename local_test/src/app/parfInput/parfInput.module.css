@@ -87,9 +87,10 @@
   overflow: hidden;
 }
 
+
 .submitButton {
-  background: #51a2d8;
-  color: white;
+  background: linear-gradient(50deg, #53595b, #c9d7e6);
+  color: #fff;
   border: none;
   padding: 10px 15px;
   border-radius: 10px;
@@ -100,7 +101,26 @@
 }
 
 .submitButton:hover {
-  background: #7dcbea;
+  background: linear-gradient(90deg, #559deb, #0096d6) ;
+  box-shadow: 3px 6px 15px rgba(0, 102, 204, 0.5);
+  transform: scale(1.03);
+}
+
+.submitButton_abort {
+  background: linear-gradient(50deg, #53595b, #c9d7e6);
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  float: right;
+  margin-right: 10px;
+}
+
+.submitButton_abort:hover {
+  background: linear-gradient(90deg, #ea5a58,#ee3b32) ;
+  box-shadow: 3px 6px 15px rgba(239, 93, 61, 0.5);
   transform: scale(1.03);
 }
 
