@@ -53,15 +53,16 @@
 .fileName {
   cursor: pointer;
   font-weight: bold;
-  color: #0077b6;
+  color: #6f6e6c;
   display: inline-block;
   padding: 5px;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .groupName:hover,
 .fileName:hover {
-  background-color: #e6f7ff;
+  background-color: #e3f2f7;
+  color:#454544
 }
 
 .tooltipContent {

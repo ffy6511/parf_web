@@ -160,8 +160,8 @@ const InputPanel = () => {
 
   return (
     <div>
-      <strong style={{ fontSize: '17px', marginTop: '2px', textShadow: '2px 2px 4px #a49f9f' }}>
-        <AlignLeftOutlined /> 参数设置
+      <strong style={{ fontSize: '17px', marginTop: '2px', textShadow: '1px 1px 10px #a49f9f' }}>
+        <AlignLeftOutlined /> Parameter Setting
       </strong>
 
       <div style={{ width: '100%', marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -197,14 +197,14 @@ const InputPanel = () => {
 
         {/* 显示已保存的参数组 */}
         <strong style={{ textShadow: '1px 1px 4px #a49f9f', marginTop: '3px',fontSize: '15px', color:'#4f4e4e' }}>
-        <UnorderedListOutlined /> 已保存参数组
+        <UnorderedListOutlined /> Parameter Groups
           </strong>
         <div
           style={{
             maxHeight: '40vh', // 限制最大高度
             overflowY: 'auto', // 启用垂直滚动
             padding: '3px',
-            marginTop: '-10px',
+            marginTop: '-5px',
             listStyle: 'none',
             scrollbarWidth: 'thin', // 用于 Firefox 的细滚动条
           }}

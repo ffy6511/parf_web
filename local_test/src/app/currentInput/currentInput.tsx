@@ -89,7 +89,7 @@ const CurrentInput: React.FC = () => {
     <div className={styles.currentInputContainer}>
       {/* 左侧标题部分 */}
       <div className={styles.titleSection}>
-        <strong>当前设置</strong>
+        <strong>Current Setting</strong>
       </div>
 
       {/* 文件名称部分 */}

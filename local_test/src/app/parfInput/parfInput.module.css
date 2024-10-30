@@ -74,7 +74,7 @@
 }
 
 .codeBlock {
-  background-color: #f7f7f7;
+  background-color: transparent;
   padding: 10px;
   border-radius: 5px;
   font-family: 'Courier New', Courier, monospace;
@@ -89,7 +89,7 @@
 
 
 .submitButton {
-  background: linear-gradient(50deg, #53595b, #c9d7e6);
+  background:  linear-gradient(120deg, #a6c0fe 0%, #f68084 100%);
   color: #fff;
   border: none;
   padding: 10px 15px;
@@ -98,6 +98,8 @@
   transition: all 0.3s ease;
   float: right;
   margin-right: 10px;
+  font-weight: bold;
+
 }
 
 .submitButton:hover {
@@ -116,6 +118,8 @@
   transition: all 0.3s ease;
   float: right;
   margin-right: 10px;
+  font-weight: bold;
+
 }
 
 .submitButton_abort:hover {
@@ -187,11 +191,15 @@
 .blinking_text {
   display: inline-block; /* 使文本块可以移动 */
   color: transparent; /* 文字本身设置为透明 */
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%); /* 深色渐变 */
+  font-weight: bolder !important;
+  /*background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%); /* 深色渐变 */
+
+  background: linear-gradient(120deg, rgba(166, 192, 254,0.5) 0%, rgba(246, 128, 132,1.0) 50%, rgba(166, 192, 254,0.5) 100%); 
+  
   background-size: 200% 100%; /* 背景大小设置为200%以实现移动效果 */
   animation: move 3s linear infinite, fade 3s linear infinite; /* 应用移动和闪烁动画 */
   -webkit-background-clip: text; /* 仅对文本应用背景 */
   background-clip: text; /* 仅对文本应用背景 */
-  font-size: 1em; /* 设置字体大小 */
+  font-size: 1.2em; /* 设置字体大小 */
 }
 

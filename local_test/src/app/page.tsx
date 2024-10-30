@@ -79,7 +79,7 @@ const Page: React.FC = () => {
                 >
                   <MenuFoldOutlined style={{ filter: 'drop-shadow(2px 2px 10px grey)',color:'#1ea0f2' }} />
                 </Tooltip>
-                <strong style={{ marginLeft: '8px', textShadow: '2px 3px 4px #a49f9f', color:'#454543' }}>文件列表</strong>
+                <strong style={{ marginLeft: '8px', textShadow: '2px 3px 4px #a49f9f', color:'#454543' }}>File List</strong>
               </div>
             ) : (
               // 当文件列表收起时，只显示图标，通过 Tooltip 实现悬停提示
