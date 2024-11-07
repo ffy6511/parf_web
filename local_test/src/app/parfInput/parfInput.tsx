@@ -31,27 +31,15 @@ const ParfInput: React.FC = () => {
 
   const mutation = trpc.analyse.executeCommand.useMutation();
   const positionQuery = trpc.analyse.getQueueLength.useQuery(undefined, {
-    refetchInterval: 5000, // 每 5 秒刷新一次队列位置
+    refetchInterval: 2000, // 每 2 秒刷新一次队列位置
   });
 
 
   // 添加 AbortController 实例来管理请求的中止
   const [abortController, setAbortController] = useState<AbortController | null>(null);
 
-  // 从localStorage加载文件和参数组
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const groupData = localStorage.getItem('selectedGroup');
-      if (groupData) {
-        setSelectedGroup(JSON.parse(groupData) as GroupDetails);
-      }
 
-      const fileData = localStorage.getItem('selectedFile');
-      if (fileData) {
-        setSelectedFile(JSON.parse(fileData) as FileDetails);
-      }
-    }
-  }, []);
+  
 
   // 从IndexedDB获取文件内容
   const getFileContentFromIndexedDB = (fileId: number) => {
@@ -92,12 +80,23 @@ const ParfInput: React.FC = () => {
   const handleSubmit = async () => {
     setSubmitted(true); // 用户点击了提交按钮，更新状态
     setDisplayData(""); // 重置显示区数据
+
+     // 从 localStorage 获取最新的 selectedGroup 和 selectedFile
+    const groupData = localStorage.getItem('selectedGroup');
+    const fileData = localStorage.getItem('selectedFile');
+
+
+    const selectedGroup = JSON.parse(groupData!) as GroupDetails;
+    const selectedFile = JSON.parse(fileData!) as FileDetails;
+    
     if (!selectedGroup || !selectedFile) {
       alert('请选择一个参数组和文件！');
       return;
     }
 
     setLoading(true);
+
+    
 
     // 创建一个新的 AbortController 实例
     const controller = new AbortController();
@@ -131,7 +130,7 @@ const ParfInput: React.FC = () => {
               setDisplayData('调用已中止');
             } else {
               console.error("Error executing command:", error);
-              setDisplayData('命令执行失败');
+              setDisplayData('命令执行失败,请检查代码文件');
             }
             setLoading(false); // 停止加载状态
           },
@@ -139,7 +138,7 @@ const ParfInput: React.FC = () => {
       );
     } catch (error) {
       console.error("Error executing command:", error);
-      setDisplayData('命令执行失败');
+      setDisplayData('命令执行失败,请检查代码文件');
       setLoading(false); // 停止加载状态
     }
   };
@@ -166,7 +165,7 @@ const ParfInput: React.FC = () => {
       ? <span className={styles.blinking_text}><Spin/> 正在调用𝑷𝒂𝒓𝒇分析: 加载中...</span>
       : positionQuery.isError
         ? '无法加载队列信息'
-        : <span className={styles.blinking_text}><Spin/> 正在调用𝑷𝒂𝒓𝒇分析: 队列位置 {positionQuery.data?.queueLength ?? '加载中...'}</span>
+        : <span className={styles.blinking_text}><Spin/> --正在分析-- 所处队列位置: {(positionQuery.data?.queueLength ?? 0) + 1}</span>
   : '尚无待分析任务';
 
 
