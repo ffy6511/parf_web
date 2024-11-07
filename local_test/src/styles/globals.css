@@ -7,7 +7,7 @@ body {
   overflow: hidden; /* 防止页面滚动 */
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-    background-color: rgba(255, 230, 153, 0.03); /* 设置背景颜色为半透明 */
+    background-color: rgba(240, 228, 211, 0.2); /* 设置背景颜色为半透明 */
     
         /* 添加上下对称的渐变 */
         

@@ -198,7 +198,7 @@ const Display_1: React.FC = () => {
           </Button>,
         ]}
         width={800} // 调整宽度
-        style={{ top: 10 }} // 调整距离顶部的高度
+        style={{ top: 0 }} // 调整距离顶部的高度
       >
         <TextArea
           value={selectedFileContent}
@@ -216,7 +216,7 @@ const Display_1: React.FC = () => {
         footer={null}
         width={800} // 调整宽度
         style={{ 
-          top: '10px',
+          top: '0px',
           borderRadius:'10px',
         }} 
         className={styles.customModal}// 调整距离顶部的高度

@@ -74,13 +74,14 @@ const FileEntry: React.FC<FileEntryProps> = ({
         padding: '0px',
         cursor: 'pointer',
         backgroundColor: isSelected ? '#e6f7ff' : isHovered ? '#E9E9E9' : 'rgba(255, 255, 255, 0.4)',
-        borderLeft:'1px solid #d6d9d9',
-        transform: isHovered ? 'scale(1.07)' : isSelected ? 'scale(1.01)' : 'scale(1.0)',
+        borderLeft: isAnyHovered?'0.5px solid #d6d9d9':'0.3px solid #d6d9d9',
+        borderRight:isAnyHovered?'0.5px solid #d6d9d9':'0.3px solid #d6d9d9',
+        transform: isHovered ? 'scale(1.05)' : isSelected ? 'scale(1.01)' : 'scale(1.0)',
         transition: 'all 0.3s ease',
         position: 'relative',
         zIndex: isHovered ? 10 : 1,
-        marginBottom: isAnyHovered? '-4px' : '-21px', //文件夹效果
-        borderBottom: isSelected? '5px solid #D9D9D9' : '2px solid #ccc',
+        marginBottom: isAnyHovered? '-10px' : '-21px', //文件夹效果
+        borderBottom: isAnyHovered?'1.4px solid #ccc':isSelected? '2px solid #D9D9D9' : '1px solid #ccc',
         marginLeft: '-3px',
         borderRadius: '10px',
       }}
@@ -129,7 +130,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
           }}
         ></div>
       </div>
-      {(isHovered || isSelected) && (
+      {(isSelected) && (
         <div style={{ position: 'absolute',
            top: '25px', 
            left: '43px',
