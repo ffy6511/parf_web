@@ -86,4 +86,8 @@ export const analyseRouter = createTRPCRouter({
         });
       });
     }),
+
+    getQueueLength: publicProcedure.query(() => {
+      return { queueLength: commandQueue.length() };
+    }),
 });

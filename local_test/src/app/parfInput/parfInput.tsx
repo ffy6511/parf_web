@@ -30,6 +30,10 @@ const ParfInput: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<FileDetails | null>(null);
 
   const mutation = trpc.analyse.executeCommand.useMutation();
+  const positionQuery = trpc.analyse.getQueueLength.useQuery(undefined, {
+    refetchInterval: 5000, // 每 5 秒刷新一次队列位置
+  });
+
 
   // 添加 AbortController 实例来管理请求的中止
   const [abortController, setAbortController] = useState<AbortController | null>(null);
@@ -156,10 +160,15 @@ const ParfInput: React.FC = () => {
 
   // 根据 submitted 和 displayData 的值决定返回区的显示内容
   const returnMessage = submitted
-    ? displayData
-      ? '点击查看详情'
-      :  <span className={styles.blinking_text}><Spin/> 正在调用𝑷𝒂𝒓𝒇分析</span>
-    : '尚无待分析任务';
+  ? displayData
+    ? '点击查看详情'
+    : positionQuery.isLoading
+      ? <span className={styles.blinking_text}><Spin/> 正在调用𝑷𝒂𝒓𝒇分析: 加载中...</span>
+      : positionQuery.isError
+        ? '无法加载队列信息'
+        : <span className={styles.blinking_text}><Spin/> 正在调用𝑷𝒂𝒓𝒇分析: 队列位置 {positionQuery.data?.queueLength ?? '加载中...'}</span>
+  : '尚无待分析任务';
+
 
   return (
     <div className={styles.parfInputContainer}>
