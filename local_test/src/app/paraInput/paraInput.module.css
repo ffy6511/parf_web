@@ -26,10 +26,9 @@
 /* 输入框和标签的布局 */
 .inputRow strong {
   min-width: 130px; /* 为标签设置最小宽度，保持对齐 */
-  color: #6f6e6c ;
+  color: #6f6e6c;
   font-weight: 400;
 }
-
 
 .inputRow .ant-input-number, .inputRow .ant-slider {
   flex: 1; /* 让输入框和滑动条占据剩余空间 */
@@ -40,8 +39,6 @@
   margin-right: 10px;
   width: 60px; /* 确保输入框宽度合适 */
 }
-
-
 
 .List {
   list-style: none; /* 去除默认列表样式 */
@@ -115,7 +112,6 @@
   border-color: #6f6e6c;
 }
 
-
 .parameterListItem:hover .deleteButton {
   animation: fadeInDown 0.5s ease forwards;
 }
@@ -124,4 +120,3 @@
   color: #ff7875 !important; /* 强制将颜色变为红色 */
   scale: 1.03;
 }
-

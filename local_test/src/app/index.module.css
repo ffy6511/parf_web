@@ -198,6 +198,6 @@
 
 .fileListExpanded {
   max-height: 500px; /* 可以根据需要调整这个值 */
-  width: 300px; /* 展开的宽度 */
+  width: 35vw; /* 展开的宽度 */
   opacity: 1;
 }

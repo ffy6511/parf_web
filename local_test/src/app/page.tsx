@@ -37,12 +37,13 @@ const Page: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       {/* 主体内容部分 */}
-      <div style={{ display: 'flex', flex: 1, maxHeight: '97vh' }}>
+      <div style={{ display: 'flex', flex: 1, maxHeight: '98vh' }}>
         {/* 控制按钮和文件列表的容器 */}
         <div
           style={{
             display: 'flex',
             position: 'relative',
+            flexDirection:'row', //竖直排列
             boxShadow: '1px 0 5px rgba(0, 0, 0, 0.3)',  
             background: 'linear-gradient(90deg, rgba(242, 242, 242, 0.5), rgba(241, 237, 234, 0.5), rgba(233, 226, 226, 0.5))',
           }}
@@ -101,13 +102,29 @@ const Page: React.FC = () => {
                 marginTop: '45px',
                 marginLeft: '10px',
                 overflow: 'hidden',
+                maxHeight: '97vh',
                 borderRight: '1.5px solid #e0e0e0',
                 transition: 'max-height 0.5s ease, width 0.5s ease, opacity 0.5s ease',
+                display: 'flex', // 添加这个样式使内容竖直排列
+                flexDirection: 'column', // 设置为竖直排列
               }}
             >
+             <div style={{ flex: 1, maxHeight: '40%', overflow: 'auto' }}> {/* Display_1 */}
               <Display_1 key={reloadTrigger} />
+              </div>
+
+              <div style={{ 
+                flex: 1, 
+                maxHeight: '40%', 
+                overflow: 'auto',
+                marginTop:'3vh' ,
+                }}> {/* InputPanel */}
+              <InputPanel />
+
+             </div>
             </div>
-          )}
+        )}
+
         </div>
   
         {/* 中间部分：文件上传组件 */}
@@ -121,18 +138,7 @@ const Page: React.FC = () => {
           <FileUploadContainer onFileUploadSuccess={handleFileUploadSuccess} />
           <ParfInput />
         </div>
-  
-        {/* 右侧部分：数据输入组件 */}
-        <div
-          style={{
-            flex: isFileListVisible ? 3 : 4,
-            padding: '20px',
-            transition: 'flex 0.5s ease',
-            borderLeft: '1.5px solid #e0e0e0',
-          }}
-        >
-          <InputPanel />
-        </div>
+
       </div>
   
       {/* 页脚部分 */}
