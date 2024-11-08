@@ -7,6 +7,7 @@
   border-radius: 8px;
   background: #ffffff; /* 整体容器的背景 */
   width: 100%;
+  border:1px solid rgb(229, 223, 223);
   max-width: 400px; /* 调整宽度，确保更紧凑 */
   margin-bottom: 0px;
   transition: all 0.3s ease;

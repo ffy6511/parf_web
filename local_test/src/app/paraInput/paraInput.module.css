@@ -19,15 +19,17 @@
   display: flex;
   justify-content: space-between; /* 在两端对齐 */
   align-items: center;
-  padding: 5px 0;
+  padding: 3px 0;
   margin-bottom: 2px;
 }
 
 /* 输入框和标签的布局 */
 .inputRow strong {
-  min-width: 100px; /* 为标签设置最小宽度，保持对齐 */
+  min-width: 130px; /* 为标签设置最小宽度，保持对齐 */
   color: #6f6e6c ;
+  font-weight: 400;
 }
+
 
 .inputRow .ant-input-number, .inputRow .ant-slider {
   flex: 1; /* 让输入框和滑动条占据剩余空间 */

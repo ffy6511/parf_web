@@ -112,7 +112,7 @@ const InputPanel = () => {
       };
 
       store.put(data).onsuccess = () => {
-        showMessage('success', `参数组 "${groupName}" 已保存`);
+        showMessage('success', ` "${groupName}" Saved`);
         loadSavedGroups(db);
         setGroupName('');
       };
@@ -137,7 +137,7 @@ const InputPanel = () => {
     setTimeBudget(group.timeBudget);
     setCore(group.core);
     setSampleSize(group.sampleSize);
-    showMessage('info', `已选择参数组 "${group.groupName}" `);
+    showMessage('info', `Group "${group.groupName}" selected`);
 
     // 保存到 localStorage
     localStorage.setItem('selectedGroup', JSON.stringify(group));
@@ -161,39 +161,53 @@ const InputPanel = () => {
   return (
     <div>
       <strong style={{ fontSize: '17px', marginTop: '2px', textShadow: '1px 1px 10px #a49f9f' }}>
-        <AlignLeftOutlined /> Parameter Setting
+        <AlignLeftOutlined /> Hyperparameters Configuration
       </strong>
 
       <div style={{ width: '100%', marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <div className={styles.container}>
+
+          {/* 保存或更新参数组 */}
+          <div style={{ display: 'flex', alignItems: 'center', marginTop: '0px' }}>
+            <div className={styles.inputRow}>
+              <strong>Group Neme</strong>
+            </div>
+            <Input
+              placeholder="enter group name"
+              value={groupName}
+              onChange={(e) => setGroupName(e.target.value)}
+              style={{ 
+                marginRight: '10px', 
+                width: '70px',
+                marginLeft:'20px'
+               }}
+            />
+            <Button type="primary" onClick={handleSave} className = "sendButton"  style = {{
+              width: '60px',
+              marginLeft:'23px',
+              marginRight:'0px',
+              }}>
+              {selectedGroup ? 'Update' : 'Save'}
+            </Button>
+          </div>
+
           <div className={styles.inputRow}>
-            <strong>时间预算(秒)</strong>
+            <strong>Time Budget(s)</strong>
             <TimeBudgetInput value={timeBudget} onChange={setTimeBudget} />
           </div>
 
           <div className={styles.inputRow}>
-            <strong>核</strong>
+            <strong>Processes</strong>
             <CoreInput value={core} onChange={setCore} />
           </div>
 
           <div className={styles.inputRow}>
-            <strong>采样数量</strong>
+            <strong>Samples</strong>
             <SampleSizeInput value={sampleSize} onChange={setSampleSize} />
           </div>
         </div>
 
-        {/* 保存或更新参数组 */}
-        <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px' }}>
-          <Input
-            placeholder="输入参数组名"
-            value={groupName}
-            onChange={(e) => setGroupName(e.target.value)}
-            style={{ marginRight: '10px', width: '200px' }}
-          />
-          <Button type="primary" onClick={handleSave} className = "sendButton">
-            {selectedGroup ? '更新参数组' : '保存参数组'}
-          </Button>
-        </div>
+        
 
         {/* 显示已保存的参数组 */}
         <strong style={{ textShadow: '1px 1px 4px #a49f9f', marginTop: '3px',fontSize: '15px', color:'#4f4e4e' }}>
@@ -225,7 +239,7 @@ const InputPanel = () => {
             <div className={styles.parameterContent}>
               <strong>{item.groupName}</strong>
               <div className={styles.parameterDetails}>
-                时间预算: {item.timeBudget} 秒   核数: {item.core}   采样数量: {item.sampleSize}
+                Time Budget: {item.timeBudget} _Processes: {item.core}_Samples: {item.sampleSize}
               </div>
             </div>
             <Button

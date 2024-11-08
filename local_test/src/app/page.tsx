@@ -145,11 +145,11 @@ const Page: React.FC = () => {
         >
           <DockerOutlined /> parfdocker
         </a>
-        <a href="https://example2.com" target="_blank" rel="noopener noreferrer" className={styles.link}>
-          <GithubOutlined />
+        <a href="https://dl.acm.org/doi/10.1145/3691620.3695487" target="_blank" rel="noopener noreferrer" className={styles.link}>
+          （论文图标）
         </a>
-        <a href="https://example3.com" target="_blank" rel="noopener noreferrer" className={styles.link}>
-          Example Link 3
+        <a href="https://fiction-zju.github.io" target="_blank" rel="noopener noreferrer" className={styles.link}>
+          Formal Verification Group（图标）
         </a>
       </footer>
     </div>

@@ -94,11 +94,11 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
               <p className={styles.logo}>
                 <InboxOutlined />
               </p>
-              <p className="ant-upload-text" style={{ marginTop: '10px', color:"#6f6e6c" }}>
-                点击或拖拽代码文件到此处上传
+              <p className="ant-upload-text" style={{ marginTop: '10px', color:"#1f1e1c", fontSize:'17px' }}>
+                点击或拖拽代码文件上传
               </p>
-              <p className="ant-upload-hint" style={{ marginTop: '1px',color:'#6f6e6c' }}>
-                （支持单个代码文件或批量上传）
+              <p className="ant-upload-hint" style={{ marginTop: '1px',color:'#6f6e6c', fontSize:'13px' }}>
+                支持不超过10MB的代码文件单个或批量上传
               </p>
             </div>
           </Upload>
