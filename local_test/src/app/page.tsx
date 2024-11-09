@@ -2,7 +2,7 @@
 import styles from './index.module.css';
 import React, { useState } from 'react';
 import ParfInput from './parfInput/parfInput';
-import FileUploadContainer from './fileUploader/display_2'; // 上传组件
+import FileUploadContainer from './fileUploader/new_project'; // 上传组件
 import Display_1 from './fileList/display_1';  // 文件列表组件
 import InputPanel from './paraInput/paraInput';
 import { DockerOutlined, AlignLeftOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
@@ -43,7 +43,6 @@ const Page: React.FC = () => {
           style={{
             display: 'flex',
             position: 'relative',
-            flexDirection:'row', //竖直排列
             boxShadow: '1px 0 5px rgba(0, 0, 0, 0.3)',  
             background: 'linear-gradient(90deg, rgba(242, 242, 242, 0.5), rgba(241, 237, 234, 0.5), rgba(233, 226, 226, 0.5))',
           }}
@@ -53,7 +52,7 @@ const Page: React.FC = () => {
             style={{
               position: 'absolute',
               left: '1em',
-              top: '5px',
+              top: '0px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -64,6 +63,12 @@ const Page: React.FC = () => {
           >
             {isFileListExpanded ? (
               // 当文件列表展开时显示图标和“文件列表”文本
+              <div
+                style = {{
+                  display:'flex',
+                  flexDirection:'row',
+                  marginTop:'-2vh',
+                }}>
               <div 
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
@@ -81,8 +86,16 @@ const Page: React.FC = () => {
                   <MenuFoldOutlined style={{ filter: 'drop-shadow(2px 2px 10px grey)',color:'#1ea0f2' }} />
                 </Tooltip>
                 <strong style={{ fontSize: '1.2em', marginTop: '0px', textShadow: '1px 1px 10px #a49f9f',marginLeft:'0.5em'  }}>File List</strong>
+            
               </div>
-            ) : (
+                <div style = {{
+                    marginLeft: '12vw',
+                    fontSize:'0.6em',
+                }}>
+                  <FileUploadContainer onFileUploadSuccess={handleFileUploadSuccess} />
+                </div>
+              </div>    //上传组件
+            ): (
               // 当文件列表收起时，只显示图标，通过 Tooltip 实现悬停提示
               <Tooltip title="展开文件列表" color="grey" 
               mouseEnterDelay={0.1} mouseLeaveDelay={0.2}
@@ -99,7 +112,7 @@ const Page: React.FC = () => {
             <div
               className={`${styles.fileListContainer} ${isFileListExpanded ? styles.fileListExpanded : ''}`}
               style={{
-                marginTop: '5vh',
+                marginTop: '8vh',
                 marginLeft: '0.5vw',
                 overflow: 'hidden',
                 borderRight: '1.5px solid #e0e0e0',
@@ -139,7 +152,6 @@ const Page: React.FC = () => {
             transition: 'flex 0.7s ease',
           }}
         >
-          <FileUploadContainer onFileUploadSuccess={handleFileUploadSuccess} />
           <ParfInput />
         </div>
 

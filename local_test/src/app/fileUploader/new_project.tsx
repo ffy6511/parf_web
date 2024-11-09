@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Input, Upload, message, Modal } from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
+import { Button, Input, Upload, message, Modal, Dropdown, Menu } from 'antd';
+import { InboxOutlined, PlusOutlined } from '@ant-design/icons';
 import styles from './fileUpload.module.css';
-import TextArea from 'antd/lib/input/TextArea'; 
-import "~/styles/globals.css"
+import TextArea from 'antd/lib/input/TextArea';
+import "~/styles/globals.css";
 
 interface FileUploadContainerProps {
   onFileUploadSuccess: () => void;
@@ -11,9 +11,10 @@ interface FileUploadContainerProps {
 
 const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadSuccess }) => {
   const [db, setDb] = useState<IDBDatabase | null>(null);
-  const [fileName, setFileName] = useState<string>(''); // 手动输入的文件名
-  const [fileContent, setFileContent] = useState<string>(''); // 手动输入的文件内容
-  const [showManualInput, setShowManualInput] = useState<boolean>(false); // 控制弹窗的显示
+  const [fileName, setFileName] = useState<string>('');
+  const [fileContent, setFileContent] = useState<string>('');
+  const [showManualInput, setShowManualInput] = useState<boolean>(false); // For manual input modal
+  const [showUploadPrompt, setShowUploadPrompt] = useState<boolean>(false); // For upload prompt modal
 
   useEffect(() => {
     const request = indexedDB.open('FileStorage', 1);
@@ -28,7 +29,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
     };
   }, []);
 
-  // 文件上传处理
+  // File upload handling
   const handleUpload = (file: File) => {
     if (db) {
       const reader = new FileReader();
@@ -43,14 +44,15 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         };
         store.add(data).onsuccess = () => {
           message.success(`文件 ${file.name} 上传成功`);
-          onFileUploadSuccess(); // 上传成功后调用回调函数
+          onFileUploadSuccess();
+          setShowUploadPrompt(false); // Close the upload prompt after success
         };
       };
       reader.readAsArrayBuffer(file);
     }
   };
 
-  // 手动输入提交
+  // Manual input submit handling
   const handleManualInputSubmit = () => {
     if (db && fileName && fileContent) {
       const transaction = db.transaction(['files'], 'readwrite');
@@ -62,62 +64,71 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
       };
       store.add(data).onsuccess = () => {
         message.success(`文件 ${fileName} 已手动输入`);
-        setFileName(''); // 清空文件名输入框
-        setFileContent(''); // 清空文件内容输入框
-        setShowManualInput(false); // 关闭弹窗
-        onFileUploadSuccess(); // 上传成功后调用回调函数
+        setFileName('');
+        setFileContent('');
+        setShowManualInput(false); // Close modal after successful input
+        onFileUploadSuccess();
       };
     } else {
       message.error('请填写文件名和文件内容');
     }
   };
 
+  // Menu items for the dropdown
+  const menu = (
+    <Menu>
+      <Menu.Item
+        key="upload"
+        onClick={() => setShowUploadPrompt(true)} // Open the upload prompt
+      >
+        上传文件
+      </Menu.Item>
+      <Menu.Item
+        key="manual"
+        onClick={() => setShowManualInput(true)} // Open the manual input modal
+      >
+        手动输入
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
-    <div className={styles.fileUploadContainer} style = {{marginLeft:'2vw'}}>
-      {/* 左侧文件上传区域 */}
-      <div className={styles.uploadSection}>
-      <div className={styles.gradient_text}>
-      Parf: Adaptive Parameter Refining for Abstract Interpretation
-      </div>
+    <div className={styles.fileUploadContainer}>
+      {/* Elliptical New Project Button with Dropdown */}
+      <Dropdown overlay={menu} trigger={['click']}>
+        <Button
+          type="primary"
+          shape="round"
+          className={styles.newProjectButton}
+        >
+          New Project
+        </Button>
+      </Dropdown>
 
-        <div className={styles.uploader}>
-          <Upload
-            action='NULL'
-            beforeUpload={(file: File) => {
-              handleUpload(file);
-              return false; // 阻止默认上传行为
-            }}
-            showUploadList={false}
-          >
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <p className={styles.logo}>
-                <InboxOutlined />
-              </p>
-              <p className="ant-upload-text" style={{ marginTop: '10px', color:"#1f1e1c", fontSize:'17px' }}>
-                点击或拖拽代码文件上传
-              </p>
-              <p className="ant-upload-hint" style={{ marginTop: '1px',color:'#6f6e6c', fontSize:'13px' }}>
-                支持不超过10MB的代码文件单个或批量上传
-              </p>
-            </div>
-          </Upload>
-        </div>
-      </div>
+      {/* Upload Modal */}
+      <Modal
+        title="上传文件"
+        visible={showUploadPrompt}
+        onCancel={() => setShowUploadPrompt(false)}
+        footer={null}
+      >
+        <Upload
+          beforeUpload={(file: File) => {
+            handleUpload(file);
+            return false; // Prevent default upload behavior
+          }}
+          showUploadList={false}
+          action=''
+        >
+          <div style={{ textAlign: 'center' }}>
+            <InboxOutlined style={{ fontSize: '48px', color: '#1890ff' }} />
+            <p>点击或拖拽代码文件上传</p>
+            <p>支持不超过10MB的代码文件单个或批量上传</p>
+          </div>
+        </Upload>
+      </Modal>
 
-      {/* 右侧 CurrentInput 和 手动输入区域 */}
-      <div className={styles.rightSection}>
-        <div className={styles.manualInputButtonWrapper}>
-          <Button
-            type="primary"
-            onClick={() => setShowManualInput(true)}
-            className="sendButton"
-          >
-            手动输入
-          </Button>
-        </div>
-      </div>
-
-      {/* 手动输入表单弹窗 */}
+      {/* Manual Input Modal */}
       <Modal
         title="手动输入文件"
         visible={showManualInput}
@@ -132,13 +143,14 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         />
         <TextArea
           placeholder="文件内容"
-          rows={15}
+          rows={8}
           value={fileContent}
           onChange={(e) => setFileContent(e.target.value)}
         />
         <Button
           onClick={handleManualInputSubmit}
-          className={styles.buttonCustom}
+          type="primary"
+          style={{ marginTop: '10px' }}
         >
           提交手动输入
         </Button>
