@@ -37,7 +37,7 @@ const Page: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       {/* 主体内容部分 */}
-      <div style={{ display: 'flex', flex: 1, maxHeight: '98vh' }}>
+      <div style={{ display: 'flex', flex: 1 }}>
         {/* 控制按钮和文件列表的容器 */}
         <div
           style={{
@@ -52,7 +52,7 @@ const Page: React.FC = () => {
           <div
             style={{
               position: 'absolute',
-              left: '25px',
+              left: '1em',
               top: '5px',
               display: 'flex',
               alignItems: 'center',
@@ -70,7 +70,7 @@ const Page: React.FC = () => {
                 style={{ 
                 display: 'flex', 
                 alignItems: 'center', 
-                fontSize: '17px', 
+                fontSize: '1em', 
                 marginTop: '0px',
 
                 }}>
@@ -80,7 +80,7 @@ const Page: React.FC = () => {
                 >
                   <MenuFoldOutlined style={{ filter: 'drop-shadow(2px 2px 10px grey)',color:'#1ea0f2' }} />
                 </Tooltip>
-                <strong style={{ marginLeft: '8px', textShadow: '2px 3px 4px #a49f9f', color:'#454543' }}>File List</strong>
+                <strong style={{ fontSize: '1.2em', marginTop: '0px', textShadow: '1px 1px 10px #a49f9f',marginLeft:'0.5em'  }}>File List</strong>
               </div>
             ) : (
               // 当文件列表收起时，只显示图标，通过 Tooltip 实现悬停提示
@@ -100,7 +100,7 @@ const Page: React.FC = () => {
               className={`${styles.fileListContainer} ${isFileListExpanded ? styles.fileListExpanded : ''}`}
               style={{
                 marginTop: '5vh',
-                marginLeft: '10px',
+                marginLeft: '0.5vw',
                 overflow: 'hidden',
                 borderRight: '1.5px solid #e0e0e0',
                 transition: 'max-height 0.5s ease, width 0.5s ease, opacity 0.5s ease',
@@ -111,9 +111,7 @@ const Page: React.FC = () => {
              <div style={{ flex: 1, maxHeight: '50%', overflow: 'auto' }}> {/* Display_1 */}
               <Display_1 key={reloadTrigger} />
               </div>
-              
              
-
               <div style={{ 
                 flex: 1, 
                 maxHeight: '50%', 

@@ -3,7 +3,6 @@ import { Button, Input, Upload, message, Modal } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import styles from './fileUpload.module.css';
 import TextArea from 'antd/lib/input/TextArea'; 
-import CurrentInput from '../currentInput/currentInput';
 import "~/styles/globals.css"
 
 interface FileUploadContainerProps {
@@ -74,11 +73,11 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
   };
 
   return (
-    <div className={styles.fileUploadContainer}>
+    <div className={styles.fileUploadContainer} style = {{marginLeft:'2vw'}}>
       {/* 左侧文件上传区域 */}
       <div className={styles.uploadSection}>
       <div className={styles.gradient_text}>
-        文件上传与 𝑷𝒂𝒓𝒇 调用
+      Parf: Adaptive Parameter Refining for Abstract Interpretation
       </div>
 
         <div className={styles.uploader}>
@@ -107,9 +106,6 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
 
       {/* 右侧 CurrentInput 和 手动输入区域 */}
       <div className={styles.rightSection}>
-        <div className={styles.currentInputWrapper}>
-          <CurrentInput />
-        </div>
         <div className={styles.manualInputButtonWrapper}>
           <Button
             type="primary"
