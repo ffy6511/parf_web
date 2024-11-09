@@ -1,6 +1,5 @@
 import "~/styles/globals.css";
-
-import { GeistSans } from "geist/font/sans";
+import styles from './layout.module.css'; 
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/trpc/react";
@@ -16,8 +15,21 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={GeistSans.className}>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+     <body className={styles.body}>
+        {/* 添加导航栏 */}
+        <header className={styles.navbar}>
+          <nav>
+            <ul className={styles.navList}>
+              <li><a href="#home">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </nav>
+        </header>
+        {/* 内容部分 */}
+        <div className={styles.content}>
+          <TRPCReactProvider>{children}</TRPCReactProvider>
+        </div>
       </body>
     </html>
   );

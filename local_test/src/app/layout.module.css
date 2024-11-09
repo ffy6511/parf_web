@@ -1,0 +1,38 @@
+/* layout.module.css */
+.body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    height: 100%;
+    overflow: auto; /* 确保整个页面可以滚动 */
+  }
+  
+  .navbar {
+    position: sticky; /* 使导航栏在页面滚动时保持在顶部 */
+    top: 0;
+    width: 100%;
+    background-color: #585858;
+    padding: 1em;
+    z-index: 1000; /* 确保导航栏在其他内容之上 */
+  }
+  
+  .navList {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 2em;
+  }
+  
+  .navList li a {
+    color: white;
+    text-decoration: none;
+  }
+  
+  .content {
+    padding: 0em;
+    min-height: calc(100vh - 60px); /* 确保内容部分高度减去导航栏的高度 */
+    height: 100%; /* 允许内容部分根据页面内容的大小自动扩展 */
+  }
+  

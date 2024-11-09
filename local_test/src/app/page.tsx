@@ -35,7 +35,7 @@ const Page: React.FC = () => {
     }
   };
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
       {/* 主体内容部分 */}
       <div style={{ display: 'flex', flex: 1 }}>
         {/* 控制按钮和文件列表的容器 */}
@@ -124,7 +124,6 @@ const Page: React.FC = () => {
             >
              <div style={{ 
                 flex: 1, 
-                minHeight: '50%',
                 overflow: 'auto',
                 boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)'
                 }}> {/* Display_1 */}
@@ -133,7 +132,6 @@ const Page: React.FC = () => {
              
               <div style={{ 
                 flex: 1, 
-                minHeight: '50%', 
                 overflow: 'auto',
                 marginTop:'1vh' ,
                 }}> {/* InputPanel */}
@@ -197,6 +195,7 @@ const footerStyle: React.CSSProperties = {
   marginTop: '0px',  // 增加 margin-top 来调整页脚和内容之间的间距
   gap: '5vw',
   flexShrink: 0,  // 确保页脚不会被压缩
+  height:'3vh',
 };
 
 
