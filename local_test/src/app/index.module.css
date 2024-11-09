@@ -177,13 +177,14 @@
 }
 
 .link{
-  color: #636261; 
+  color: #343232; 
   text-decoration: none; /* 去掉下划线 */  
   transition: color 0.3s; /* 添加颜色变化的过渡效果 */ 
 }
 
 .link:hover {  
-  color: rgb(98, 174, 224); /* 悬停时链接的颜色 */  
+  color: rgb(65, 157, 219); /* 悬停时链接的颜色 */  
+  border-bottom: 1px solid rgb(98, 174, 224);
 }  
 
 /* fileList.module.css */
@@ -200,4 +201,19 @@
   max-height: 500px; /* 可以根据需要调整这个值 */
   width: 35vw; /* 展开的宽度 */
   opacity: 1;
+}
+
+.footerStyle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8em;
+  padding: 0px 0; /* Increase padding to make footer larger */
+  background-color: #f1f1f1;
+  width: 100%;
+  border-top: 1px solid #e0e0e0;
+  margin-top: 0px; /* Adjust margin-top to add spacing between footer and content */
+  gap: 5vw;
+  flex-shrink: 0; /* Ensure the footer does not get compressed */
+  height: 3vh;
 }

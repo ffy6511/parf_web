@@ -35,7 +35,7 @@ const Page: React.FC = () => {
     }
   };
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <div style={{ display: 'flex', flexDirection: 'column',height:'100vh',overflow:'auto' }}>
       {/* 主体内容部分 */}
       <div style={{ display: 'flex', flex: 1 }}>
         {/* 控制按钮和文件列表的容器 */}
@@ -124,8 +124,8 @@ const Page: React.FC = () => {
             >
              <div style={{ 
                 flex: 1, 
-                overflow: 'auto',
-                boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)'
+                boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)',
+                minHeight:'30vh'
                 }}> {/* Display_1 */}
               <Display_1 key={reloadTrigger} />
               </div>
@@ -134,6 +134,7 @@ const Page: React.FC = () => {
                 flex: 1, 
                 overflow: 'auto',
                 marginTop:'1vh' ,
+                minHeight:'40vh'
                 }}> {/* InputPanel */}
 
               <strong style={{ fontSize: '1.2em', marginTop: '0px', textShadow: '1px 1px 10px #a49f9f' }}>
@@ -150,7 +151,7 @@ const Page: React.FC = () => {
 
         <div
           style={{
-            flex: isFileListVisible ? 5 : 6,
+            flex: isFileListVisible ? 2 : 6,
             padding: '0px',
             transition: 'flex 0.7s ease',
             marginLeft:'2vw',
@@ -162,7 +163,7 @@ const Page: React.FC = () => {
       </div>
   
       {/* 页脚部分 */}
-      <footer style={footerStyle}>
+      <footer className= {styles.footerStyle}>
         <a
           href="https://hub.docker.com/r/parfdocker/parf"
           target="_blank"
@@ -181,22 +182,6 @@ const Page: React.FC = () => {
     </div>
   );
 }
-
-// 页脚样式
-const footerStyle: React.CSSProperties = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  fontSize: '0.8em',
-  padding: '0px 0',  // 增加 padding 使页脚更大
-  backgroundColor: '#f1f1f1',
-  width: '100%',
-  borderTop: '1px solid #e0e0e0',
-  marginTop: '0px',  // 增加 margin-top 来调整页脚和内容之间的间距
-  gap: '5vw',
-  flexShrink: 0,  // 确保页脚不会被压缩
-  height:'3vh',
-};
 
 
 
