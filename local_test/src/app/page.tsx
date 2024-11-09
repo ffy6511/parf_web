@@ -5,7 +5,7 @@ import ParfInput from './parfInput/parfInput';
 import FileUploadContainer from './fileUploader/new_project'; // 上传组件
 import Display_1 from './fileList/display_1';  // 文件列表组件
 import InputPanel from './paraInput/paraInput';
-import { DockerOutlined, AlignLeftOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { DockerOutlined, AlignLeftOutlined, MenuUnfoldOutlined, MenuFoldOutlined,PaperClipOutlined,TeamOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd'; // 导入 Tooltip 组件
 
 const Page: React.FC = () => {
@@ -119,15 +119,21 @@ const Page: React.FC = () => {
                 transition: 'max-height 0.5s ease, width 0.5s ease, opacity 0.5s ease',
                 display: 'flex', // 添加这个样式使内容竖直排列
                 flexDirection: 'column', // 设置为竖直排列
+
               }}
             >
-             <div style={{ flex: 1, maxHeight: '50%', overflow: 'auto' }}> {/* Display_1 */}
+             <div style={{ 
+                flex: 1, 
+                minHeight: '50%',
+                overflow: 'auto',
+                boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)'
+                }}> {/* Display_1 */}
               <Display_1 key={reloadTrigger} />
               </div>
              
               <div style={{ 
                 flex: 1, 
-                maxHeight: '50%', 
+                minHeight: '50%', 
                 overflow: 'auto',
                 marginTop:'1vh' ,
                 }}> {/* InputPanel */}
@@ -143,13 +149,13 @@ const Page: React.FC = () => {
         )}
 
         </div>
-  
-        {/* 中间部分：文件上传组件 */}
+
         <div
           style={{
             flex: isFileListVisible ? 5 : 6,
             padding: '0px',
             transition: 'flex 0.7s ease',
+            marginLeft:'2vw',
           }}
         >
           <ParfInput />
@@ -165,13 +171,13 @@ const Page: React.FC = () => {
           rel="noopener noreferrer"
           className={styles.link}
         >
-          <DockerOutlined /> parfdocker
+          <DockerOutlined /> Parfdocker
         </a>
         <a href="https://dl.acm.org/doi/10.1145/3691620.3695487" target="_blank" rel="noopener noreferrer" className={styles.link}>
-          （论文图标）
+        <PaperClipOutlined /> Article
         </a>
         <a href="https://fiction-zju.github.io" target="_blank" rel="noopener noreferrer" className={styles.link}>
-          Formal Verification Group（图标）
+        <TeamOutlined />FICTION
         </a>
       </footer>
     </div>
@@ -183,13 +189,13 @@ const footerStyle: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  fontSize: '14px',
+  fontSize: '0.8em',
   padding: '0px 0',  // 增加 padding 使页脚更大
   backgroundColor: '#f1f1f1',
   width: '100%',
   borderTop: '1px solid #e0e0e0',
   marginTop: '0px',  // 增加 margin-top 来调整页脚和内容之间的间距
-  gap: '35px',
+  gap: '5vw',
   flexShrink: 0,  // 确保页脚不会被压缩
 };
 

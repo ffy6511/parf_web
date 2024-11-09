@@ -184,12 +184,13 @@ const InputPanel = () => {
               }}
             />
             <Button type="primary" onClick={handleSave} className="sendButton" style={{
-              width: '2vw', // 调整按钮宽度
+              width: '3vw', // 调整按钮宽度
               marginRight:'1vw',
               maxHeight:'40%',
-              marginBottom:'1vh'
+              marginBottom:'1vh',
+              fontSize:'0.3em'
             }}>
-              {selectedGroup ? 'Update' : 'Save'}
+              {'Save'}
             </Button>
           </div>
 

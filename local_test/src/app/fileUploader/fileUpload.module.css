@@ -1,9 +1,6 @@
 .fileUploadContainer {
   display: flex;
-  flex-direction: row; /* 使用横向布局 */
-  gap: 20px; /* 左右区域之间的间隔 */
   padding: 20px;
-  max-width: 1200px; /* 设置最大宽度 */
   margin: 0 auto; /* 居中容器 */
   
   

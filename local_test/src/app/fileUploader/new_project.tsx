@@ -74,20 +74,20 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
     }
   };
 
-  // Menu items for the dropdown
+  
   const menu = (
-    <Menu>
+    <Menu >
       <Menu.Item
         key="upload"
         onClick={() => setShowUploadPrompt(true)} // Open the upload prompt
       >
-        上传文件
+        Upload
       </Menu.Item>
       <Menu.Item
         key="manual"
         onClick={() => setShowManualInput(true)} // Open the manual input modal
       >
-        手动输入
+        Input File
       </Menu.Item>
     </Menu>
   );
@@ -107,7 +107,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
 
       {/* Upload Modal */}
       <Modal
-        title="上传文件"
+        title="Upload"
         visible={showUploadPrompt}
         onCancel={() => setShowUploadPrompt(false)}
         footer={null}
@@ -130,19 +130,19 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
 
       {/* Manual Input Modal */}
       <Modal
-        title="手动输入文件"
+        title="Input File"
         visible={showManualInput}
         onCancel={() => setShowManualInput(false)}
         footer={null}
       >
         <Input
-          placeholder="文件名"
+          placeholder="File Name"
           value={fileName}
           onChange={(e) => setFileName(e.target.value)}
           style={{ marginBottom: '10px' }}
         />
         <TextArea
-          placeholder="文件内容"
+          placeholder="Please enter file content here."
           rows={8}
           value={fileContent}
           onChange={(e) => setFileContent(e.target.value)}
@@ -152,7 +152,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
           type="primary"
           style={{ marginTop: '10px' }}
         >
-          提交手动输入
+          Submit
         </Button>
       </Modal>
     </div>
