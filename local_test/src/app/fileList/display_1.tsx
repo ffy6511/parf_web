@@ -155,11 +155,11 @@ const Display_1: React.FC = () => {
       
       {fileList.length > 0 ? (
         <ul style={{ 
-          padding: 13, 
+          padding: 8, 
           listStyle: 'none',
-          margin:7,
+          margin:5,
           overflowY:'scroll',
-          maxHeight:'78vh',
+          maxHeight:'38vh',
           overflowX:'hidden',
           scrollbarWidth: 'thin',
          }}>

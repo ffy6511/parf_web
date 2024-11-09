@@ -5,7 +5,7 @@ import ParfInput from './parfInput/parfInput';
 import FileUploadContainer from './fileUploader/display_2'; // 上传组件
 import Display_1 from './fileList/display_1';  // 文件列表组件
 import InputPanel from './paraInput/paraInput';
-import { DockerOutlined, GithubOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { DockerOutlined, AlignLeftOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd'; // 导入 Tooltip 组件
 
 const Page: React.FC = () => {
@@ -53,7 +53,7 @@ const Page: React.FC = () => {
             style={{
               position: 'absolute',
               left: '25px',
-              top: '10px',
+              top: '5px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -71,7 +71,7 @@ const Page: React.FC = () => {
                 display: 'flex', 
                 alignItems: 'center', 
                 fontSize: '17px', 
-                marginTop: '3px',
+                marginTop: '0px',
 
                 }}>
                 <Tooltip title="收起文件列表" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2} onClick={toggleFileListVisibility}
@@ -99,26 +99,32 @@ const Page: React.FC = () => {
             <div
               className={`${styles.fileListContainer} ${isFileListExpanded ? styles.fileListExpanded : ''}`}
               style={{
-                marginTop: '45px',
+                marginTop: '5vh',
                 marginLeft: '10px',
                 overflow: 'hidden',
-                maxHeight: '97vh',
                 borderRight: '1.5px solid #e0e0e0',
                 transition: 'max-height 0.5s ease, width 0.5s ease, opacity 0.5s ease',
                 display: 'flex', // 添加这个样式使内容竖直排列
                 flexDirection: 'column', // 设置为竖直排列
               }}
             >
-             <div style={{ flex: 1, maxHeight: '40%', overflow: 'auto' }}> {/* Display_1 */}
+             <div style={{ flex: 1, maxHeight: '50%', overflow: 'auto' }}> {/* Display_1 */}
               <Display_1 key={reloadTrigger} />
               </div>
+              
+             
 
               <div style={{ 
                 flex: 1, 
-                maxHeight: '40%', 
+                maxHeight: '50%', 
                 overflow: 'auto',
-                marginTop:'3vh' ,
+                marginTop:'1vh' ,
                 }}> {/* InputPanel */}
+
+              <strong style={{ fontSize: '1.2em', marginTop: '0px', textShadow: '1px 1px 10px #a49f9f' }}>
+                 <AlignLeftOutlined /> Hyperparameters Configuration
+               </strong>
+
               <InputPanel />
 
              </div>

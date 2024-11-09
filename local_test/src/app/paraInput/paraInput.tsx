@@ -28,7 +28,11 @@ const TimeBudgetInput: React.FC<TimeBudgetInputProps> = ({ value, onChange }) =>
       <Slider min={1} max={2000} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
     </Col>
     <Col span={'6'}>
-      <InputNumber min={0} max={2000} value={value} onChange={onChange} style={{ width: '100%', marginLeft: '5px' }} />
+      <InputNumber min={0} max={2000} value={value} onChange={onChange} style={{ 
+        width: '80%',
+        marginRight:'2vw',
+        fontSize:'0.8em',
+        }} />
     </Col>
   </Row>
 );
@@ -45,7 +49,11 @@ const CoreInput: React.FC<CoreInputProps> = ({ value, onChange }) => (
       <Slider min={1} max={64} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
     </Col>
     <Col span={'6'}>
-      <InputNumber min={1} max={64} value={value} onChange={onChange} style={{ width: '100%', marginLeft: '5px' }} />
+      <InputNumber min={1} max={64} value={value} onChange={onChange} style={{ 
+        width: '80%',
+        marginRight:'2vw',
+        fontSize:'0.8em',
+        }} />
     </Col>
   </Row>
 );
@@ -62,7 +70,11 @@ const SampleSizeInput: React.FC<SampleSizeInputProps> = ({ value, onChange }) =>
       <Slider min={1} max={1000} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
     </Col>
     <Col span={'6'}>
-      <InputNumber min={1} max={1000} value={value} onChange={onChange} style={{ width: '100%', marginLeft: '5px' }} />
+      <InputNumber min={1} max={1000} value={value} onChange={onChange} style={{ 
+        width: '80%',
+        marginRight:'2vw',
+        fontSize:'0.8em',
+        }} />
     </Col>
   </Row>
 );
@@ -151,9 +163,7 @@ const InputPanel = () => {
 
   return (
     <div>
-      <strong style={{ fontSize: '17px', marginTop: '2px', textShadow: '1px 1px 10px #a49f9f' }}>
-        <AlignLeftOutlined /> Hyperparameters Configuration
-      </strong>
+      
 
       <div style={{ width: '100%', marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <div className={styles.container}>
@@ -174,8 +184,10 @@ const InputPanel = () => {
               }}
             />
             <Button type="primary" onClick={handleSave} className="sendButton" style={{
-              width: '80px', // 调整按钮宽度
-              marginLeft: '10px',
+              width: '2vw', // 调整按钮宽度
+              marginRight:'1vw',
+              maxHeight:'40%',
+              marginBottom:'1vh'
             }}>
               {selectedGroup ? 'Update' : 'Save'}
             </Button>
@@ -198,8 +210,8 @@ const InputPanel = () => {
         </div>
 
         {/* 显示已保存的参数组 */}
-        <strong style={{ textShadow: '1px 1px 4px #a49f9f', marginTop: '3px', fontSize: '15px', color: '#4f4e4e' }}>
-          <UnorderedListOutlined /> Parameter Groups
+        <strong style={{ textShadow: '0px 1px 50px #a49f9f', marginTop: '1px', fontSize: '1em', color: '#4f4e4e',marginLeft:'0.5vw' }}>
+          <UnorderedListOutlined /> Configuration Groups
         </strong>
         <div
           style={{

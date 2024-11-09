@@ -1,17 +1,17 @@
 /* container 是外部包裹容器 */
 .container {
-  padding: 15px;
+  padding: 5px;
   border: 1px solid rgba(241, 240, 232, 0.924);
   border-radius: 15px;
   background: linear-gradient(50deg, rgba(23, 128, 163, 0.2), rgba(241, 240, 232, 0.924));
   transition: all 0.3s ease;
-  max-width: 800px; /* 设定一个最大宽度，确保内容不超出 */
+  max-width: 90%; /* 设定一个最大宽度，确保内容不超出 */
   margin: 0 auto; /* 居中容器 */
   box-shadow: 5px 10px 20px rgba(149, 149, 149, 0.2);
 }
 
 .container:hover {
-  transform: scale(1.03);
+  transform: scale(1.02);
 }
 
 /* inputRow 用于单行输入布局 */
@@ -19,8 +19,9 @@
   display: flex;
   justify-content: space-between; /* 在两端对齐 */
   align-items: center;
-  padding: 3px 0;
-  margin-bottom: 2px;
+  padding: 0px 0;
+  margin-bottom: 1px;
+  margin-top: -1px;
 }
 
 /* 输入框和标签的布局 */
