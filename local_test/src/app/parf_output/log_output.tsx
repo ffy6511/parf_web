@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Tooltip, Spin } from 'antd';
 import { ArrowsAltOutlined, UploadOutlined, LoadingOutlined, StopOutlined } from '@ant-design/icons';
-import styles from './parfInput.module.css';
+import styles from './parf_output.module.css';
 import { trpc } from '../../trpc/react'; // 导入 trpc 客户端
 import "~/styles/globals.css"
 
@@ -22,7 +22,7 @@ interface AnalyseResponse {
   result: string; 
 }
 
-const ParfInput: React.FC = () => {
+const  Log_output: React.FC = () => {
   const [displayData, setDisplayData] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [isExpandedFully, setIsExpandedFully] = useState<boolean>(false);
@@ -224,4 +224,4 @@ const ParfInput: React.FC = () => {
   );
 };
 
-export default ParfInput;
+export default Log_output;

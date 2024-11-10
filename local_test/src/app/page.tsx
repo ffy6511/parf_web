@@ -1,7 +1,7 @@
 'use client';
 import styles from './index.module.css';
 import React, { useState } from 'react';
-import ParfInput from './parfInput/parfInput';
+import  Output_container from './parf_output/output';
 import FileUploadContainer from './fileUploader/new_project'; // 上传组件
 import Display_1 from './fileList/display_1';  // 文件列表组件
 import InputPanel from './paraInput/paraInput';
@@ -157,7 +157,7 @@ const Page: React.FC = () => {
             marginLeft:'2vw',
           }}
         >
-          <ParfInput />
+          <  Output_container />
         </div>
 
       </div>

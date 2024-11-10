@@ -1,11 +1,12 @@
 .parfInputContainer {
   padding: 0px;
   border-radius: 15px;
-  width: 95%;
+  width: 100%;
   border:none;
   margin: 5px auto;
   position: relative;
   transition: all 0.3s ease;
+  background-color: rgb(215, 214, 206);
 }
 
 .parfInputContainer:hover {
@@ -23,7 +24,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background: linear-gradient(-45deg, #F3F4F7 0%, #CACCD1 100% );
+  background: linear-gradient(-45deg, #F3F4F7 0%, #f6e5c1 100% );
   transform: translate3d(0px, 20px, 0) scale(0.95);
   filter: blur(20px);
   opacity: var(0.7);
@@ -52,7 +53,7 @@
       
 
 .displayMonitor {
-  background: #fff;
+  background: rgb(234, 224, 224);
   border-radius: 8px;
   padding: 0px;
   text-align: center;
@@ -203,3 +204,29 @@
   font-size: 1.2em; /* 设置字体大小 */
 }
 
+
+.parentContainer {
+  display: flex;
+  flex-direction: column; /* 将父容器分为上下结构 */
+  gap: 0px; /* 为区域添加间隙 */
+  height: 100vh; /* 父容器的高度占满整个视口 */
+  padding: 0px; /* 给父容器添加内边距 */
+}
+
+.topSection {
+  display: flex;
+  justify-content: space-between; /* 确保顶部两个区域均匀水平排列 */
+  gap: 0px; /* 顶部区域之间的间隙 */
+  flex: 1; /* 顶部区域占据父容器的1倍高度 */
+}
+
+.leftColumn,
+.rightColumn {
+  flex: 1; /* 确保左列和右列均分宽度 */
+  padding: 2px;
+}
+
+.bottomSection {
+  flex: 1; /* 底部区域占据父容器的1倍高度 */
+  padding: 5px;
+}
