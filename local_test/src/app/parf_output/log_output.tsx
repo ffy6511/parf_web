@@ -67,7 +67,7 @@ const  Log_output: React.FC = () => {
         };
 
         fileRequest.onerror = () => {
-          reject('Failed to load file from IndexedDB');
+          reject(new Error('Failed to load file from IndexedDB'));
         };
       };
     });

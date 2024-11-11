@@ -14,6 +14,7 @@ const config = {
   ],
   "rules": {
     "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-empty-function":'off',
     "@typescript-eslint/array-type": "off",
     "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/no-unsafe-member-access":"off",
@@ -33,14 +34,7 @@ const config = {
       }
     ],
     "@typescript-eslint/require-await": "off",
-    "@typescript-eslint/no-misused-promises": [
-      "error",
-      {
-        "checksVoidReturn": {
-          "attributes": false
-        }
-      }
-    ]
+    "@typescript-eslint/no-misused-promises": "off"
   }
 }
 module.exports = config;

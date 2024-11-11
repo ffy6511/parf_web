@@ -74,6 +74,7 @@
   margin-top: -10px;
   background: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
   text-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 添加阴影实现模糊效果 */
   filter: blur(0px); /* 可调节模糊程度 */
