@@ -53,7 +53,7 @@
       
 
 .displayMonitor {
-  background: rgb(234, 224, 224);
+  background: rgb(250, 237, 237);
   border-radius: 8px;
   padding: 0px;
   text-align: center;
@@ -211,6 +211,7 @@
   gap: 0px; /* 为区域添加间隙 */
   height: 100vh; /* 父容器的高度占满整个视口 */
   padding: 0px; /* 给父容器添加内边距 */
+  overflow: hidden;
 }
 
 .topSection {

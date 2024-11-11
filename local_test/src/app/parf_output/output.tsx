@@ -6,7 +6,7 @@ import styles from './parf_output.module.css';
 
 const Output_container = () => {
   return (
-    <div className={styles.parentContainer}>
+    <div className={styles.parentContainer} >
       <div className={styles.topSection}>
         <div className={styles.leftColumn}>
           <Initial_output/>

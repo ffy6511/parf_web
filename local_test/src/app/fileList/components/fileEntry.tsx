@@ -73,7 +73,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
         alignItems: 'center',
         padding: '0px',
         cursor: 'pointer',
-        backgroundColor: isSelected ? '#e6f7ff' : isHovered ? '#E9E9E9' : 'rgba(255, 255, 255, 0.4)',
+        backgroundColor: isHovered ? '#E9E9E9' : 'rgba(255, 255, 255, 0.4)',
         borderLeft: isAnyHovered?'0.5px solid #d6d9d9':'0.3px solid #d6d9d9',
         borderRight:isAnyHovered?'0.5px solid #d6d9d9':'0.3px solid #d6d9d9',
         transform: isHovered ? 'scale(1.05)' : isSelected ? 'scale(1.01)' : 'scale(1.0)',
@@ -112,7 +112,8 @@ const FileEntry: React.FC<FileEntryProps> = ({
           style={{
             color:isSelected? `${borderColor}`: isHovered? '#202122':'#888',
             transition:'all 0.3s ease',
-            fontSize:'15px',
+            fontSize:isSelected? '1.03em': isHovered? '1.05em':'1em',
+
           }}
         >
           {fileName.length > 18 ? fileName.substring(0, 18) + '..' : fileName}

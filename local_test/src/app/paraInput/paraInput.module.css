@@ -8,6 +8,7 @@
   max-width: 90%; /* 设定一个最大宽度，确保内容不超出 */
   margin: 0 auto; /* 居中容器 */
   box-shadow: 5px 10px 20px rgba(149, 149, 149, 0.2);
+  overflow: hidden;
 }
 
 .container:hover {

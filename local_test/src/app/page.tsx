@@ -35,13 +35,14 @@ const Page: React.FC = () => {
     }
   };
   return (
-    <div style={{ display: 'flex', flexDirection: 'column',height:'100vh',overflow:'auto' }}>
+    <div style={{ display: 'flex', flexDirection: 'column',height:'100vh',overflow:'auto'}}>
       {/* 主体内容部分 */}
-      <div style={{ display: 'flex', flex: 1 }}>
+      <div style={{ display: 'flex', flex: 1,overflow:'hidden' }}>
         {/* 控制按钮和文件列表的容器 */}
         <div
           style={{
             display: 'flex',
+            flex:isFileListVisible?3:0,
             position: 'relative',
             boxShadow: '1px 0 5px rgba(0, 0, 0, 0.3)',  
             background: 'linear-gradient(90deg, rgba(242, 242, 242, 0.5), rgba(241, 237, 234, 0.5), rgba(233, 226, 226, 0.5))',
@@ -151,10 +152,10 @@ const Page: React.FC = () => {
 
         <div
           style={{
-            flex: isFileListVisible ? 2 : 6,
+            flex: isFileListVisible ? 7 : 10,
             padding: '0px',
             transition: 'flex 0.7s ease',
-            marginLeft:'2vw',
+            marginLeft:isFileListVisible?'0.5vw' : '4vw'
           }}
         >
           <  Output_container />
