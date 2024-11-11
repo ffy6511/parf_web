@@ -2,6 +2,7 @@
   "name": "local_test",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/parf/",
   "type": "module",
   "scripts": {
     "build": "next build",
