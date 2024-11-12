@@ -6,9 +6,9 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 
-
 const config = {
-    basePath:'/app',
+    assetPrefix:'home/',
+    basePath:'/home',
 };
 
 export default config;
