@@ -1,17 +1,22 @@
 .fileUploadContainer {
   display: flex;
+  width: 100%; /* 让容器宽度占满可用空间 */
+  justify-content: center; /* 居中对齐 */
   padding: 20px;
-  margin: 0 auto; /* 居中容器 */
-  
-  
+  margin: 0 auto;
 }
 
+
 .uploadSection {
-  flex: 1; /* 文件上传区域占据左侧 */
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  height: 100%; /* 确保高度占满 */
+  width: 100%; /* 根据需要调整宽度 */
 }
+
 
 .rightSection {
   flex: 1; /* 右侧区域与左侧区域等宽 */

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Upload, message, Modal, Dropdown, Menu } from 'antd';
-import { InboxOutlined, PlusOutlined } from '@ant-design/icons';
+import { InboxOutlined } from '@ant-design/icons';
 import styles from './fileUpload.module.css';
 import TextArea from 'antd/lib/input/TextArea';
 import "~/styles/globals.css";
@@ -15,6 +15,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
   const [fileContent, setFileContent] = useState<string>('');
   const [showManualInput, setShowManualInput] = useState<boolean>(false); // For manual input modal
   const [showUploadPrompt, setShowUploadPrompt] = useState<boolean>(false); // For upload prompt modal
+  const [showFolderUploadPrompt, setShowFolderUploadPrompt] = useState<boolean>(false); // For folder upload modal
 
   useEffect(() => {
     const request = indexedDB.open('FileStorage', 1);
@@ -29,7 +30,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
     };
   }, []);
 
-  // File upload handling
+  // File upload handling for single file
   const handleUpload = (file: File) => {
     if (db) {
       const reader = new FileReader();
@@ -43,13 +44,12 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
           lastModified: new Date().toISOString(),
         };
         store.add(data).onsuccess = () => {
-          message.success(`文件 ${file.name} 上传成功`);
-          onFileUploadSuccess();
-          setShowUploadPrompt(false); // Close the upload prompt after success
+          message.success(`文件 ${file.name} 存储到本地成功`);
         };
       };
       reader.readAsArrayBuffer(file);
     }
+    return false; // Prevent the default upload action
   };
 
   // Manual input submit handling
@@ -74,51 +74,71 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
     }
   };
 
-  
+  // Folder upload handling
+  const handleFolderUpload = (files: File[]) => {
+    if (db) {
+      // Iterate over each file in the folder
+      files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const fileContent = reader.result as ArrayBuffer;
+          const transaction = db.transaction(['files'], 'readwrite');
+          const store = transaction.objectStore('files');
+          const data = {
+            fileName: file.name,
+            fileContent: fileContent,
+            lastModified: new Date().toISOString(),
+          };
+          store.add(data).onsuccess = () => {
+            message.success(`文件夹中的文件 ${file.name} 存储到本地成功`);
+          };
+        };
+        reader.readAsArrayBuffer(file); // Read the content of each file
+      });
+      setShowFolderUploadPrompt(false); // Close folder upload prompt after success
+    }
+  };
+
+  // Dropdown menu
   const menu = (
-    <Menu >
-      <Menu.Item
-        key="upload"
-        onClick={() => setShowUploadPrompt(true)} // Open the upload prompt
-      >
+    <Menu>
+      <Menu.Item key="upload" onClick={() => setShowUploadPrompt(true)}>
         Upload
       </Menu.Item>
-      <Menu.Item
-        key="manual"
-        onClick={() => setShowManualInput(true)} // Open the manual input modal
-      >
+      <Menu.Item key="manual" onClick={() => setShowManualInput(true)}>
         Input File
+      </Menu.Item>
+      <Menu.Item key="folder" onClick={() => setShowFolderUploadPrompt(true)}>
+        Upload Folder
       </Menu.Item>
     </Menu>
   );
 
   return (
     <div className={styles.fileUploadContainer}>
-      {/* Elliptical New Project Button with Dropdown */}
+      {/* Dropdown button for New Project */}
       <Dropdown overlay={menu} trigger={['click']}>
-        <Button
-          type="primary"
-          shape="round"
-          className={styles.newProjectButton}
-        >
+        <Button type="primary" shape="round" className={styles.newProjectButton}>
           New Project
         </Button>
       </Dropdown>
 
-      {/* Upload Modal */}
+      {/* Upload Modal for file */}
       <Modal
         title="Upload"
         visible={showUploadPrompt}
         onCancel={() => setShowUploadPrompt(false)}
         footer={null}
+        style = {{maxWidth:'27vw'}}
       >
         <Upload
           beforeUpload={(file: File) => {
-            handleUpload(file);
+            handleUpload(file); // Use beforeUpload to store files to indexedDB
             return false; // Prevent default upload behavior
           }}
           showUploadList={false}
-          action=''
+          action=""
+          multiple={true}
         >
           <div style={{ textAlign: 'center' }}>
             <InboxOutlined style={{ fontSize: '48px', color: '#1890ff' }} />
@@ -147,13 +167,35 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
           value={fileContent}
           onChange={(e) => setFileContent(e.target.value)}
         />
-        <Button
-          onClick={handleManualInputSubmit}
-          type="primary"
-          style={{ marginTop: '10px' }}
-        >
+        <Button onClick={handleManualInputSubmit} type="primary" style={{ marginTop: '10px' }}>
           Submit
         </Button>
+      </Modal>
+
+      {/* Folder Upload Modal */}
+      <Modal
+        title="Upload Folder"
+        visible={showFolderUploadPrompt}
+        onCancel={() => setShowFolderUploadPrompt(false)}
+        footer={null}
+        style={{maxWidth:'20vw'}}
+      >
+        <Upload
+          beforeUpload={(file: File) => {
+            handleFolderUpload([file]); // Handle each file from the folder
+            return false; // Prevent default upload behavior
+          }}
+          showUploadList={false}
+          action=""
+          multiple={true}
+          directory={true} // Enable folder upload
+        >
+          <div style={{ textAlign: 'center'}}>
+            <InboxOutlined style={{ fontSize: '48px', color: '#1890ff' }} />
+            <p>点击或拖拽文件夹上传</p>
+            <p>支持上传文件夹中的所有文件</p>
+          </div>
+        </Upload>
       </Modal>
     </div>
   );

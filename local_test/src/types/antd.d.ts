@@ -19,6 +19,7 @@ declare module 'antd' {
   export interface UploadProps extends React.HTMLAttributes<HTMLDivElement>{
     children?: React.ReactNode; // 假设你要添加额外的 children 类型
     style?: React.CSSProperties; // 假设你要添加额外的 style 类型
+    directory?:boolean;
 }
 
 export interface ButtonProps extends React.HTMLAttributes<HTMLDivElement>{
