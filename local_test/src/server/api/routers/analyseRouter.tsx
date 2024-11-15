@@ -32,6 +32,7 @@ type CommandResult = { result: string };
 
 // 创建队列
 const commandQueue = queue(async (task: ExecuteCommandInput | FolderAnalyseInput) => {
+ //async
   if ('files' in task) {
     return analyseFolderFiles(task);
   }
