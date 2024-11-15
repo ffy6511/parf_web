@@ -23,6 +23,7 @@ const Display_1: React.FC = () => {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isPreviewModalVisible, setIsPreviewModalVisible] = useState(false);
   const [isAnyHovered, setIsAnyHovered] = useState(false);
+  const [expandedFolders, setExpandedFolders] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     const request = indexedDB.open('FileStorage', 2);
@@ -46,7 +47,24 @@ const Display_1: React.FC = () => {
 
     request.onsuccess = () => {
       setFileList(request.result);
+      // 默认展开根目录下的所有文件夹
+      const rootFolders = request.result
+        .filter(item => item.isFolder && item.parentId === null)
+        .map(folder => folder.id);
+      setExpandedFolders(new Set(rootFolders));
     };
+  };
+
+  const toggleFolder = (folderId: number) => {
+    setExpandedFolders(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(folderId)) {
+        newSet.delete(folderId);
+      } else {
+        newSet.add(folderId);
+      }
+      return newSet;
+    });
   };
 
   const renderFileTree = (parentId: number | null = null) => {
@@ -77,8 +95,11 @@ const Display_1: React.FC = () => {
               parentId={item.parentId}
               onDrop={handleFileDrop}
               isFolder={item.isFolder}
-            />
-            {item.isFolder && renderFileTree(item.id)}
+              isExpanded={expandedFolders.has(item.id)}
+              onToggle={() => item.isFolder && toggleFolder(item.id)}
+            >
+              {item.isFolder && expandedFolders.has(item.id) && renderFileTree(item.id)}
+            </FileEntry>
           </li>
         ))}
       </ul>
@@ -90,7 +111,6 @@ const Display_1: React.FC = () => {
       const transaction = db.transaction(['files'], 'readwrite');
       const store = transaction.objectStore('files');
       
-      // Check for circular reference
       const isCircular = (fileId: number, targetParentId: number | null): boolean => {
         if (targetParentId === null) return false;
         if (targetParentId === fileId) return true;
@@ -168,7 +188,6 @@ const Display_1: React.FC = () => {
 
   const handleDeleteFile = (fileId: number) => {
     if (db) {
-      // Get all files that need to be deleted (including children)
       const getAllChildren = (parentId: number): number[] => {
         const children = fileList.filter(file => file.parentId === parentId);
         return children.reduce((acc, child) => {
@@ -191,6 +210,12 @@ const Display_1: React.FC = () => {
               setSelectedFileId(null);
               setSelectedFileContent("");
             }
+            // 从展开的文件夹集合中移除被删除的文件夹
+            setExpandedFolders(prev => {
+              const newSet = new Set(prev);
+              filesToDelete.forEach(id => newSet.delete(id));
+              return newSet;
+            });
           }
         };
       });
