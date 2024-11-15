@@ -216,10 +216,9 @@ const InputPanel = () => {
         </strong>
         <div
           style={{
-            maxHeight: '40vh',
             overflowY: 'auto',
             padding: '3px',
-            marginTop: '-5px',
+            marginTop: '-2px',
             listStyle: 'none',
             scrollbarWidth: 'thin',
           }}

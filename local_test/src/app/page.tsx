@@ -105,6 +105,7 @@ const Page: React.FC = () => {
         <div
           style={{
             display: 'flex',
+            marginTop:'-2vh',
             flex:isFileListVisible?3:0,
             position: 'relative',
             boxShadow: '1px 0 5px rgba(0, 0, 0, 0.3)',  
@@ -131,7 +132,7 @@ const Page: React.FC = () => {
                 style = {{
                   display:'flex',
                   flexDirection:'row',
-                  marginTop:'-2vh',
+                  marginTop:'-0.5vh',
                 }}>
               <div 
                 onMouseEnter={() => setIsHovered(true)}
@@ -176,7 +177,7 @@ const Page: React.FC = () => {
             <div
               className={`${styles.fileListContainer} ${isFileListExpanded ? styles.fileListExpanded : ''}`}
               style={{
-                marginTop: '8vh',
+                marginTop: '7.5vh',
                 marginLeft: '0.5vw',
                 overflow: 'hidden',
                 borderRight: '1.5px solid #e0e0e0',
@@ -189,7 +190,7 @@ const Page: React.FC = () => {
              <div style={{ 
                 flex: 1, 
                 boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)',
-                minHeight:'30vh'
+                minHeight:'35vh'
                 }}> {/* Display_1 */}
               <Display_1 
                 ref={displayRef}
@@ -204,7 +205,7 @@ const Page: React.FC = () => {
                 flex: 1, 
                 overflow: 'auto',
                 marginTop:'1vh' ,
-                minHeight:'40vh'
+                minHeight:'35vh'
                 }}> {/* InputPanel */}
 
               <strong style={{ fontSize: '1.2em', marginTop: '0px', textShadow: '1px 1px 10px #a49f9f' }}>
@@ -214,6 +215,7 @@ const Page: React.FC = () => {
               <InputPanel />
 
              </div>
+
             </div>
         )}
 
