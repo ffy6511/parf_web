@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CloseCircleOutlined, EditOutlined, EyeOutlined, PushpinOutlined } from '@ant-design/icons';
 import { FolderOutlined, FileOutlined, CaretRightOutlined, CaretDownOutlined } from '@ant-design/icons';
-import { Dropdown, Menu, Tooltip } from 'antd';
+import { Dropdown, Menu, Tooltip, Checkbox } from 'antd';
 import styles from '../fileList.module.css'
 
 interface FileEntryProps {
@@ -20,15 +20,16 @@ interface FileEntryProps {
   children?: React.ReactNode;
   isExpanded?: boolean;
   onToggle?: () => void;
+  isMultiSelect?: boolean;
+  isMultiSelected?: boolean;
+  onMultiSelect?: (fileId: number) => void;
 }
 
 const getRandomColor = () => {
-  // HSL颜色空间：色相(0-360)，饱和度(0-100)，亮度(0-100)
-  const h = Math.floor(Math.random() * 360); // 随机色相
-  const s = Math.floor(Math.random() * 20) + 80; // 80-100的饱和度
-  const l = Math.floor(Math.random() * 20) + 25; // 25-45的亮度
+  const h = Math.floor(Math.random() * 360);
+  const s = Math.floor(Math.random() * 20) + 80;
+  const l = Math.floor(Math.random() * 20) + 25;
 
-  // 转换HSL为HEX
   const hslToHex = (h: number, s: number, l: number): string => {
     l /= 100;
     const a = s * Math.min(l, 1 - l) / 100;
@@ -59,6 +60,9 @@ const FileEntry: React.FC<FileEntryProps> = ({
   children,
   isExpanded,
   onToggle,
+  isMultiSelect,
+  isMultiSelected,
+  onMultiSelect,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [borderColor, setBorderColor] = useState('');
@@ -98,7 +102,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
     
     if (isFolder && onDrop) {
       const draggedFileId = parseInt(e.dataTransfer.getData('fileId'));
-      if (draggedFileId !== fileId) { // 防止拖拽到自己
+      if (draggedFileId !== fileId) {
         onDrop(draggedFileId, fileId);
       }
     }
@@ -126,6 +130,15 @@ const FileEntry: React.FC<FileEntryProps> = ({
     e.stopPropagation();
     if (onToggle) {
       onToggle();
+    }
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isMultiSelect && onMultiSelect) {
+      onMultiSelect(fileId);
+    } else {
+      onClick(fileId);
     }
   };
 
@@ -159,7 +172,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
       display: 'flex', 
       flexDirection: 'column', 
       width: '100%',
-      marginBottom: isFolder ? '4px' : '0px', // 文件夹和文件的间距区分
+      marginBottom: isFolder ? '4px' : '0px',
     }}>
       <div
         draggable={true}
@@ -169,13 +182,14 @@ const FileEntry: React.FC<FileEntryProps> = ({
         onDrop={handleDrop}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        onClick={() => onClick(fileId)}
+        onClick={handleClick}
         style={{
           display: 'flex',
           alignItems: 'center',
           padding: '6px 12px',
           cursor: 'pointer',
           backgroundColor: isDragOver ? 'rgba(24, 144, 255, 0.1)' : 
+                       isMultiSelected ? 'rgba(24, 144, 255, 0.1)' :
                        isHovered ? '#E9E9E9' : 
                        'rgba(255, 255, 255, 0.4)',
           borderLeft: isAnyHovered ? '0.5px solid #d6d9d9' : '0.3px solid #d6d9d9',
@@ -191,11 +205,22 @@ const FileEntry: React.FC<FileEntryProps> = ({
           border: isDragOver && isFolder ? '1px dashed #1890ff' : undefined,
         }}
       >
+        {isMultiSelect && (
+          <Checkbox
+            checked={isMultiSelected}
+            onChange={(e) => {
+              e.stopPropagation();
+              onMultiSelect?.(fileId);
+            }}
+            style={{ marginRight: 8 }}
+          />
+        )}
+
         <div style={{ display: 'flex', alignItems: 'center', minWidth: '24px' }}>
           {renderFileIcon()}
         </div>
 
-        {isSelected && (
+        {isSelected && !isMultiSelect && (
           <div style={{
             marginLeft: '1vw',
             color: '#1890ff',
@@ -228,7 +253,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
           </div>
         </div>
 
-        {isHovered && (
+        {isHovered && !isMultiSelect && (
           <Dropdown overlay={menu} trigger={['click']} className={styles.ant_dropdown}>
             <button className={styles.menu}></button>
           </Dropdown>

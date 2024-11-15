@@ -181,7 +181,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
     <div className={styles.fileUploadContainer}>
       <Dropdown overlay={menu} trigger={['click']}>
         <Button type="primary" shape="round" className={styles.newProjectButton}>
-          New Project
+          New
         </Button>
       </Dropdown>
 

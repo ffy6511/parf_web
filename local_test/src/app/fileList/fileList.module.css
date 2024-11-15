@@ -126,3 +126,10 @@
   background: rgba(255, 255, 255, 0.3); /* 半透明背景 */
   border-radius: 10px; /* 可选：圆角 */
 }
+
+.operationBar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2px;
+  padding: 0 8px;
+}

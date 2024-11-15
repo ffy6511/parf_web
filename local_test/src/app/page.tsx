@@ -1,6 +1,11 @@
 'use client';
 import styles from './index.module.css';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+
+
+import FolderCreator from './fileList/components/FolderCreator'; //新建文件夹
+import MultiSelector from './fileList/components/MultiSelector'; //多选控制组件
+
 import  Output_container from './parf_output/output';
 import FileUploadContainer from './fileUploader/new_project'; // 上传组件
 import Display_1 from './fileList/display_1';  // 文件列表组件
@@ -13,6 +18,64 @@ const Page: React.FC = () => {
   const [isFileListVisible, setIsFileListVisible] = useState(true); // 控制文件列表显示
   const [isFileListExpanded, setIsFileListExpanded] = useState(true); // 控制文件列表的展开动画
   const [isHovered, setIsHovered] = useState(false); // 控制悬浮状态
+  const [isMultiSelect, setIsMultiSelect] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<Set<number>>(new Set());
+
+
+  const handleToggleMultiSelect = () => {
+    setIsMultiSelect(!isMultiSelect);
+    setSelectedFiles(new Set());
+  };
+
+  const handleMultiSelect = (fileId: number) => {
+    setSelectedFiles(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(fileId)) {
+        newSet.delete(fileId);
+      } else {
+        newSet.add(fileId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleBatchDelete = () => {
+    // 可以通过ref调用Display_1的方法
+    if (displayRef.current) {
+      displayRef.current.handleBatchDelete(Array.from(selectedFiles));
+    }
+  };
+
+  const handleCreateFolder = (name: string) => {
+    if (displayRef.current) {
+      displayRef.current.handleCreateFolder(name);
+    }
+  };
+
+  // 添加ref用于调用Display_1的方法
+  const displayRef = useRef<any>(null);
+
+  // 在原有的 FileUploadContainer 旁边添加操作按钮
+  const renderFileOperations = () => (
+    <div style={{ 
+      display: 'flex', 
+      alignItems: 'center',
+      gap: '1vw',
+      marginLeft: '0vw',
+      fontSize: '0.6em',
+    }}>
+      <FolderCreator onFolderCreate={handleCreateFolder} />
+      <MultiSelector
+        isMultiSelect={isMultiSelect}
+        selectedCount={selectedFiles.size}
+        onToggleMultiSelect={handleToggleMultiSelect}
+        onBatchDelete={handleBatchDelete}
+      />
+      <FileUploadContainer onFileUploadSuccess={handleFileUploadSuccess} />
+    </div>
+  );
+
+
 
   const handleFileUploadSuccess = () => {
     // 当文件上传成功时，触发重新加载
@@ -86,14 +149,14 @@ const Page: React.FC = () => {
                 >
                   <MenuFoldOutlined style={{ filter: 'drop-shadow(2px 2px 10px grey)',color:'#1ea0f2' }} />
                 </Tooltip>
-                <strong style={{ fontSize: '1.2em', marginTop: '0px', textShadow: '1px 1px 10px #a49f9f',marginLeft:'0.5em'  }}>File List</strong>
+                <strong style={{ fontSize: '1.2em', marginTop: '0px', textShadow: '1px 1px 10px #a49f9f',marginLeft:'0.5em'  }}>Project</strong>
             
               </div>
                 <div style = {{
-                    marginLeft: '12vw',
+                    marginLeft: '1vw',
                     fontSize:'0.6em',
                 }}>
-                  <FileUploadContainer onFileUploadSuccess={handleFileUploadSuccess} />
+                   {renderFileOperations()}
                 </div>
               </div>    //上传组件
             ): (
@@ -128,7 +191,13 @@ const Page: React.FC = () => {
                 boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)',
                 minHeight:'30vh'
                 }}> {/* Display_1 */}
-              <Display_1 key={reloadTrigger} />
+              <Display_1 
+                ref={displayRef}
+                key={reloadTrigger}
+                isMultiSelect={isMultiSelect}
+                selectedFiles={selectedFiles}
+                onMultiSelect={handleMultiSelect}
+              />
               </div>
              
               <div style={{ 

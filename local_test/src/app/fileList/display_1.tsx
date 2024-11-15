@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import FileEntry from './components/fileEntry';
 import { Modal, Button, message } from 'antd';
 import styles from './fileList.module.css';
-import TextArea from 'antd/lib/input/TextArea'; 
+import TextArea from 'antd/lib/input/TextArea';
 
 interface FileData {
   id: number;
@@ -15,7 +15,13 @@ interface FileData {
   isFolder?: boolean;
 }
 
-const Display_1: React.FC = () => {
+interface Display_1Props {
+  isMultiSelect: boolean;
+  selectedFiles: Set<number>;
+  onMultiSelect: (fileId: number) => void;
+}
+
+const Display_1 = React.forwardRef<any, Display_1Props>((props, ref) => {
   const [fileList, setFileList] = useState<FileData[]>([]);
   const [selectedFileId, setSelectedFileId] = useState<number | null>(null);
   const [selectedFileContent, setSelectedFileContent] = useState<string>("");
@@ -24,6 +30,7 @@ const Display_1: React.FC = () => {
   const [isPreviewModalVisible, setIsPreviewModalVisible] = useState(false);
   const [isAnyHovered, setIsAnyHovered] = useState(false);
   const [expandedFolders, setExpandedFolders] = useState<Set<number>>(new Set());
+  const { isMultiSelect, selectedFiles, onMultiSelect } = props;
 
   useEffect(() => {
     const request = indexedDB.open('FileStorage', 2);
@@ -47,13 +54,79 @@ const Display_1: React.FC = () => {
 
     request.onsuccess = () => {
       setFileList(request.result);
-      // 默认展开根目录下的所有文件夹
       const rootFolders = request.result
         .filter(item => item.isFolder && item.parentId === null)
         .map(folder => folder.id);
       setExpandedFolders(new Set(rootFolders));
     };
   };
+
+  const handleCreateFolder = async (folderName: string) => {
+    if (db) {
+      const transaction = db.transaction(['files'], 'readwrite');
+      const store = transaction.objectStore('files');
+      
+      const newFolder = {
+        fileName: folderName,
+        lastModified: new Date().toISOString(),
+        isFolder: true,
+        parentId: null,
+        fileContent: new ArrayBuffer(0)
+      };
+      
+      try {
+        const request = store.add(newFolder);
+        request.onsuccess = () => {
+          loadFilesFromDB(db);
+          message.success('文件夹创建成功');
+        };
+        request.onerror = () => {
+          message.error('文件夹创建失败');
+        };
+      } catch (error) {
+        message.error('创建文件夹时发生错误');
+        console.error('创建文件夹错误:', error);
+      }
+    }
+  };
+
+  // useImperativeHandle to expose methods to parent
+  React.useImperativeHandle(ref, () => ({
+    handleBatchDelete: async (fileIds: number[]) => {
+      if (db && fileIds.length > 0) {
+        const getAllChildren = (parentId: number): number[] => {
+          const children = fileList.filter(file => file.parentId === parentId);
+          return children.reduce((acc, child) => {
+            return [...acc, child.id, ...getAllChildren(child.id)];
+          }, [] as number[]);
+        };
+
+        const filesToDelete = fileIds.reduce((acc, fileId) => {
+          const file = fileList.find(f => f.id === fileId);
+          if (file?.isFolder) {
+            return [...acc, fileId, ...getAllChildren(fileId)];
+          }
+          return [...acc, fileId];
+        }, [] as number[]);
+
+        const transaction = db.transaction(['files'], 'readwrite');
+        const store = transaction.objectStore('files');
+        
+        let deletedCount = 0;
+        filesToDelete.forEach(id => {
+          store.delete(id).onsuccess = () => {
+            deletedCount++;
+            if (deletedCount === filesToDelete.length) {
+              setFileList(prevFiles => prevFiles.filter(file => !filesToDelete.includes(file.id)));
+              message.success(`成功删除 ${fileIds.length} 个项目`);
+            }
+          };
+        });
+      }
+    },
+    handleCreateFolder
+  }));
+
 
   const toggleFolder = (folderId: number) => {
     setExpandedFolders(prev => {
@@ -75,11 +148,11 @@ const Display_1: React.FC = () => {
         paddingLeft: parentId !== null ? '20px' : '0',
         listStyle: 'none',
         margin: 0,
-        padding: 0 ,
+        padding: 0,
       }}>
         {items.map((item) => (
           <li key={item.id} 
-            style={{margin: 0 , padding: 0  }}
+            style={{ margin: 0, padding: 0 }}
             onMouseEnter={() => setIsAnyHovered(true)}
             onMouseLeave={() => setIsAnyHovered(false)}
           >
@@ -98,6 +171,9 @@ const Display_1: React.FC = () => {
               isFolder={item.isFolder}
               isExpanded={expandedFolders.has(item.id)}
               onToggle={() => item.isFolder && toggleFolder(item.id)}
+              isMultiSelect={isMultiSelect}
+              isMultiSelected={selectedFiles.has(item.id)}
+              onMultiSelect={onMultiSelect}
             >
               {item.isFolder && expandedFolders.has(item.id) && renderFileTree(item.id)}
             </FileEntry>
@@ -138,10 +214,12 @@ const Display_1: React.FC = () => {
   };
 
   const handleFileClick = (fileId: number) => {
-    setSelectedFileId(fileId);
-    const selectedFile = fileList.find((file) => file.id === fileId);
-    if (selectedFile) {
-      localStorage.setItem('selectedFile', JSON.stringify(selectedFile));
+    if (!isMultiSelect) {
+      setSelectedFileId(fileId);
+      const selectedFile = fileList.find((file) => file.id === fileId);
+      if (selectedFile) {
+        localStorage.setItem('selectedFile', JSON.stringify(selectedFile));
+      }
     }
   };
 
@@ -211,7 +289,6 @@ const Display_1: React.FC = () => {
               setSelectedFileId(null);
               setSelectedFileContent("");
             }
-            // 从展开的文件夹集合中移除被删除的文件夹
             setExpandedFolders(prev => {
               const newSet = new Set(prev);
               filesToDelete.forEach(id => newSet.delete(id));
@@ -298,6 +375,6 @@ const Display_1: React.FC = () => {
       </Modal>
     </div>
   );
-};
+});
 
 export default Display_1;

@@ -1,0 +1,8 @@
+.foldcreator{
+    background-color: transparent;
+}
+
+.foldcreator:hover{
+    background-color: grey;
+    transition: all 0.3s ease;
+}
