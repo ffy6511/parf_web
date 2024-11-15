@@ -101,24 +101,47 @@ const Log_output: React.FC = () => {
     const result: { path: string; content: string }[] = [];
     
     const getFiles = async (id: number, basePath: string = '') => {
+      const currentFile = fileList.find(file => file.id === id);
+      if (!currentFile) return;
+
+      // 获取子文件和文件夹
       const children = fileList.filter(file => file.parentId === id);
       
       for (const child of children) {
+        // 构建相对路径
+        const childPath = basePath ? `${basePath}/${child.fileName}` : child.fileName;
+        
         if (child.isFolder) {
-          await getFiles(child.id, `${basePath}${child.fileName}/`);
+          // 递归处理子文件夹
+          await getFiles(child.id, childPath);
         } else {
+          // 获取文件内容
           const content = await getFileContentFromIndexedDB(child.id);
           if (content) {
-            result.push({
-              path: `${basePath}${child.fileName}`,
-              content,
-            });
+            // 检查是否是config.txt，如果是则确保它在数组的最前面
+            if (child.fileName === 'config.txt') {
+              result.unshift({
+                path: childPath,
+                content,
+              });
+            } else {
+              result.push({
+                path: childPath,
+                content,
+              });
+            }
           }
         }
       }
     };
 
     await getFiles(folderId);
+
+    // 确保存在 config.txt
+    if (!result.some(file => file.path.endsWith('config.txt'))) {
+      throw new Error('文件夹中必须包含 config.txt 文件');
+    }
+
     return result;
   };
 
@@ -292,7 +315,7 @@ const Log_output: React.FC = () => {
             </button>
           </Tooltip>
         </div>
-        
+
     </div>
   );
 };
