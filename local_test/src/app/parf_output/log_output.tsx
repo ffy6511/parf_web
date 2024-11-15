@@ -29,7 +29,10 @@ const  Log_output: React.FC = () => {
   const [selectedGroup, setSelectedGroup] = useState<GroupDetails | null>(null);
   const [selectedFile, setSelectedFile] = useState<FileDetails | null>(null);
 
-  const mutation = trpc.analyse.executeCommand.useMutation();
+  const single_file_mutaion = trpc.analyse.executeCommand.useMutation();
+  const folder_mutation = trpc.analyse.folderAnalyse.useMutation();
+
+  
   const positionQuery = trpc.analyse.getQueueLength.useQuery(undefined, {
     refetchInterval: 2000, // 每 2 秒刷新一次队列位置
   });
@@ -38,8 +41,6 @@ const  Log_output: React.FC = () => {
   // 添加 AbortController 实例来管理请求的中止
   const [abortController, setAbortController] = useState<AbortController | null>(null);
 
-
-  
 
   // 从IndexedDB获取文件内容
   const getFileContentFromIndexedDB = (fileId: number) => {
@@ -113,7 +114,7 @@ const  Log_output: React.FC = () => {
       }
 
       // 向后端提交请求，通过调用 mutate 方法
-      mutation.mutate(
+      single_file_mutaion.mutate(
         {
           budget: selectedGroup.timeBudget,
           process: selectedGroup.core,
@@ -191,19 +192,7 @@ const  Log_output: React.FC = () => {
         >
           {returnMessage}
         </div>
-        <div>
-          <Tooltip title={loading ? '中止当前调用' : '调用Parf分析当前设置'}>
-            <button
-              className={loading ? styles.submitButton_abort : styles.submitButton}
-              onClick={loading ? handleAbort : handleSubmit}
-              disabled={loading && !abortController}
-          
-            >
-              {loading ? <StopOutlined /> : <UploadOutlined />}
-              {loading ? ' 中止调用' : ' 提交调用'}
-            </button>
-          </Tooltip>
-        </div>
+
       </div>
 
       <Modal
@@ -220,7 +209,21 @@ const  Log_output: React.FC = () => {
       >
         <pre className={styles.modalCodeBlock}>{displayData}</pre>
       </Modal>
+      <div>
+          <Tooltip title={loading ? '中止当前调用' : '调用Parf分析当前设置'}>
+            <button
+              className={loading ? styles.submitButton_abort : styles.submitButton}
+              onClick={loading ? handleAbort : handleSubmit}
+              disabled={loading && !abortController}
+          
+            >
+              {loading ? <StopOutlined /> : <UploadOutlined />}
+              {loading ? ' 中止调用' : ' 提交调用'}
+            </button>
+          </Tooltip>
+        </div>
     </div>
+    
   );
 };
 
