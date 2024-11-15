@@ -74,11 +74,12 @@ const Display_1: React.FC = () => {
       <ul style={{ 
         paddingLeft: parentId !== null ? '20px' : '0',
         listStyle: 'none',
-        margin: 0
+        margin: 0,
+        padding: 0 ,
       }}>
         {items.map((item) => (
           <li key={item.id} 
-            style={{ marginBottom: '10px' }}
+            style={{margin: 0 , padding: 0  }}
             onMouseEnter={() => setIsAnyHovered(true)}
             onMouseLeave={() => setIsAnyHovered(false)}
           >
