@@ -1,12 +1,11 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import { trpc } from '../../../trpc/react';
 
 export interface Parameter {
   type: "Char_Poi" | "Char_Ber" | "Char_BerVec";
-  values:
-    | { min: number; max: number; lambda: number }
-    | number
-    | number[];
+  values: { min: number; max: number; lambda: number } | number | number[];
 }
 
 export interface IterationData {
@@ -16,12 +15,13 @@ export interface IterationData {
 export const useIterationData = () => {
   const [currentIteration, setCurrentIteration] = useState(0);
 
-  const { data: iterationData = [], refetch } = trpc.iterationdata.getIterationData.useQuery(undefined, {
-    onSuccess: (data) => {
-      setCurrentIteration(data.length - 1); // 默认设置为最新迭代
-    },
-    refetchInterval: 5000, // 每5秒自动重新拉取数据
-  });
+  const { data: iterationData = [], refetch } = trpc.iterationdata.getIterationData.useQuery();
+
+  useEffect(() => {
+    if (iterationData.length > 0) {
+      setCurrentIteration(iterationData.length - 1); // 当数据加载成功时更新当前迭代
+    }
+  }, [iterationData]); // 监听 data 的变化
 
   return [iterationData, currentIteration, refetch] as const;
 };
