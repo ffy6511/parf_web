@@ -9,6 +9,18 @@ interface FileUploadContainerProps {
   onFileUploadSuccess: () => void;
 }
 
+// 定义文件夹结构接口
+interface FileNode {
+  id?: number;
+  fileName: string;
+  isFolder: boolean;
+  content?: ArrayBuffer;
+  parentId: number | null;
+  children?: FileNode[];
+  path: string;
+  lastModified: string;
+}
+
 const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadSuccess }) => {
   const [db, setDb] = useState<IDBDatabase | null>(null);
   const [fileName, setFileName] = useState<string>('');
@@ -18,142 +30,24 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
   const [showFolderUploadPrompt, setShowFolderUploadPrompt] = useState<boolean>(false);
 
   useEffect(() => {
-    const request = indexedDB.open('FileStorage', 2);
+    const request = indexedDB.open('FileStorage', 3);
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
       if (!db.objectStoreNames.contains('files')) {
         const store = db.createObjectStore('files', { keyPath: 'id', autoIncrement: true });
         store.createIndex('parentId', 'parentId');
+        store.createIndex('path', 'path');
         store.createIndex('isFolder', 'isFolder');
       }
     };
-
+  
     request.onsuccess = (event) => {
       setDb((event.target as IDBOpenDBRequest).result);
     };
   }, []);
 
-  const handleUpload = async (file: File) => {
-    if (!db) return;
 
-    const transaction = db.transaction(['files'], 'readwrite');
-    const store = transaction.objectStore('files');
-
-    try {
-      const content = await new Promise<ArrayBuffer>((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as ArrayBuffer);
-        reader.readAsArrayBuffer(file);
-      });
-
-      const fileData = {
-        fileName: file.name,
-        fileContent: content,
-        lastModified: new Date().toISOString(),
-        parentId: null,
-        isFolder: false,
-      };
-
-      await new Promise((resolve, reject) => {
-        const request = store.add(fileData);
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-
-      message.success(`File ${file.name} saved successfully`);
-      onFileUploadSuccess();
-    } catch (error) {
-      message.error('Failed to upload file');
-      console.error(error);
-    }
-  };
-
-  const handleManualInputSubmit = () => {
-    if (!db || !fileName || !fileContent) {
-      message.error('Please fill in both file name and content');
-      return;
-    }
-
-    const transaction = db.transaction(['files'], 'readwrite');
-    const store = transaction.objectStore('files');
-    const data = {
-      fileName,
-      fileContent: new TextEncoder().encode(fileContent).buffer,
-      lastModified: new Date().toISOString(),
-      parentId: null
-    };
-
-    store.add(data).onsuccess = () => {
-      message.success(`File ${fileName} created successfully`);
-      setFileName('');
-      setFileContent('');
-      setShowManualInput(false);
-      onFileUploadSuccess();
-    };
-  };
-
-  const handleFolderUpload = async (files: FileList) => {
-    if (!db) return;
-  
-    try {
-      const folderName = files[0].webkitRelativePath.split('/')[0];
-      
-      // 创建一个事务来处理文件夹创建
-      const folderTransaction = db.transaction(['files'], 'readwrite');
-      const folderStore = folderTransaction.objectStore('files');
-      
-      // 创建文件夹记录
-      const folderData = {
-        fileName: folderName,
-        isFolder: true,
-        lastModified: new Date().toISOString(),
-        parentId: null
-      };
-      
-      const folderId = await new Promise((resolve, reject) => {
-        const request = folderStore.add(folderData);
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-  
-      // 读取所有文件内容
-      const fileContents = await Promise.all(
-        Array.from(files).map(async (file) => ({
-          file,
-          content: await readFileAsArrayBuffer(file)
-        }))
-      );
-  
-      // 处理所有文件写入
-      const fileTransaction = db.transaction(['files'], 'readwrite');
-      const fileStore = fileTransaction.objectStore('files');
-      
-      await Promise.all(
-        fileContents.map(({file, content}) => 
-          new Promise<void>((resolve, reject) => {
-            const request = fileStore.add({
-              fileName: file.name,
-              fileContent: content,
-              lastModified: new Date().toISOString(),
-              parentId: folderId,
-              path: file.webkitRelativePath
-            });
-            request.onsuccess = () => resolve();
-            request.onerror = () => reject(request.error);
-          })
-        )
-      );
-  
-      message.success(`Folder ${folderName} uploaded successfully`);
-      onFileUploadSuccess();
-      setShowFolderUploadPrompt(false);
-    } catch (error) {
-      message.error('Failed to upload folder');
-      console.error(error);
-    }
-  };
-  
-  // 辅助函数
+  // 读取文件内容
   const readFileAsArrayBuffer = (file: File): Promise<ArrayBuffer> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -163,6 +57,203 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
     });
   };
 
+  // 构建文件夹树结构
+  const buildFileTree = async (files: File[]): Promise<FileNode> => {
+    const root: FileNode = {
+      fileName: files[0].webkitRelativePath.split('/')[0],
+      isFolder: true,
+      parentId: null,
+      children: [],
+      path: files[0].webkitRelativePath.split('/')[0],
+      lastModified: new Date().toISOString()
+    };
+
+    const pathMap = new Map<string, FileNode>();
+    pathMap.set(root.path, root);
+
+    for (const file of files) {
+      const pathParts = file.webkitRelativePath.split('/');
+      let currentPath = '';
+
+      // 处理每一级路径
+      for (let i = 0; i < pathParts.length; i++) {
+        const part = pathParts[i];
+        currentPath = currentPath ? `${currentPath}/${part}` : part;
+
+        if (!pathMap.has(currentPath)) {
+          const isFile = i === pathParts.length - 1;
+          const newNode: FileNode = {
+            fileName: part,
+            isFolder: !isFile,
+            parentId: null, // 将在后续设置
+            children: isFile ? undefined : [],
+            path: currentPath,
+            lastModified: new Date().toISOString()
+          };
+
+          if (isFile) {
+            // 如果是文件，读取内容
+            newNode.content = await readFileAsArrayBuffer(file);
+          }
+
+          // 找到父节点并添加关系
+          const parentPath = currentPath.substring(0, currentPath.lastIndexOf('/'));
+          const parent = pathMap.get(parentPath);
+          if (parent) {
+            parent.children?.push(newNode);
+            newNode.parentId = parent.id ?? null;
+          }
+
+          pathMap.set(currentPath, newNode);
+        }
+      }
+    }
+
+    return root;
+  };
+
+  // 保存文件树到数据库
+  const saveFileTree = async (node: FileNode, parentId: number | null = null): Promise<number> => {
+  if (!db) throw new Error('Database not initialized');
+
+  const transaction = db.transaction(['files'], 'readwrite');
+  const store = transaction.objectStore('files');
+
+  // 检查是否已存在同路径文件
+  const pathIndex = store.index('path');
+  const existing = await new Promise(resolve => {
+    const request = pathIndex.get(node.path);
+    request.onsuccess = () => resolve(request.result);
+  });
+
+  if (existing) {
+    return existing.id;
+  }
+
+  // 准备保存的数据
+  const nodeData = {
+    fileName: node.fileName,
+    isFolder: node.isFolder,
+    fileContent: node.content || new ArrayBuffer(0),
+    parentId: parentId,
+    path: node.path,
+    lastModified: node.lastModified
+  };
+
+  // 保存节点
+  const nodeId = await new Promise<number>((resolve, reject) => {
+    const request = store.add(nodeData);
+    request.onsuccess = () => resolve(request.result as number);
+    request.onerror = () => reject(request.error);
+  });
+
+  // 递归保存子节点
+  if (node.children) {
+    for (const child of node.children) {
+      await saveFileTree(child, nodeId);
+    }
+  }
+
+  return nodeId;
+};
+
+  // 处理文件夹上传
+  const handleFolderUpload = async (files: FileList) => {
+    if (!db || files.length === 0) return;
+
+    try {
+      const filesArray = Array.from(files);
+      const folderName = filesArray[0].webkitRelativePath.split('/')[0];
+
+      // 检查是否已存在
+      const transaction = db.transaction(['files'], 'readwrite');
+      const store = transaction.objectStore('files');
+      const pathIndex = store.index('path');
+      
+      const existing = await new Promise(resolve => {
+        const request = pathIndex.get(folderName);
+        request.onsuccess = () => resolve(request.result);
+      });
+
+      if (existing) {
+        message.warning(`Folder ${folderName} already exists`);
+        return;
+      }
+
+      // 构建文件树
+      const fileTree = await buildFileTree(filesArray);
+      
+      // 保存到数据库
+      await saveFileTree(fileTree);
+
+      message.success(`Folder ${folderName} uploaded successfully`);
+      onFileUploadSuccess();
+      setShowFolderUploadPrompt(false);
+    } catch (error) {
+      message.error('Failed to upload folder');
+      console.error(error);
+    }
+  };
+
+  // 单文件上传处理
+  const handleUpload = async (file: File) => {
+    if (!db) return;
+
+    try {
+      const content = await readFileAsArrayBuffer(file);
+      const transaction = db.transaction(['files'], 'readwrite');
+      const store = transaction.objectStore('files');
+
+      const fileNode: FileNode = {
+        fileName: file.name,
+        isFolder: false,
+        content: content,
+        parentId: null,
+        path: file.name,
+        lastModified: new Date().toISOString()
+      };
+
+      await saveFileTree(fileNode);
+
+      message.success(`File ${file.name} saved successfully`);
+      onFileUploadSuccess();
+    } catch (error) {
+      message.error('Failed to upload file');
+      console.error(error);
+    }
+  };
+
+  // 处理手动输入
+  const handleManualInputSubmit = () => {
+    if (!db || !fileName || !fileContent) {
+      message.error('Please fill in both file name and content');
+      return;
+    }
+
+    const fileNode: FileNode = {
+      fileName,
+      isFolder: false,
+      content: new TextEncoder().encode(fileContent).buffer,
+      parentId: null,
+      path: fileName,
+      lastModified: new Date().toISOString()
+    };
+
+    saveFileTree(fileNode)
+      .then(() => {
+        message.success(`File ${fileName} created successfully`);
+        setFileName('');
+        setFileContent('');
+        setShowManualInput(false);
+        onFileUploadSuccess();
+      })
+      .catch(error => {
+        message.error('Failed to create file');
+        console.error(error);
+      });
+  };
+
+  // UI 部分保持不变
   const menu = (
     <Menu>
       <Menu.Item key="upload" onClick={() => setShowUploadPrompt(true)}>
@@ -185,6 +276,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         </Button>
       </Dropdown>
 
+      {/* Modals 保持不变 */}
       <Modal
         title="Upload"
         visible={showUploadPrompt}

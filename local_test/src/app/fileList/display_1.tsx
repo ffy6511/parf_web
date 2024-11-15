@@ -11,8 +11,9 @@ interface FileData {
   fileName: string;
   lastModified: string;
   fileContent: ArrayBuffer;
-  parentId?: number | null;
-  isFolder?: boolean;
+  parentId: number | null;
+  isFolder: boolean;
+  path: string;  // 添加 path 字段
 }
 
 interface Display_1Props {
@@ -33,13 +34,17 @@ const Display_1 = React.forwardRef<any, Display_1Props>((props, ref) => {
   const { isMultiSelect, selectedFiles, onMultiSelect } = props;
 
   useEffect(() => {
-    const request = indexedDB.open('FileStorage', 2);
+    const request = indexedDB.open('FileStorage', 3); // 版本号改为3
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
-      const store = db.createObjectStore('files', { keyPath: 'id', autoIncrement: true });
-      store.createIndex('parentId', 'parentId');
+      if (!db.objectStoreNames.contains('files')) {
+        const store = db.createObjectStore('files', { keyPath: 'id', autoIncrement: true });
+        store.createIndex('parentId', 'parentId');
+        store.createIndex('path', 'path');
+        store.createIndex('isFolder', 'isFolder');
+      }
     };
-
+  
     request.onsuccess = (event) => {
       const dbResult = (event.target as IDBOpenDBRequest).result;
       setDb(dbResult);
@@ -47,48 +52,67 @@ const Display_1 = React.forwardRef<any, Display_1Props>((props, ref) => {
     };
   }, []);
 
-  const loadFilesFromDB = (db: IDBDatabase) => {
-    const transaction = db.transaction(['files'], 'readonly');
+
+
+const loadFilesFromDB = (db: IDBDatabase) => {
+  const transaction = db.transaction(['files'], 'readonly');
+  const store = transaction.objectStore('files');
+  const request = store.getAll();
+
+  request.onsuccess = () => {
+    const files = request.result.map(file => ({
+      ...file,
+      fileContent: file.fileContent || file.content, // 兼容两种数据结构
+      parentId: file.parentId || null
+    }));
+    setFileList(files);
+    
+    // 展开根文件夹
+    const rootFolders = files
+      .filter(item => item.isFolder && item.parentId === null)
+      .map(folder => folder.id);
+    setExpandedFolders(new Set(rootFolders));
+  };
+};
+
+const handleCreateFolder = async (folderName: string) => {
+  if (db) {
+    const transaction = db.transaction(['files'], 'readwrite');
     const store = transaction.objectStore('files');
-    const request = store.getAll();
-
-    request.onsuccess = () => {
-      setFileList(request.result);
-      const rootFolders = request.result
-        .filter(item => item.isFolder && item.parentId === null)
-        .map(folder => folder.id);
-      setExpandedFolders(new Set(rootFolders));
+    
+    const newFolder = {
+      fileName: folderName,
+      lastModified: new Date().toISOString(),
+      isFolder: true,
+      parentId: null,
+      fileContent: new ArrayBuffer(0),
+      path: folderName // 添加 path
     };
-  };
+    
+    try {
+      // 检查是否已存在
+      const pathIndex = store.index('path');
+      const existing = await new Promise(resolve => {
+        const request = pathIndex.get(folderName);
+        request.onsuccess = () => resolve(request.result);
+      });
 
-  const handleCreateFolder = async (folderName: string) => {
-    if (db) {
-      const transaction = db.transaction(['files'], 'readwrite');
-      const store = transaction.objectStore('files');
-      
-      const newFolder = {
-        fileName: folderName,
-        lastModified: new Date().toISOString(),
-        isFolder: true,
-        parentId: null,
-        fileContent: new ArrayBuffer(0)
-      };
-      
-      try {
-        const request = store.add(newFolder);
-        request.onsuccess = () => {
-          loadFilesFromDB(db);
-          message.success('文件夹创建成功');
-        };
-        request.onerror = () => {
-          message.error('文件夹创建失败');
-        };
-      } catch (error) {
-        message.error('创建文件夹时发生错误');
-        console.error('创建文件夹错误:', error);
+      if (existing) {
+        message.warning(`Folder ${folderName} already exists`);
+        return;
       }
+
+      const request = store.add(newFolder);
+      request.onsuccess = () => {
+        loadFilesFromDB(db);
+        message.success('文件夹创建成功');
+      };
+    } catch (error) {
+      message.error('创建文件夹时发生错误');
+      console.error('创建文件夹错误:', error);
     }
-  };
+  }
+};
 
   // useImperativeHandle to expose methods to parent
   React.useImperativeHandle(ref, () => ({
