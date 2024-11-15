@@ -67,7 +67,7 @@ const Log_output: React.FC = () => {
   // 从IndexedDB获取文件内容
   const getFileContentFromIndexedDB = async (fileId: number): Promise<string | null> => {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open('FileStorage', 2);
+      const request = indexedDB.open('FileStorage', 3);
 
       request.onsuccess = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
