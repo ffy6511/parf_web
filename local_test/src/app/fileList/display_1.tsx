@@ -1,8 +1,7 @@
-// Display_1.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import FileEntry from './components/fileEntry'; // 导入FileEntry组件
+import FileEntry from './components/fileEntry';
 import { Modal, Button, message } from 'antd';
 import styles from './fileList.module.css';
 import TextArea from 'antd/lib/input/TextArea'; 
@@ -12,6 +11,8 @@ interface FileData {
   fileName: string;
   lastModified: string;
   fileContent: ArrayBuffer;
+  parentId?: number | null;
+  isFolder?: boolean;
 }
 
 const Display_1: React.FC = () => {
@@ -19,15 +20,16 @@ const Display_1: React.FC = () => {
   const [selectedFileId, setSelectedFileId] = useState<number | null>(null);
   const [selectedFileContent, setSelectedFileContent] = useState<string>("");
   const [db, setDb] = useState<IDBDatabase | null>(null);
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false); // 编辑弹窗
-  const [isPreviewModalVisible, setIsPreviewModalVisible] = useState(false); // 预览弹窗
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isPreviewModalVisible, setIsPreviewModalVisible] = useState(false);
   const [isAnyHovered, setIsAnyHovered] = useState(false);
 
   useEffect(() => {
-    const request = indexedDB.open('FileStorage', 1);
+    const request = indexedDB.open('FileStorage', 2);
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
-      db.createObjectStore('files', { keyPath: 'id', autoIncrement: true });
+      const store = db.createObjectStore('files', { keyPath: 'id', autoIncrement: true });
+      store.createIndex('parentId', 'parentId');
     };
 
     request.onsuccess = (event) => {
@@ -37,7 +39,6 @@ const Display_1: React.FC = () => {
     };
   }, []);
 
-  // 加载文件列表
   const loadFilesFromDB = (db: IDBDatabase) => {
     const transaction = db.transaction(['files'], 'readonly');
     const store = transaction.objectStore('files');
@@ -48,17 +49,81 @@ const Display_1: React.FC = () => {
     };
   };
 
-  // 点击选中文件
+  const renderFileTree = (parentId: number | null = null) => {
+    const items = fileList.filter(item => item.parentId === parentId);
+    
+    return items.length > 0 ? (
+      <ul style={{ 
+        paddingLeft: parentId !== null ? '20px' : '0',
+        listStyle: 'none',
+        margin: 0
+      }}>
+        {items.map((item) => (
+          <li key={item.id} 
+            style={{ marginBottom: '10px' }}
+            onMouseEnter={() => setIsAnyHovered(true)}
+            onMouseLeave={() => setIsAnyHovered(false)}
+          >
+            <FileEntry
+              fileId={item.id}
+              fileName={item.fileName}
+              lastModified={item.lastModified}
+              onClick={handleFileClick}
+              onDelete={handleDeleteFile}
+              onEdit={() => handleFileEdit(item.id)}
+              onPreview={() => handleFilePreview(item.id)}
+              isSelected={selectedFileId === item.id}
+              isAnyHovered={isAnyHovered}
+              parentId={item.parentId}
+              onDrop={handleFileDrop}
+              isFolder={item.isFolder}
+            />
+            {item.isFolder && renderFileTree(item.id)}
+          </li>
+        ))}
+      </ul>
+    ) : null;
+  };
+
+  const handleFileDrop = (fileId: number, targetParentId: number | null) => {
+    if (db) {
+      const transaction = db.transaction(['files'], 'readwrite');
+      const store = transaction.objectStore('files');
+      
+      // Check for circular reference
+      const isCircular = (fileId: number, targetParentId: number | null): boolean => {
+        if (targetParentId === null) return false;
+        if (targetParentId === fileId) return true;
+        const parent = fileList.find(f => f.id === targetParentId);
+        return parent ? isCircular(fileId, parent.parentId ?? null) : false;
+      };
+
+      if (isCircular(fileId, targetParentId)) {
+        message.error('Cannot move a folder into its own subfolder');
+        return;
+      }
+
+      store.get(fileId).onsuccess = (event) => {
+        const file = (event.target as IDBRequest).result;
+        if (file) {
+          file.parentId = targetParentId;
+          store.put(file).onsuccess = () => {
+            loadFilesFromDB(db);
+            message.success('File moved successfully');
+          };
+        }
+      };
+    }
+  };
+
   const handleFileClick = (fileId: number) => {
     setSelectedFileId(fileId);
-    
     const selectedFile = fileList.find((file) => file.id === fileId);
     if (selectedFile) {
       localStorage.setItem('selectedFile', JSON.stringify(selectedFile));
     }
   };
 
-  // 编辑文件
   const handleFileEdit = (fileId: number) => {
     if (db) {
       const transaction = db.transaction(['files'], 'readonly');
@@ -72,7 +137,7 @@ const Display_1: React.FC = () => {
           const reader = new FileReader();
           reader.onload = () => {
             setSelectedFileContent(reader.result as string);
-            setIsEditModalVisible(true); // 打开编辑弹窗
+            setIsEditModalVisible(true);
           };
           reader.readAsText(blob);
         }
@@ -80,7 +145,6 @@ const Display_1: React.FC = () => {
     }
   };
 
-  // 预览文件
   const handleFilePreview = (fileId: number) => {
     if (db) {
       const transaction = db.transaction(['files'], 'readonly');
@@ -94,7 +158,7 @@ const Display_1: React.FC = () => {
           const reader = new FileReader();
           reader.onload = () => {
             setSelectedFileContent(reader.result as string);
-            setIsPreviewModalVisible(true); // 打开预览弹窗
+            setIsPreviewModalVisible(true);
           };
           reader.readAsText(blob);
         }
@@ -102,32 +166,37 @@ const Display_1: React.FC = () => {
     }
   };
 
-  
-//删除文件
   const handleDeleteFile = (fileId: number) => {
-    console.log('删除文件ID:', fileId); // 确保删除ID正确
     if (db) {
+      // Get all files that need to be deleted (including children)
+      const getAllChildren = (parentId: number): number[] => {
+        const children = fileList.filter(file => file.parentId === parentId);
+        return children.reduce((acc, child) => {
+          return [...acc, child.id, ...getAllChildren(child.id)];
+        }, [] as number[]);
+      };
+
+      const filesToDelete = [fileId, ...getAllChildren(fileId)];
+
       const transaction = db.transaction(['files'], 'readwrite');
       const store = transaction.objectStore('files');
-      const request = store.delete(fileId);
-  
-      request.onsuccess = () => {
-        console.log('文件删除成功');
-        setFileList((prevFiles) => prevFiles.filter((file) => file.id !== fileId));
-        if (fileId === selectedFileId) {
-          setSelectedFileId(null);
-          setSelectedFileContent("");
-        }
-      };
-  
-      request.onerror = (event) => {
-        console.error('删除文件时发生错误:', event);
-      };
+      
+      let deletedCount = 0;
+      filesToDelete.forEach(id => {
+        store.delete(id).onsuccess = () => {
+          deletedCount++;
+          if (deletedCount === filesToDelete.length) {
+            setFileList(prevFiles => prevFiles.filter(file => !filesToDelete.includes(file.id)));
+            if (filesToDelete.includes(selectedFileId!)) {
+              setSelectedFileId(null);
+              setSelectedFileContent("");
+            }
+          }
+        };
+      });
     }
   };
-  
 
-  // 保存编辑后的文件内容
   const handleSaveContent = () => {
     if (db && selectedFileId && selectedFileContent) {
       const transaction = db.transaction(['files'], 'readwrite');
@@ -142,8 +211,8 @@ const Display_1: React.FC = () => {
           fileData.fileContent = updatedContent;
           store.put(fileData).onsuccess = () => {
             message.success('文件内容已保存');
-            loadFilesFromDB(db); // 刷新文件列表
-            setIsEditModalVisible(false); // 关闭编辑弹窗
+            loadFilesFromDB(db);
+            setIsEditModalVisible(false);
           };
         }
       };
@@ -152,79 +221,56 @@ const Display_1: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      
       {fileList.length > 0 ? (
-        <ul style={{ 
+        <div style={{ 
           padding: 8, 
-          listStyle: 'none',
-          margin:5,
-          overflowY:'scroll',
-          maxHeight:'38vh',
-          overflowX:'hidden',
+          margin: 5,
+          overflowY: 'scroll',
+          maxHeight: '38vh',
+          overflowX: 'hidden',
           scrollbarWidth: 'thin',
-         }}>
-          {fileList.map((file) => (
-            <li key={file.id} 
-            style={{ marginBottom: '10px', }}
-            onMouseEnter={()=>setIsAnyHovered(true)}
-            onMouseLeave={()=>setIsAnyHovered(false)}
-            >
-              <FileEntry
-                fileId={file.id}
-                fileName={file.fileName}
-                lastModified={file.lastModified}
-                onClick={handleFileClick}
-                onDelete={handleDeleteFile}
-                onEdit={() => handleFileEdit(file.id)} // 传递编辑回调
-                onPreview={() => handleFilePreview(file.id)} // 传递预览回调
-                isSelected={selectedFileId === file.id}
-                isAnyHovered={isAnyHovered} // 传递悬停状态
-              />
-            </li>
-          ))}
-        </ul>
+        }}>
+          {renderFileTree(null)}
+        </div>
       ) : (
-        <div style  = {{color:'#6f6e6c'}}> 𝐄𝐦𝐩𝐭𝐲 𝐋𝐢𝐬𝐭 </div>
+        <div style={{color: '#6f6e6c'}}>𝐄𝐦𝐩𝐭𝐲 𝐋𝐢𝐬𝐭</div>
       )}
 
-      {/* 编辑弹窗 */}
       <Modal
         title="编辑文件内容"
-        visible={isEditModalVisible}
+        open={isEditModalVisible}
         onCancel={() => setIsEditModalVisible(false)}
         footer={[
           <Button key="save" type="primary" onClick={handleSaveContent}>
             保存
           </Button>,
         ]}
-        width={800} // 调整宽度
-        style={{ top: 0 }} // 调整距离顶部的高度
+        width={800}
+        style={{ top: 0 }}
       >
         <TextArea
           value={selectedFileContent}
-          className= { styles.modalCodeBlock}
+          className={styles.modalCodeBlock}
           rows={25}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setSelectedFileContent(e.target.value)}
+          onChange={(e) => setSelectedFileContent(e.target.value)}
         />
       </Modal>
 
-      {/* 预览弹窗 */}
       <Modal
         title="预览文件内容"
-        visible={isPreviewModalVisible}
+        open={isPreviewModalVisible}
         onCancel={() => setIsPreviewModalVisible(false)}
         footer={null}
-        width={800} // 调整宽度
+        width={800}
         style={{ 
           top: '0px',
-          borderRadius:'10px',
-        }} 
-        className={styles.customModal}// 调整距离顶部的高度
+          borderRadius: '10px',
+        }}
+        className={styles.customModal}
       >
-        <pre  className= { styles.modalCodeBlock}>{selectedFileContent}</pre>
+        <pre className={styles.modalCodeBlock}>{selectedFileContent}</pre>
       </Modal>
     </div>
-    
   );
 };
 

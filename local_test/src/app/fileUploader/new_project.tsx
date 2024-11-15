@@ -13,93 +13,156 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
   const [db, setDb] = useState<IDBDatabase | null>(null);
   const [fileName, setFileName] = useState<string>('');
   const [fileContent, setFileContent] = useState<string>('');
-  const [showManualInput, setShowManualInput] = useState<boolean>(false); // For manual input modal
-  const [showUploadPrompt, setShowUploadPrompt] = useState<boolean>(false); // For upload prompt modal
-  const [showFolderUploadPrompt, setShowFolderUploadPrompt] = useState<boolean>(false); // For folder upload modal
+  const [showManualInput, setShowManualInput] = useState<boolean>(false);
+  const [showUploadPrompt, setShowUploadPrompt] = useState<boolean>(false);
+  const [showFolderUploadPrompt, setShowFolderUploadPrompt] = useState<boolean>(false);
 
   useEffect(() => {
-    const request = indexedDB.open('FileStorage', 1);
+    const request = indexedDB.open('FileStorage', 2);
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
-      db.createObjectStore('files', { keyPath: 'id', autoIncrement: true });
+      if (!db.objectStoreNames.contains('files')) {
+        const store = db.createObjectStore('files', { keyPath: 'id', autoIncrement: true });
+        store.createIndex('parentId', 'parentId');
+        store.createIndex('isFolder', 'isFolder');
+      }
     };
 
     request.onsuccess = (event) => {
-      const dbResult = (event.target as IDBOpenDBRequest).result;
-      setDb(dbResult);
+      setDb((event.target as IDBOpenDBRequest).result);
     };
   }, []);
 
-  // File upload handling for single file
-  const handleUpload = (file: File) => {
-    if (db) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const fileContent = reader.result as ArrayBuffer;
-        const transaction = db.transaction(['files'], 'readwrite');
-        const store = transaction.objectStore('files');
-        const data = {
-          fileName: file.name,
-          fileContent: fileContent,
-          lastModified: new Date().toISOString(),
-        };
-        store.add(data).onsuccess = () => {
-          message.success(`文件 ${file.name} 存储到本地成功`);
-        };
-      };
-      reader.readAsArrayBuffer(file);
-    }
-    return false; // Prevent the default upload action
-  };
+  const handleUpload = async (file: File) => {
+    if (!db) return;
 
-  // Manual input submit handling
-  const handleManualInputSubmit = () => {
-    if (db && fileName && fileContent) {
-      const transaction = db.transaction(['files'], 'readwrite');
-      const store = transaction.objectStore('files');
-      const data = {
-        fileName: fileName,
-        fileContent: new TextEncoder().encode(fileContent).buffer,
-        lastModified: new Date().toISOString(),
-      };
-      store.add(data).onsuccess = () => {
-        message.success(`文件 ${fileName} 已手动输入`);
-        setFileName('');
-        setFileContent('');
-        setShowManualInput(false); // Close modal after successful input
-        onFileUploadSuccess();
-      };
-    } else {
-      message.error('请填写文件名和文件内容');
-    }
-  };
+    const transaction = db.transaction(['files'], 'readwrite');
+    const store = transaction.objectStore('files');
 
-  // Folder upload handling
-  const handleFolderUpload = (files: File[]) => {
-    if (db) {
-      // Iterate over each file in the folder
-      files.forEach((file) => {
+    try {
+      const content = await new Promise<ArrayBuffer>((resolve) => {
         const reader = new FileReader();
-        reader.onload = () => {
-          const fileContent = reader.result as ArrayBuffer;
-          const transaction = db.transaction(['files'], 'readwrite');
-          const store = transaction.objectStore('files');
-          const data = {
-            fileName: file.name,
-            fileContent: fileContent,
-            lastModified: new Date().toISOString(),
-          };
-          store.add(data).onsuccess = () => {
-            message.success(`文件夹中的文件 ${file.name} 存储到本地成功`);
-          };
-        };
-        reader.readAsArrayBuffer(file); // Read the content of each file
+        reader.onload = () => resolve(reader.result as ArrayBuffer);
+        reader.readAsArrayBuffer(file);
       });
-      setShowFolderUploadPrompt(false); // Close folder upload prompt after success
+
+      const fileData = {
+        fileName: file.name,
+        fileContent: content,
+        lastModified: new Date().toISOString(),
+        parentId: null,
+        isFolder: false,
+      };
+
+      await new Promise((resolve, reject) => {
+        const request = store.add(fileData);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+
+      message.success(`File ${file.name} saved successfully`);
+      onFileUploadSuccess();
+    } catch (error) {
+      message.error('Failed to upload file');
+      console.error(error);
     }
   };
 
-  // Dropdown menu
+  const handleManualInputSubmit = () => {
+    if (!db || !fileName || !fileContent) {
+      message.error('Please fill in both file name and content');
+      return;
+    }
+
+    const transaction = db.transaction(['files'], 'readwrite');
+    const store = transaction.objectStore('files');
+    const data = {
+      fileName,
+      fileContent: new TextEncoder().encode(fileContent).buffer,
+      lastModified: new Date().toISOString(),
+      parentId: null
+    };
+
+    store.add(data).onsuccess = () => {
+      message.success(`File ${fileName} created successfully`);
+      setFileName('');
+      setFileContent('');
+      setShowManualInput(false);
+      onFileUploadSuccess();
+    };
+  };
+
+  const handleFolderUpload = async (files: FileList) => {
+    if (!db) return;
+  
+    try {
+      const folderName = files[0].webkitRelativePath.split('/')[0];
+      
+      // 创建一个事务来处理文件夹创建
+      const folderTransaction = db.transaction(['files'], 'readwrite');
+      const folderStore = folderTransaction.objectStore('files');
+      
+      // 创建文件夹记录
+      const folderData = {
+        fileName: folderName,
+        isFolder: true,
+        lastModified: new Date().toISOString(),
+        parentId: null
+      };
+      
+      const folderId = await new Promise((resolve, reject) => {
+        const request = folderStore.add(folderData);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+  
+      // 读取所有文件内容
+      const fileContents = await Promise.all(
+        Array.from(files).map(async (file) => ({
+          file,
+          content: await readFileAsArrayBuffer(file)
+        }))
+      );
+  
+      // 处理所有文件写入
+      const fileTransaction = db.transaction(['files'], 'readwrite');
+      const fileStore = fileTransaction.objectStore('files');
+      
+      await Promise.all(
+        fileContents.map(({file, content}) => 
+          new Promise<void>((resolve, reject) => {
+            const request = fileStore.add({
+              fileName: file.name,
+              fileContent: content,
+              lastModified: new Date().toISOString(),
+              parentId: folderId,
+              path: file.webkitRelativePath
+            });
+            request.onsuccess = () => resolve();
+            request.onerror = () => reject(request.error);
+          })
+        )
+      );
+  
+      message.success(`Folder ${folderName} uploaded successfully`);
+      onFileUploadSuccess();
+      setShowFolderUploadPrompt(false);
+    } catch (error) {
+      message.error('Failed to upload folder');
+      console.error(error);
+    }
+  };
+  
+  // 辅助函数
+  const readFileAsArrayBuffer = (file: File): Promise<ArrayBuffer> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as ArrayBuffer);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
   const menu = (
     <Menu>
       <Menu.Item key="upload" onClick={() => setShowUploadPrompt(true)}>
@@ -116,29 +179,26 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
 
   return (
     <div className={styles.fileUploadContainer}>
-      {/* Dropdown button for New Project */}
       <Dropdown overlay={menu} trigger={['click']}>
         <Button type="primary" shape="round" className={styles.newProjectButton}>
           New Project
         </Button>
       </Dropdown>
 
-      {/* Upload Modal for file */}
       <Modal
         title="Upload"
         visible={showUploadPrompt}
         onCancel={() => setShowUploadPrompt(false)}
         footer={null}
-        style = {{maxWidth:'27vw'}}
+        style={{maxWidth:'27vw'}}
       >
         <Upload
-          beforeUpload={(file: File) => {
-            handleUpload(file); // Use beforeUpload to store files to indexedDB
-            return false; // Prevent default upload behavior
+          beforeUpload={(file) => {
+            handleUpload(file);
+            return false;
           }}
           showUploadList={false}
-          action=""
-          multiple={true}
+          multiple
         >
           <div style={{ textAlign: 'center' }}>
             <InboxOutlined style={{ fontSize: '48px', color: '#1890ff' }} />
@@ -148,7 +208,6 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         </Upload>
       </Modal>
 
-      {/* Manual Input Modal */}
       <Modal
         title="Input File"
         visible={showManualInput}
@@ -172,7 +231,6 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         </Button>
       </Modal>
 
-      {/* Folder Upload Modal */}
       <Modal
         title="Upload Folder"
         visible={showFolderUploadPrompt}
@@ -181,14 +239,13 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         style={{maxWidth:'20vw'}}
       >
         <Upload
-          beforeUpload={(file: File) => {
-            handleFolderUpload([file]); // Handle each file from the folder
-            return false; // Prevent default upload behavior
+          beforeUpload={(file, fileList) => {
+            handleFolderUpload(fileList);
+            return false;
           }}
+          directory
+          multiple
           showUploadList={false}
-          action=""
-          multiple={true}
-          directory={true} // Enable folder upload
         >
           <div style={{ textAlign: 'center'}}>
             <InboxOutlined style={{ fontSize: '48px', color: '#1890ff' }} />
