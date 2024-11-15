@@ -204,7 +204,7 @@ const Page: React.FC = () => {
                 flex: 1, 
                 overflow: 'auto',
                 marginTop:'1vh' ,
-                minHeight:'40vh'
+                minHeight:'70vh'
                 }}> {/* InputPanel */}
 
               <strong style={{ fontSize: '1.2em', marginTop: '0px', textShadow: '1px 1px 10px #a49f9f' }}>

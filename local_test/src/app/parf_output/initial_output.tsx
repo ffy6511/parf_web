@@ -1,12 +1,15 @@
+"use client";
+
 import React from 'react';
 import styles from './parf_output.module.css';
+import IterationTable from "./visual/IterationTable";
 
 const Initial_output = () => {
   return (
     <div className= {styles.parfInputContainer} style = {{ minWidth:'20vw'}}>
     <div className={styles.displayMonitor }  style = {{minHeight:'45vh'}}>
-      <h3>左上显示区</h3>
-      <p>数据待定...</p>
+    <h1 className="text-3xl font-bold text-center mb-8">参数分布迭代表</h1>
+    <IterationTable />
     </div>
     </div>
   );
