@@ -190,17 +190,18 @@ const FileEntry: React.FC<FileEntryProps> = ({
           cursor: 'pointer',
           backgroundColor: isDragOver ? 'rgba(24, 144, 255, 0.1)' : 
                        isMultiSelected ? 'rgba(24, 144, 255, 0.1)' :
+                       isSelected? '#dedfe0':
                        isHovered ? '#E9E9E9' : 
                        'rgba(255, 255, 255, 0.4)',
           borderLeft: isAnyHovered ? '0.5px solid #d6d9d9' : '0.3px solid #d6d9d9',
           borderRight: isAnyHovered ? '0.5px solid #d6d9d9' : '0.3px solid #d6d9d9',
-          transform: isHovered ? 'scale(1.05)' : isSelected ? 'scale(1.01)' : 'scale(1.0)',
+          transform: isHovered ? 'scale(1.03)' : isSelected ? 'scale(1.0)' : 'scale(1.0)',
           transition: 'all 0.2s ease',
           position: 'relative',
           borderBottom: isAnyHovered ? '1.4px solid #ccc' : 
                        isSelected ? '2px solid #D9D9D9' : 
                        '1px solid #ccc',
-          borderRadius: '10px',
+          borderRadius: '5px',
           boxShadow: isDragOver && isFolder ? '0 0 5px rgba(24,144,255,0.5)' : 'none',
           border: isDragOver && isFolder ? '1px dashed #1890ff' : undefined,
         }}
@@ -220,17 +221,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
           {renderFileIcon()}
         </div>
 
-        {isSelected && !isMultiSelect && (
-          <div style={{
-            marginLeft: '1vw',
-            color: '#1890ff',
-            fontSize: '15px',
-          }}>
-            <Tooltip title="已选中该文件" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2}>
-              <PushpinOutlined />
-            </Tooltip>
-          </div>
-        )}
+
 
         <div style={{ flex: 1, marginLeft: '8px' }}>
           <div
@@ -239,18 +230,13 @@ const FileEntry: React.FC<FileEntryProps> = ({
               transition: 'all 0.2s ease',
               fontSize: isSelected ? '1.03em' : isHovered ? '1.05em' : '1em',
               marginBottom: '0px',
+              marginLeft:'0.5em',
+              textAlign:'left',
             }}
           >
             {fileName.length > 18 ? fileName.substring(0, 18) + '..' : fileName}
           </div>
           
-          <div style={{ 
-            color: isAnyHovered ? '#888' : 'transparent', 
-            fontSize: '12px', 
-            transition: 'all 0.2s ease'
-          }}>
-            {formattedTime}
-          </div>
         </div>
 
         {isHovered && !isMultiSelect && (

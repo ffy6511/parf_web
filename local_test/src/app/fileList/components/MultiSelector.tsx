@@ -1,7 +1,8 @@
-// components/MultiSelector.tsx
+// MultiSelector.tsx
 import React from 'react';
 import { Button } from 'antd';
 import { SelectOutlined, DeleteOutlined } from '@ant-design/icons';
+import styles from './component.module.css'
 
 interface MultiSelectorProps {
   isMultiSelect: boolean;
@@ -19,12 +20,17 @@ const MultiSelector: React.FC<MultiSelectorProps> = ({
   className
 }) => {
   return (
-    <div style = {{display:'flex', flexDirection:'row'}}>
+    <div style={{ display: 'flex', flexDirection: 'row' }}>
       <Button
         type={isMultiSelect ? 'primary' : 'default'}
         icon={<SelectOutlined />}
         onClick={onToggleMultiSelect}
-        style={{ marginRight: 8 }}
+        style={{
+          padding: '8px',
+          border: 'none',
+          fontSize: '2em',
+        }}
+        className={`${styles.foldcreator} ${isMultiSelect ? styles.active : ''}`}
       >
         {isMultiSelect ? 'Exit' : 'Mul'}
       </Button>
@@ -33,8 +39,14 @@ const MultiSelector: React.FC<MultiSelectorProps> = ({
           danger
           icon={<DeleteOutlined />}
           onClick={onBatchDelete}
+          style={{
+            padding: '8px',
+            border: 'none',
+            fontSize: '2em',
+          }}
+          className={styles.deleteButton}
         >
-        ({selectedCount})
+          ({selectedCount})
         </Button>
       )}
     </div>

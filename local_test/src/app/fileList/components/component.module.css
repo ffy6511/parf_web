@@ -1,8 +1,39 @@
-.foldcreator{
-    background-color: transparent;
+/* component.module.css */
+.foldcreator {
+    background-color: transparent !important;
+    border: none !important;
+    color: rgba(0, 0, 0, 0.85) !important;
 }
 
-.foldcreator:hover{
-    background-color: grey;
+.foldcreator:hover {
+    background-color: rgb(220, 220, 220) !important;
     transition: all 0.3s ease;
+    color: rgba(0, 0, 0, 0.85) !important;
+}
+
+.foldcreator.active {
+    background-color: #1890ff !important;
+    color: white !important;
+}
+
+.foldcreator.active:hover {
+    background-color: #40a9ff !important;
+    color: white !important;
+}
+
+.deleteButton {
+    background-color: transparent !important;
+    border: none !important;
+    color: #ff4d4f !important;
+}
+
+.deleteButton:hover {
+    background-color: rgb(220, 220, 220) !important;
+    transition: all 0.3s ease;
+    color: #ff4d4f !important;
+}
+
+.deleteButton:active {
+    background-color: #fafafa !important;
+    color: #ff7875 !important;
 }
