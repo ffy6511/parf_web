@@ -10,7 +10,7 @@ import  Output_container from './parf_output/output';
 import FileUploadContainer from './fileUploader/new_project'; // 上传组件
 import Display_1 from './fileList/display_1';  // 文件列表组件
 import InputPanel from './paraInput/paraInput';
-import { DockerOutlined, AlignLeftOutlined, MenuUnfoldOutlined, MenuFoldOutlined,PaperClipOutlined,TeamOutlined } from '@ant-design/icons';
+import { DockerOutlined, FunctionOutlined , MenuUnfoldOutlined, MenuFoldOutlined,PaperClipOutlined,TeamOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd'; // 导入 Tooltip 组件
 
 const Page: React.FC = () => {
@@ -132,7 +132,7 @@ const Page: React.FC = () => {
                 style = {{
                   display:'flex',
                   flexDirection:'row',
-                  marginTop:'-0.5vh',
+                  marginTop:'-1vh',
                 }}>
               <div 
                 onMouseEnter={() => setIsHovered(true)}
@@ -177,7 +177,7 @@ const Page: React.FC = () => {
             <div
               className={`${styles.fileListContainer} ${isFileListExpanded ? styles.fileListExpanded : ''}`}
               style={{
-                marginTop: '7.5vh',
+                marginTop: '8vh',
                 marginLeft: '0.5vw',
                 overflow: 'hidden',
                 borderRight: '1.5px solid #e0e0e0',
@@ -209,7 +209,7 @@ const Page: React.FC = () => {
                 }}> {/* InputPanel */}
 
               <strong style={{ fontSize: '1.2em', marginTop: '0px', textShadow: '1px 1px 10px #a49f9f' }}>
-                 <AlignLeftOutlined /> Hyperparameters Configuration
+              <FunctionOutlined /> Hyperparameters Configuration
                </strong>
 
               <InputPanel />

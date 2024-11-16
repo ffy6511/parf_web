@@ -323,6 +323,19 @@ const Log_output: React.FC = () => {
         >
           {returnMessage}
         </div>
+        
+      <div>
+        <Tooltip title={loading ? '中止当前调用' : '调用Parf分析当前设置'}>
+          <button
+            className={loading ? styles.submitButton_abort : styles.submitButton}
+            onClick={loading ? handleAbort : handleSubmit}
+            disabled={loading && !abortController}
+          >
+            {loading ? <StopOutlined /> : <UploadOutlined />}
+            {loading ? ' 中止调用' : ' 提交调用'}
+          </button>
+        </Tooltip>
+      </div>
 
       </div>
 
@@ -341,18 +354,6 @@ const Log_output: React.FC = () => {
         <pre className={styles.modalCodeBlock}>{displayData}</pre>
       </Modal>
 
-      <div>
-        <Tooltip title={loading ? '中止当前调用' : '调用Parf分析当前设置'}>
-          <button
-            className={loading ? styles.submitButton_abort : styles.submitButton}
-            onClick={loading ? handleAbort : handleSubmit}
-            disabled={loading && !abortController}
-          >
-            {loading ? <StopOutlined /> : <UploadOutlined />}
-            {loading ? ' 中止调用' : ' 提交调用'}
-          </button>
-        </Tooltip>
-      </div>
 
     </div>
   );

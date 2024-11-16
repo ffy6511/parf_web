@@ -11,7 +11,7 @@ export const iterationDataRouter = createTRPCRouter({
     }))
     .query(async ({ input }) => {
       // 如果没有提供 tempPath，使用默认路径
-      const old_dirPath = input.tempPath || 'output/frama_c_folder_1731745613852';
+      const old_dirPath = input.tempPath || 'output/frama_c_folder_1731746896611';
       const dirPath = path.join(process.cwd(), old_dirPath, '.parf_temp_files');
       // const dirPath = path.join(process.cwd(), "src/app/parf_output/visual/parf_files");
       console.log("Reading files from:", dirPath);
@@ -43,7 +43,7 @@ export const iterationDataRouter = createTRPCRouter({
     }))
     .query(async ({ input }) => {
       // 如果没有提供 tempPath，使用默认路径
-      const old_dirPath = input.tempPath || 'output/frama_c_folder_1731745613852';
+      const old_dirPath = input.tempPath || 'output/frama_c_folder_1731746896611';
       const dirPath = path.join(process.cwd(), old_dirPath, '.parf_temp_files');
       console.log("Reading files from:", dirPath);
 
