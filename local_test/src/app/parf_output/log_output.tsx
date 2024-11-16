@@ -47,7 +47,7 @@ const Log_output: React.FC = () => {
   // 从IndexedDB加载文件列表
   useEffect(() => {
     const loadFileList = async () => {
-      const request = indexedDB.open('FileStorage', 2);
+      const request = indexedDB.open('FileStorage', 3);
       
       request.onsuccess = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
