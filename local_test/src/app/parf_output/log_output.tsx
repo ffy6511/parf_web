@@ -27,7 +27,7 @@ interface FileDetails {
 
 interface AnalyseResponse {
   result: string;
-  tempPath?:string;
+  tempPath?: string;
 }
 
 const Log_output: React.FC = () => {
@@ -73,7 +73,7 @@ const Log_output: React.FC = () => {
   useEffect(() => {
     const loadFileList = async () => {
       const request = indexedDB.open('FileStorage', 3);
-      
+
       request.onsuccess = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
         const transaction = db.transaction(['files'], 'readonly');
@@ -124,18 +124,18 @@ const Log_output: React.FC = () => {
   // 获取文件夹中所有文件的函数
   const getAllFilesInFolder = async (folderId: number): Promise<{ path: string; content: string }[]> => {
     const result: { path: string; content: string }[] = [];
-    
+
     const getFiles = async (id: number, basePath: string = '') => {
       const currentFile = fileList.find(file => file.id === id);
       if (!currentFile) return;
 
       // 获取子文件和文件夹
       const children = fileList.filter(file => file.parentId === id);
-      
+
       for (const child of children) {
         // 构建相对路径
         const childPath = basePath ? `${basePath}/${child.fileName}` : child.fileName;
-        
+
         if (child.isFolder) {
           // 递归处理子文件夹
           await getFiles(child.id, childPath);
@@ -196,14 +196,14 @@ const Log_output: React.FC = () => {
 
     const selectedGroup = JSON.parse(groupData) as GroupDetails;
     const selectedFile = JSON.parse(fileData) as FileDetails;
-    
+
     if (!selectedGroup || !selectedFile) {
       alert('请选择一个参数组和文件！');
       return;
     }
     const path = require('path');
 
-    
+
     // 生成新的临时路径
     // 创建文件夹名称
     const folderName = `frama_c_folder_${Date.now()}`;
@@ -221,7 +221,7 @@ const Log_output: React.FC = () => {
       if (selectedFile.isFolder) {
         // 处理文件夹
         const files = await getAllFilesInFolder(selectedFile.id);
-        
+
         // 调用文件夹分析接口
         folderMutation.mutate(
           {
@@ -295,10 +295,10 @@ const Log_output: React.FC = () => {
     ? displayData
       ? '点击查看详情'
       : positionQuery.isLoading
-        ? <span style={{color: '#333399', fontWeight: 'bold' }}><Spin/> 正在调用𝑷𝒂𝒓𝒇分析: 加载中...</span>
+        ? <span style={{ color: '#333399', fontWeight: 'bold' }}><Spin /> 正在调用𝑷𝒂𝒓𝒇分析: 加载中...</span>
         : positionQuery.isError
           ? '无法加载队列信息'
-          : <span style={{color: '#333399', fontWeight: 'bold' }}><Spin/> --正在分析-- 所处队列位置: {(positionQuery.data?.queueLength ?? 0) + 1}</span>
+          : <span style={{ color: '#333399', fontWeight: 'bold' }}><Spin /> --正在分析-- 所处队列位置: {(positionQuery.data?.queueLength ?? 0) + 1}</span>
     : '尚无待分析任务';
 
   return (
@@ -317,7 +317,7 @@ const Log_output: React.FC = () => {
           className={styles.codeBlock}
           style={
             submitted && displayData
-              ? { fontSize: '23px', fontWeight:"bolder", color: '#19a9c6', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60%' }
+              ? { fontSize: '23px', fontWeight: "bolder", color: '#19a9c6', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60%' }
               : { fontSize: '20px', color: 'grey', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60%' }
           }
         >
@@ -342,17 +342,17 @@ const Log_output: React.FC = () => {
       </Modal>
 
       <div>
-          <Tooltip title={loading ? '中止当前调用' : '调用Parf分析当前设置'}>
-            <button
-              className={loading ? styles.submitButton_abort : styles.submitButton}
-              onClick={loading ? handleAbort : handleSubmit}
-              disabled={loading && !abortController}
-            >
-              {loading ? <StopOutlined /> : <UploadOutlined />}
-              {loading ? ' 中止调用' : ' 提交调用'}
-            </button>
-          </Tooltip>
-        </div>
+        <Tooltip title={loading ? '中止当前调用' : '调用Parf分析当前设置'}>
+          <button
+            className={loading ? styles.submitButton_abort : styles.submitButton}
+            onClick={loading ? handleAbort : handleSubmit}
+            disabled={loading && !abortController}
+          >
+            {loading ? <StopOutlined /> : <UploadOutlined />}
+            {loading ? ' 中止调用' : ' 提交调用'}
+          </button>
+        </Tooltip>
+      </div>
 
     </div>
   );
