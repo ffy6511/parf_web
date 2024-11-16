@@ -43,9 +43,11 @@ export const useIterationData = () => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedTempPath = localStorage.getItem('tempPath');
-      setTempPath(storedTempPath);
+      if (storedTempPath !== tempPath) {
+        setTempPath(storedTempPath); // 更新 tempPath
+      }
     }
-  }, []);
+  }, [tempPath]);
 
   const { data: iterationData = [], refetch } = trpc.iterationdata.getIterationData.useQuery(
     { tempPath },
