@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { trpc } from '../../../trpc/react';
+import styles from '../parf_output.module.css'
 
 const ResultComparation = () => {
   const [tempPath, setTempPath] = useState<string | null>(null);
@@ -26,8 +27,8 @@ const ResultComparation = () => {
     if (typeof window !== 'undefined') {
       const storedTempPath = localStorage.getItem("tempPath");
       if (storedTempPath !== tempPath) {
-      setTempPath(storedTempPath); // 更新 tempPath
-    }
+        setTempPath(storedTempPath); // 更新 tempPath
+      }
     }
   }, [tempPath]);
 
@@ -44,15 +45,15 @@ const ResultComparation = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       {/* 第一部分：显示第一个文件内容 */}
-      <div style={{ flex: 1, padding: '10px', overflowY: 'auto' }}>
-        <h3>{files[0]?.fileName}</h3>
-        <pre>{files[0]?.content}</pre>
+      <div style={{ flex: 1, padding: '10px', overflowY: 'auto' }} className={styles.codeBlock}>
+        <h3>{files[1]?.fileName}</h3>
+        <pre>{files[1]?.content}</pre>
       </div>
 
       {/* 第二部分：显示第二个文件内容 */}
-      <div style={{ flex: 1, padding: '10px', overflowY: 'auto' }}>
-        <h3>{files[1]?.fileName}</h3>
-        <pre>{files[1]?.content}</pre>
+      <div style={{ flex: 1, padding: '10px', overflowY: 'auto' }} className={styles.codeBlock} >
+        <h3>{files[0]?.fileName}</h3>
+        <pre>{files[0]?.content}</pre>
       </div>
     </div>
   );
