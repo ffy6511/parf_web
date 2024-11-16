@@ -8,29 +8,39 @@ const ResultComparation = () => {
   const [tempPath, setTempPath] = useState<string | null>(null);
   const [files, setFiles] = useState<{ fileName: string, content: string }[]>([]);
 
-  // 发起查询的条件依赖于 tempPath
-  const { data, isLoading, error } = trpc.iterationdata.getTxtFilesContent.useQuery({
-    tempPath: tempPath || "", // 使用 tempPath 作为路径
-  }, {
-    enabled: !!tempPath // 只有当 tempPath 不为空时，才启用该查询
-  });
 
-  // 当查询数据返回时，更新文件内容
-  useEffect(() => {
-    if (data) {
-      setFiles(data); // 更新文件内容
-    }
-  }, [data]);
-
-  // 只有在组件加载完成后获取 tempPath
+  // 初始化时从 localStorage 获取 tempPath
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const storedTempPath = localStorage.getItem("tempPath");
-      if (storedTempPath !== tempPath) {
-        setTempPath(storedTempPath); // 更新 tempPath
-      }
+      const storedTempPath = localStorage.getItem('tempPath');
+      setTempPath(storedTempPath);
     }
-  }, [tempPath]);
+  }, []);
+
+  // 监听 tempPathUpdated 自定义事件
+  useEffect(() => {
+    const handleTempPathUpdated = () => {
+      if (typeof window !== 'undefined') {
+        const updatedPath = localStorage.getItem('tempPath');
+        setTempPath(updatedPath);
+      }
+    };
+
+    window.addEventListener('tempPathUpdated', handleTempPathUpdated);
+
+    return () => {
+      window.removeEventListener('tempPathUpdated', handleTempPathUpdated);
+    };
+  }, []);
+
+    // 发起查询的条件依赖于 tempPath
+    const { data, isLoading, error } = trpc.iterationdata.getTxtFilesContent.useQuery({
+      tempPath: tempPath || "", // 使用 tempPath 作为路径
+    }, {
+      enabled: !!tempPath // 只有当 tempPath 不为空时，才启用该查询
+    });
+  
+
 
   // 如果数据正在加载
   if (isLoading) {

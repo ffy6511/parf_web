@@ -51,6 +51,7 @@ const Log_output: React.FC = () => {
     if (typeof window !== 'undefined') {
       if (newPath) {
         localStorage.setItem('tempPath', newPath);
+        window.dispatchEvent(new Event('tempPathUpdated')); 
       } else {
         localStorage.removeItem('tempPath');
       }

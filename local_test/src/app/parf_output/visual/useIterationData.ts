@@ -6,15 +6,30 @@ export const useIterationData = () => {
   const [currentIteration, setCurrentIteration] = useState(0);
   const [intervalId, setINTERVALId] = useState<NodeJS.Timeout | null>(null);
 
-  // 在客户端安全地访问 localStorage
+  // 初始化时从 localStorage 获取 tempPath
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedTempPath = localStorage.getItem('tempPath');
-      if (storedTempPath !== tempPath) {
-        setTempPath(storedTempPath); // 更新 tempPath
-      }
+      setTempPath(storedTempPath);
     }
-  }, [tempPath]);
+  }, []);
+
+  // 监听 tempPathUpdated 自定义事件
+  useEffect(() => {
+    const handleTempPathUpdated = () => {
+      if (typeof window !== 'undefined') {
+        const updatedPath = localStorage.getItem('tempPath');
+        setTempPath(updatedPath); // 更新 tempPath
+      }
+    };
+
+    window.addEventListener('tempPathUpdated', handleTempPathUpdated);
+
+    return () => {
+      window.removeEventListener('tempPathUpdated', handleTempPathUpdated);
+    };
+  }, []);
+  
 
   const { data: iterationData = [], refetch } = trpc.iterationdata.getIterationData.useQuery(
     { tempPath },
