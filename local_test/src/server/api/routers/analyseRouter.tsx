@@ -12,6 +12,7 @@ type ExecuteCommandInput = {
   process: number;
   sampleNum: number;
   fileContent: string;
+  tempDirPath: string;
 };
 
 // 新增文件夹分析的输入类型
@@ -24,13 +25,13 @@ type FolderAnalyseInput = {
     content: string;
   }[];
   folderPath: string;
+  tempDirPath: string;
 };
 
 
 // 定义结果类型
 type CommandResult = { 
   result: string ;
-  temPath?: string;
 };
 
 // 创建队列
@@ -43,8 +44,7 @@ const commandQueue = queue(async (task: ExecuteCommandInput | FolderAnalyseInput
 }, 1);
 
 // 文件夹分析函数
-const analyseFolderFiles = async ({ budget, process, sampleNum, files, folderPath }: FolderAnalyseInput): Promise<CommandResult> => {
-  const tempDirPath = path.join(os.tmpdir(), `frama_c_folder_${Date.now()}`);
+const analyseFolderFiles = async ({ budget, process, sampleNum, files, folderPath,tempDirPath }: FolderAnalyseInput): Promise<CommandResult> => {
   
   try {
     // 创建临时目录
@@ -106,7 +106,6 @@ const analyseFolderFiles = async ({ budget, process, sampleNum, files, folderPat
 
     return {
        result: combinedOutput,
-       tempPath: tempDirPath
 
      };
   } catch (error) {
@@ -124,8 +123,9 @@ const analyseFolderFiles = async ({ budget, process, sampleNum, files, folderPat
 
 
 // 实际的执行命令逻辑
-const executeCommand = async ({ budget, process, sampleNum, fileContent }: ExecuteCommandInput): Promise<CommandResult> => {
-  const tempFilePath = path.join(os.tmpdir(), `frama_c_input_${Date.now()}.c`);
+const executeCommand = async ({ budget, process, sampleNum, fileContent,tempDirPath }: ExecuteCommandInput): Promise<CommandResult> => {
+  const fullTempPath = path.join(os.tmpdir(), tempDirPath);
+  const tempFilePath = path.join(fullTempPath, 'input.c');
 
   try {
     await fs.writeFile(tempFilePath, fileContent);
@@ -143,7 +143,6 @@ const executeCommand = async ({ budget, process, sampleNum, fileContent }: Execu
       });
     });
 
-    await fs.unlink(tempFilePath).catch(() => {});
 
     const combinedOutput = `${stdout}${stderr}`
       .split('\n')
@@ -166,11 +165,11 @@ export const analyseRouter = createTRPCRouter({
         process: z.number().min(1),
         sampleNum: z.number().min(1),
         fileContent: z.string(),
+        tempDirPath: z.string(),
       })
     )
     .output(z.object({
        result: z.string() ,
-       tempPath: z.string().optional(),
       }))
     .mutation(async ({ input }) => {
       return new Promise<{ result: string }>((resolve, reject) => {
@@ -202,6 +201,7 @@ export const analyseRouter = createTRPCRouter({
           })
         ),
         folderPath: z.string(),
+        tempDirPath: z.string(),
       })
     )
     .output(z.object({ result: z.string() }))

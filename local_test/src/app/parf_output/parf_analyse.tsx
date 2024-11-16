@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import styles from './parf_output.module.css';
 
