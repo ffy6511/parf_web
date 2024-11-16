@@ -1,4 +1,5 @@
 "use client";
+import path from "path";
 
 import { useState, useEffect } from "react";
 import { trpc } from '../../../trpc/react';
@@ -14,8 +15,8 @@ export interface IterationData {
 
 // export const useIterationData = ()=> {
 //   const path = require('path');
-  const folderPath = localStorage.getItem('tempPath');
-  const tempPath = path.join(folderPath,'.parf_temp_files');
+ // const tempPath = localStorage.getItem('tempPath') || 'output/default';
+  // const tempPath = path.join(folderPath,'.parf_temp_files');
 //   const [currentIteration, setCurrentIteration] = useState(0);
 
 //   const { data: iterationData = [], refetch } = trpc.iterationdata.getIterationData.useQuery(
