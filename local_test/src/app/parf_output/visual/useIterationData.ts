@@ -12,7 +12,8 @@ export interface IterationData {
   [key: string]: Parameter;
 }
 
-export const useIterationData = (tempPath?: string)=> {
+export const useIterationData = ()=> {
+  const tempPath = localStorage.getItem('tempPath');
   const [currentIteration, setCurrentIteration] = useState(0);
 
   const { data: iterationData = [], refetch } = trpc.iterationdata.getIterationData.useQuery(

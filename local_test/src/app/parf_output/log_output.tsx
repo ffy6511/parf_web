@@ -5,13 +5,30 @@ import styles from './parf_output.module.css';
 import { trpc } from '../../trpc/react';
 import "~/styles/globals.css"
 
+
+export const useTempPath = () => {
+  // 初始化时从 localStorage 读取
+  const [tempPath, setTempPath] = useState<string | undefined>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('tempPath');
+      return saved || undefined;
+    }
+    return undefined;
+  });
+
+  // 当 tempPath 改变时，更新 localStorage
+  useEffect(() => {
+    if (tempPath) {
+      localStorage.setItem('tempPath', tempPath);
+    } else {
+      localStorage.removeItem('tempPath');
+    }
+  }, [tempPath]);
+
+  return [tempPath, setTempPath] as const;
+};
+
 // 更新接口定义
-
-
-interface log_outputProps{
-  setTempPath:(path:string |  undefined) => void; // 将临时目录地址传递给可视化组件
-}
-
 interface GroupDetails {
   groupName: string;
   timeBudget: number;
@@ -41,6 +58,8 @@ const Log_output: React.FC = () => {
   const [selectedGroup, setSelectedGroup] = useState<GroupDetails | null>(null);
   const [selectedFile, setSelectedFile] = useState<FileDetails | null>(null);
   const [fileList, setFileList] = useState<FileDetails[]>([]);
+
+  const [tempPath, setTempPath] = useTempPath();
 
   const mutation = trpc.analyse.executeCommand.useMutation();
   const folderMutation = trpc.analyse.analyseFolder.useMutation();
