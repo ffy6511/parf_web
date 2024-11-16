@@ -10,7 +10,7 @@ import  Output_container from './parf_output/output';
 import FileUploadContainer from './fileUploader/new_project'; // 上传组件
 import Display_1 from './fileList/display_1';  // 文件列表组件
 import InputPanel from './paraInput/paraInput';
-import { DockerOutlined, AlignLeftOutlined, MenuUnfoldOutlined, MenuFoldOutlined,PaperClipOutlined,TeamOutlined } from '@ant-design/icons';
+import { DockerOutlined, FunctionOutlined , MenuUnfoldOutlined, MenuFoldOutlined,PaperClipOutlined,TeamOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd'; // 导入 Tooltip 组件
 
 const Page: React.FC = () => {
@@ -209,7 +209,7 @@ const Page: React.FC = () => {
                 }}> {/* InputPanel */}
 
               <strong style={{ fontSize: '1.2em', marginTop: '0px', textShadow: '1px 1px 10px #a49f9f' }}>
-                 <AlignLeftOutlined /> Hyperparameters Configuration
+              <FunctionOutlined /> Hyperparameters Configuration
                </strong>
 
               <InputPanel />
