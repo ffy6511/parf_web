@@ -5,7 +5,8 @@ import styles from './parf_output.module.css';
 const Parf_analyse = () => {
     return (
         <div className= {styles.parfInputContainer} style = {{ minWidth:'20vw'}}>
-        <div className={styles.displayMonitor}  style = {{minHeight:'45vh'}}>
+        {/* <div className={styles.displayMonitor}  style = {{maxHeight:'80vh',overflow:'auto'}}> */}
+        <div className={styles.displayMonitor}>
           <h3>右上显示区</h3>
           <p>数据待定...</p>
         </div>

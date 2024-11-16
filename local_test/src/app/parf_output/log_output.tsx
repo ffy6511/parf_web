@@ -302,8 +302,8 @@ const Log_output: React.FC = () => {
     : '尚无待分析任务';
 
   return (
-    <div className={styles.parfInputContainer}>
-      <div className={styles.displayMonitor}>
+    <div className={styles.parfOutputContainer}>
+      <div className={styles.displayMonitor2}>
         <strong>
           调用返回区
           {displayData && (

@@ -1,0 +1,14 @@
+project "Initial Base 2"
+Parameter: -eva-widening-delay 1 -eva-subdivide-non-linear 0 -eva-slevel 0 -eva-plevel 10 -eva-partition-history 0 -eva-min-loop-unroll 0 -eva-ilevel 8 -eva-equality-through-calls none -eva-domains cvalue -eva-auto-loop-unroll 0 
+alarm (  1): Is_nan_or_infinite((double)adaptation[RoCo_moveFast] + tmp_13)
+alarm (  2): Is_nan_or_infinite((double)c * *state)
+alarm (  3): Is_nan_or_infinite((double)(1.0 - c) * x + c * *state)
+alarm (  4): Is_nan_or_infinite((double)(1.0 - c) * x)
+alarm (  5): Is_nan_or_infinite((double)((x - curve->x[i]) / (curve->x[
+                                                              (int)i + 1] - curve->x[i])) * (
+                                        curve->y[(int)i + 1] - curve->y[i]))
+alarm (  6): Is_nan_or_infinite((double)(x - curve->x[i]) / (curve->x[
+                                                             (int)i + 1] - curve->x[i]))
+alarm (  7): Signed_overflow(_t + delayMs <= 2147483647)
+alarm (  8): Is_nan_or_infinite((double)RoCo_legAngle + t15)
+alarm (  9): Is_nan_or_infinite((double)tmp * dT)
