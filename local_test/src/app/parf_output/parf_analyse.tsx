@@ -1,6 +1,8 @@
 'use client'
 import React from 'react';
 import styles from './parf_output.module.css';
+import ResultComparation  from './visual/result_comparation'
+
 
 const Parf_analyse = () => {
     return (
@@ -8,7 +10,7 @@ const Parf_analyse = () => {
         {/* <div className={styles.displayMonitor}  style = {{maxHeight:'80vh',overflow:'auto'}}> */}
         <div className={styles.displayMonitor}>
           <h3>右上显示区</h3>
-          <p>数据待定...</p>
+          <ResultComparation/>
         </div>
         </div>
       );
