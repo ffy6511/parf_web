@@ -12,13 +12,13 @@
 }
 
 .foldcreator.active {
-    background-color: #1890ff !important;
-    color: white !important;
+    background-color: rgb(220, 220, 220) !important;
+    color: rgba(0, 0, 0, 0.85) !important;
 }
 
 .foldcreator.active:hover {
-    background-color: #40a9ff !important;
-    color: white !important;
+    background-color: rgb(220, 220, 220) !important;
+    color: rgba(0, 0, 0, 0.85) !important;
 }
 
 .deleteButton {

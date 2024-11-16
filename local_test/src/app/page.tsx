@@ -132,7 +132,7 @@ const Page: React.FC = () => {
                 style = {{
                   display:'flex',
                   flexDirection:'row',
-                  marginTop:'-0.5vh',
+                  marginTop:'-1vh',
                 }}>
               <div 
                 onMouseEnter={() => setIsHovered(true)}
@@ -177,7 +177,7 @@ const Page: React.FC = () => {
             <div
               className={`${styles.fileListContainer} ${isFileListExpanded ? styles.fileListExpanded : ''}`}
               style={{
-                marginTop: '7.5vh',
+                marginTop: '8vh',
                 marginLeft: '0.5vw',
                 overflow: 'hidden',
                 borderRight: '1.5px solid #e0e0e0',

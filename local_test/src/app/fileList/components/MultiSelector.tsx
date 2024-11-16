@@ -1,7 +1,7 @@
 // MultiSelector.tsx
 import React from 'react';
 import { Button } from 'antd';
-import { SelectOutlined, DeleteOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import styles from './component.module.css'
 
 interface MultiSelectorProps {
@@ -22,8 +22,8 @@ const MultiSelector: React.FC<MultiSelectorProps> = ({
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
       <Button
-        type={isMultiSelect ? 'primary' : 'default'}
-        icon={<SelectOutlined />}
+        type={isMultiSelect ? 'default' : 'default'}
+        icon={isMultiSelect?null:<CheckCircleOutlined/>}
         onClick={onToggleMultiSelect}
         style={{
           padding: '8px',
@@ -32,7 +32,7 @@ const MultiSelector: React.FC<MultiSelectorProps> = ({
         }}
         className={`${styles.foldcreator} ${isMultiSelect ? styles.active : ''}`}
       >
-        {isMultiSelect ? 'Exit' : 'Mul'}
+        {isMultiSelect ? 'Done' : ''}
       </Button>
       {isMultiSelect && selectedCount > 0 && (
         <Button
