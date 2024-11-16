@@ -45,13 +45,13 @@ const ResultComparation = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       {/* 第一部分：显示第一个文件内容 */}
-      <div style={{ flex: 1, padding: '10px', overflowY: 'auto' }} className={styles.codeBlock}>
+      <div style={{ flex: 1, padding: '10px', overflowY: 'auto',overflowX:'auto'}}>
         <h3>{files[1]?.fileName}</h3>
         <pre>{files[1]?.content}</pre>
       </div>
 
       {/* 第二部分：显示第二个文件内容 */}
-      <div style={{ flex: 1, padding: '10px', overflowY: 'auto' }} className={styles.codeBlock} >
+      <div style={{ flex: 1, padding: '10px', overflowY: 'auto' ,overflowX:'auto'}} >
         <h3>{files[0]?.fileName}</h3>
         <pre>{files[0]?.content}</pre>
       </div>
