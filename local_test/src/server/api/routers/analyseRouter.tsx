@@ -128,13 +128,18 @@ const executeCommand = async ({ budget, process, sampleNum, fileContent,tempDirP
   const tempFilePath = path.join(fullTempPath, 'input.c');
 
   try {
+    await fs.mkdir(fullTempPath, { recursive: true });
+
     await fs.writeFile(tempFilePath, fileContent);
 
     const command = `opam switch 5.1.0 && eval $(opam env) && frama-c ${tempFilePath} -parf -parf-budget ${budget} -parf-process ${process} -parf-sample-num ${sampleNum}`;
 
     const { stdout, stderr } = await new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
       //设置文件的最大容量：当前:10 MB
-      exec(command, { maxBuffer: 1024 * 1024 * 10 }, (error, stdout, stderr) => {
+      exec(command, {
+         maxBuffer: 1024 * 1024 * 10,
+         cwd: fullTempPath 
+         }, (error, stdout, stderr) => {
         if (error) {
           reject(error); // 如果有错误，则拒绝 Promise
         } else {

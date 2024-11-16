@@ -13,7 +13,9 @@ export interface IterationData {
 }
 
 export const useIterationData = ()=> {
-  const tempPath = localStorage.getItem('tempPath');
+  const path = require('path');
+  const folderPath = localStorage.getItem('tempPath');
+  const tempPath = path.join(folderPath,'.parf_temp_files');
   const [currentIteration, setCurrentIteration] = useState(0);
 
   const { data: iterationData = [], refetch } = trpc.iterationdata.getIterationData.useQuery(

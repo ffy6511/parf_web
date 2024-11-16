@@ -56,7 +56,7 @@ const Log_output: React.FC = () => {
       }
     }
   };
-  
+
 
 
 
@@ -201,9 +201,15 @@ const Log_output: React.FC = () => {
       alert('请选择一个参数组和文件！');
       return;
     }
+    const path = require('path');
 
+    
     // 生成新的临时路径
-    const newTempPath = `frama_c_folder_${Date.now()}`;
+    // 创建文件夹名称
+    const folderName = `frama_c_folder_${Date.now()}`;
+
+    // 拼接路径，output作为父文件夹
+    const newTempPath = path.join('output', folderName);
     setTempPath(newTempPath); // 使用 hook 设置新的临时路径
 
 
