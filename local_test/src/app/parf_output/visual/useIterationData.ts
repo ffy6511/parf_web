@@ -12,10 +12,15 @@ export interface IterationData {
   [key: string]: Parameter;
 }
 
-export const useIterationData = () => {
+export const useIterationData = (tempPath?: string)=> {
   const [currentIteration, setCurrentIteration] = useState(0);
 
-  const { data: iterationData = [], refetch } = trpc.iterationdata.getIterationData.useQuery();
+  const { data: iterationData = [], refetch } = trpc.iterationdata.getIterationData.useQuery(
+    { tempPath },
+    {
+      enabled: tempPath !== undefined, // 只有当 tempPath 存在时才发起请求
+    }
+  );
 
   useEffect(() => {
     if (iterationData.length > 0) {
