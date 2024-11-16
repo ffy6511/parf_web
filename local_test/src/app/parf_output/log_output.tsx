@@ -18,6 +18,7 @@ export const useTempPath = () => {
 
   // 当 tempPath 改变时，更新 localStorage
   useEffect(() => {
+    console.log("useEffect11111111111111111111111111");
     if (tempPath) {
       localStorage.setItem('tempPath', tempPath);
     } else {
@@ -284,10 +285,10 @@ const Log_output: React.FC = () => {
     ? displayData
       ? '点击查看详情'
       : positionQuery.isLoading
-        ? <span className={styles.blinking_text}><Spin/> 正在调用𝑷𝒂𝒓𝒇分析: 加载中...</span>
+        ? <span style={{color: '#333399', fontWeight: 'bold' }}><Spin/> 正在调用𝑷𝒂𝒓𝒇分析: 加载中...</span>
         : positionQuery.isError
           ? '无法加载队列信息'
-          : <span className={styles.blinking_text}><Spin/> --正在分析-- 所处队列位置: {(positionQuery.data?.queueLength ?? 0) + 1}</span>
+          : <span style={{color: '#333399', fontWeight: 'bold' }}><Spin/> --正在分析-- 所处队列位置: {(positionQuery.data?.queueLength ?? 0) + 1}</span>
     : '尚无待分析任务';
 
   return (
