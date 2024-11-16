@@ -1,30 +1,13 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import CharPoi from "./CharPoi";
 import CharBer from "./CharBer";
 import CharBerVec from "./CharBerVec";
 import { useIterationData } from "./useIterationData";
 
-interface IterationTableProps{
-  tempPath?:string;
-}
-
-const IterationTable: React.FC<IterationTableProps> = ({ tempPath }) => {
-  // 添加 refetch 到解构中
-  const [iterationData, currentIteration, refetch] = useIterationData(tempPath);
-
-  useEffect(() => {
-    // 如果有 tempPath，则调用 refetch
-    if (tempPath) {
-      void refetch();
-    }
-  }, [tempPath, refetch]);
-
-  // 如果没有 tempPath，显示提示信息
-  if (!tempPath) {
-    return <div className="text-center text-xl">请等待分析完成...</div>;
-  }
+const IterationTable = () => {
+  const [iterationData, currentIteration] = useIterationData();
 
   const categorizedParams = iterationData.length > 0
     ? Object.keys(iterationData[0] || {}).reduce(

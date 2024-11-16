@@ -34,7 +34,7 @@ interface AnalyseResponse {
   tempPath?:string;
 }
 
-const Log_output: React.FC<log_outputProps> = ({setTempPath}) => {
+const Log_output: React.FC = () => {
   const [displayData, setDisplayData] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [isExpandedFully, setIsExpandedFully] = useState<boolean>(false);
@@ -233,7 +233,6 @@ const Log_output: React.FC<log_outputProps> = ({setTempPath}) => {
             onSuccess: (response: AnalyseResponse) => {
               setDisplayData(response.result);
               setLoading(false);
-              setTempPath(response.tempPath);
             },
             onError: (error) => {
               handleError(error, controller);
