@@ -6,6 +6,12 @@ import { trpc } from '../../trpc/react';
 import "~/styles/globals.css"
 
 // 更新接口定义
+
+
+interface log_outputProps{
+  setTempPath:(path:string |  undefined) => void; // 将临时目录地址传递给可视化组件
+}
+
 interface GroupDetails {
   groupName: string;
   timeBudget: number;
@@ -25,6 +31,7 @@ interface FileDetails {
 
 interface AnalyseResponse {
   result: string;
+  tempPath?:string;
 }
 
 const Log_output: React.FC = () => {
@@ -199,6 +206,7 @@ const Log_output: React.FC = () => {
             onSuccess: (response: AnalyseResponse) => {
               setDisplayData(response.result);
               setLoading(false);
+              setTempPath(response.tempPath);
             },
             onError: (error) => {
               handleError(error, controller);

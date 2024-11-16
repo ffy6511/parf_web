@@ -28,7 +28,10 @@ type FolderAnalyseInput = {
 
 
 // 定义结果类型
-type CommandResult = { result: string };
+type CommandResult = { 
+  result: string ;
+  temPath?: string;
+};
 
 // 创建队列
 const commandQueue = queue(async (task: ExecuteCommandInput | FolderAnalyseInput) => {
@@ -94,17 +97,21 @@ const analyseFolderFiles = async ({ budget, process, sampleNum, files, folderPat
     });
 
     // 清理临时文件
-    await fs.rm(tempDirPath, { recursive: true, force: true });
+    //await fs.rm(tempDirPath, { recursive: true, force: true });
 
     const combinedOutput = `${stdout}${stderr}`
       .split('\n')
       .filter(line => !line.includes('.parf_temp_files'))
       .join('\n');
 
-    return { result: combinedOutput };
+    return {
+       result: combinedOutput,
+       tempPath: tempDirPath
+
+     };
   } catch (error) {
     // 确保清理临时文件
-    await fs.rm(tempDirPath, { recursive: true, force: true }).catch(() => {});
+    //await fs.rm(tempDirPath, { recursive: true, force: true }).catch(() => {});
     console.error('Error in analyseFolderFiles:', error);
     if (error instanceof Error && error.message.includes('Config file not found')) {
       throw new Error('未找到配置文件config.txt');
@@ -161,7 +168,10 @@ export const analyseRouter = createTRPCRouter({
         fileContent: z.string(),
       })
     )
-    .output(z.object({ result: z.string() }))
+    .output(z.object({
+       result: z.string() ,
+       tempPath: z.string().optional(),
+      }))
     .mutation(async ({ input }) => {
       return new Promise<{ result: string }>((resolve, reject) => {
         // 将任务添加到队列
