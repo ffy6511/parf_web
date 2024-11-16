@@ -215,7 +215,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
 
       await saveFileTree(fileNode);
 
-      message.success(`File ${file.name} saved successfully`);
+      //message.success(`File ${file.name} saved successfully`);
       onFileUploadSuccess();
     } catch (error) {
       message.error('Failed to upload file');

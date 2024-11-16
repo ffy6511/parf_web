@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import Parf_analyse from './parf_analyse';
 import Initial_output from './initial_output';

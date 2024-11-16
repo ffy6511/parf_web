@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Tooltip, Spin } from 'antd';
 import { ArrowsAltOutlined, UploadOutlined, LoadingOutlined, StopOutlined } from '@ant-design/icons';
@@ -5,29 +6,6 @@ import styles from './parf_output.module.css';
 import { trpc } from '../../trpc/react';
 import "~/styles/globals.css"
 
-
-export const useTempPath = () => {
-  // 初始化时从 localStorage 读取
-  const [tempPath, setTempPath] = useState<string | undefined>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('tempPath');
-      return saved || undefined;
-    }
-    return undefined;
-  });
-
-  // 当 tempPath 改变时，更新 localStorage
-  useEffect(() => {
-    console.log("useEffect11111111111111111111111111");
-    if (tempPath) {
-      localStorage.setItem('tempPath', tempPath);
-    } else {
-      localStorage.removeItem('tempPath');
-    }
-  }, [tempPath]);
-
-  return [tempPath, setTempPath] as const;
-};
 
 // 更新接口定义
 interface GroupDetails {
@@ -60,7 +38,27 @@ const Log_output: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<FileDetails | null>(null);
   const [fileList, setFileList] = useState<FileDetails[]>([]);
 
-  const [tempPath, setTempPath] = useTempPath();
+  const [tempPath, setTempPathState] = useState<string | undefined>(() => {
+    // 初始化时从 localStorage 读取
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('tempPath') || undefined;
+    }
+    return undefined;
+  });
+
+  const setTempPath = (newPath: string | undefined) => {
+    setTempPathState(newPath);
+    if (typeof window !== 'undefined') {
+      if (newPath) {
+        localStorage.setItem('tempPath', newPath);
+      } else {
+        localStorage.removeItem('tempPath');
+      }
+    }
+  };
+  
+
+
 
   const mutation = trpc.analyse.executeCommand.useMutation();
   const folderMutation = trpc.analyse.analyseFolder.useMutation();
@@ -204,6 +202,11 @@ const Log_output: React.FC = () => {
       return;
     }
 
+    // 生成新的临时路径
+    const newTempPath = `frama_c_folder_${Date.now()}`;
+    setTempPath(newTempPath); // 使用 hook 设置新的临时路径
+
+
     setLoading(true);
     const controller = new AbortController();
     setAbortController(controller);
@@ -221,12 +224,12 @@ const Log_output: React.FC = () => {
             sampleNum: selectedGroup.sampleSize,
             files,
             folderPath: selectedFile.fileName,
+            tempDirPath: newTempPath,
           },
           {
             onSuccess: (response: AnalyseResponse) => {
               setDisplayData(response.result);
               setLoading(false);
-              setTempPath(response.tempPath);
             },
             onError: (error) => {
               handleError(error, controller);
@@ -248,6 +251,7 @@ const Log_output: React.FC = () => {
             process: selectedGroup.core,
             sampleNum: selectedGroup.sampleSize,
             fileContent,
+            tempDirPath: newTempPath,
           },
           {
             onSuccess: (response: AnalyseResponse) => {
