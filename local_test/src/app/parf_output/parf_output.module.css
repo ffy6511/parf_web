@@ -103,13 +103,14 @@
   padding: 10px;
   border-radius: 5px;
   font-family: 'Courier New', Courier, monospace;
-  font-size: 0.9em;
+  font-size: 1em;
   height: calc(100% - 60px);
   overflow-y: auto;
   color: #333;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow: hidden;
+  text-align: left;
+  scrollbar-width: thin;
 }
 
 
