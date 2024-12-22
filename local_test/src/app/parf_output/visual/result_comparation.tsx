@@ -50,8 +50,10 @@ const ResultComparation = () => {
       
       if (timeBudget > 0) {  
         const timer = setTimeout(() => {  
-          setDelayedQuery(true);  
-        }, timeBudget * 1000);  
+          setDelayedQuery(true); 
+
+        }, (timeBudget+2) * 1000);  
+        setFiles([]);
 
         return () => clearTimeout(timer);  
       } else {  
