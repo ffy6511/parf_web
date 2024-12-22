@@ -192,9 +192,11 @@
 .fileListContainer {
   overflow: auto;
   transition: max-height 1s ease, width 1s ease, opacity 1s ease;
+  opacity: 0;
 }
 
 .fileListExpanded {
+  max-height: 100vh;
   width: 35vw; /* 展开的宽度 */
   opacity: 1;
 }
