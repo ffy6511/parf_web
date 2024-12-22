@@ -98,15 +98,16 @@ const Page: React.FC = () => {
     }
   };
   return (
-    <div style={{ display: 'flex', flexDirection: 'column',height:'100vh',overflow:'auto'}}>
+    <div style={{ display: 'flex', flexDirection: 'column',minHeight:'100vh',overflow:'auto'}}>
       {/* 主体内容部分 */}
-      <div style={{ display: 'flex', flex: 1,overflow:'hidden' }}>
+      <div style={{ display: 'flex', flex: 1,overflow:'auto' }}>
         {/* 控制按钮和文件列表的容器 */}
         <div
           style={{
             display: 'flex',
             marginTop:'-2vh',
             flex:isFileListVisible?3:0,
+            flexDirection: 'column', 
             position: 'relative',
             boxShadow: '1px 0 5px rgba(0, 0, 0, 0.3)',  
             background: 'linear-gradient(90deg, rgba(242, 242, 242, 0.5), rgba(241, 237, 234, 0.5), rgba(233, 226, 226, 0.5))',
@@ -115,11 +116,11 @@ const Page: React.FC = () => {
           {/* 控制按钮固定在左侧 */}
           <div
             style={{
-              position: 'absolute',
-              left: '1em',
+              padding: '1em',
+              flexShrink: 0, 
               top: '0px',
               display: 'flex',
-              alignItems: 'center',
+              // alignItems: 'center',
               justifyContent: 'center',
               transition: 'all 0.3s ease',
               color: isHovered ? '#1890ff' : 'black',
@@ -133,6 +134,7 @@ const Page: React.FC = () => {
                   display:'flex',
                   flexDirection:'row',
                   marginTop:'-1vh',
+                 marginRight:'auto'
                 }}>
               <div 
                 onMouseEnter={() => setIsHovered(true)}
@@ -142,7 +144,6 @@ const Page: React.FC = () => {
                 alignItems: 'center', 
                 fontSize: '1em', 
                 marginTop: '0px',
-
                 }}>
                 <Tooltip title="收起文件列表" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2} onClick={toggleFileListVisibility}
                 scale = 'isHovered ? 1.1 : 1'
@@ -177,9 +178,10 @@ const Page: React.FC = () => {
             <div
               className={`${styles.fileListContainer} ${isFileListExpanded ? styles.fileListExpanded : ''}`}
               style={{
-                marginTop: '8vh',
+                flex: 1,
+                marginTop: '0vh',
                 marginLeft: '0.5vw',
-                overflow: 'hidden',
+                overflow: 'auto',
                 borderRight: '1.5px solid #e0e0e0',
                 transition: 'max-height 0.5s ease, width 0.5s ease, opacity 0.5s ease',
                 display: 'flex', // 添加这个样式使内容竖直排列

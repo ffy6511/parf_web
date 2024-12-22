@@ -318,8 +318,8 @@ const Log_output: React.FC = () => {
           className={styles.codeBlock}
           style={
             submitted && displayData
-              ? { fontSize: '23px', fontWeight: "bolder", color: '#19a9c6', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60%' }
-              : { fontSize: '20px', color: 'grey', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60%' }
+              ? { fontSize: '23px', fontWeight: "bolder", color: '#19a9c6', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '40%' }
+              : { fontSize: '20px', color: 'grey', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '40%' }
           }
         >
           {returnMessage}

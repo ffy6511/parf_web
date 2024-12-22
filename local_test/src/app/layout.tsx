@@ -17,14 +17,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={styles.body}>
         {/* 添加导航栏 */}
-        <header className={styles.navbar}>
+        <header className={styles.navbar} style = {{ marginBottom:'5px'}}>
           <nav className={styles.navContainer}>
             {/* 左侧导航链接 */}
-            <ul className={styles.navList}>
+            {/* <ul className={styles.navList}>
               <li><a href="#home">Home</a></li>
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
-            </ul>
+            </ul> */}
             {/* 右侧标题 */}
             <div className={styles.navTitle}>
               <h2>Parf : Adaptive Parameter Refining for Abstract Interpretation</h2>
