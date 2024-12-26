@@ -83,7 +83,7 @@ const analyseFolderFiles = async ({ budget, process, sampleNum, files, folderPat
     const { stdout, stderr } = await new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
       exec(command, 
         { 
-          maxBuffer: 1024 * 1024 * 10,
+          maxBuffer: 1024 * 1024 * 20,
           cwd: tempDirPath // 设置工作目录为临时目录
         }, 
         (error, stdout, stderr) => {

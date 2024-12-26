@@ -88,7 +88,7 @@ const IterationTable = () => {
       </div>
     </div>
   ) : (
-    <div className="text-center text-xl">加载中，请稍候...</div>
+    <div className="text-center text-xl" style ={{marginTop:'20vh'}}>加载中，请稍候...</div>
   );
 };
 

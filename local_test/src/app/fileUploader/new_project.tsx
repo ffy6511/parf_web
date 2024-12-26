@@ -179,14 +179,14 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         message.warning(`Folder ${folderName} already exists`);
         return;
       }
-
+      
       // 构建文件树
       const fileTree = await buildFileTree(filesArray);
       
       // 保存到数据库
       await saveFileTree(fileTree);
 
-      message.success(`Folder ${folderName} uploaded successfully`);
+      // message.success(`Folder ${folderName} uploaded successfully`);
       onFileUploadSuccess();
       setShowFolderUploadPrompt(false);
     } catch (error) {

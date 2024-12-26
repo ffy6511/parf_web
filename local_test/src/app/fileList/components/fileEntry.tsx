@@ -195,8 +195,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
                        'rgba(255, 255, 255, 0.4)',
           borderLeft: isAnyHovered ? '0.5px solid #d6d9d9' : '0.3px solid #d6d9d9',
           borderRight: isAnyHovered ? '0.5px solid #d6d9d9' : '0.3px solid #d6d9d9',
-          transform: isHovered ? 'scale(1.03)' : isSelected ? 'scale(1.0)' : 'scale(1.0)',
-          transition: 'all 0.2s ease',
+          transition: 'all 0s ease',
           position: 'relative',
           borderBottom: isAnyHovered ? '1.4px solid #ccc' : 
                        isSelected ? '2px solid #D9D9D9' : 
@@ -228,7 +227,6 @@ const FileEntry: React.FC<FileEntryProps> = ({
             style={{
               color: isSelected ? borderColor : isHovered ? '#202122' : '#888',
               transition: 'all 0.2s ease',
-              fontSize: isSelected ? '1.03em' : isHovered ? '1.05em' : '1em',
               marginBottom: '0px',
               marginLeft:'0.5em',
               textAlign:'left',
