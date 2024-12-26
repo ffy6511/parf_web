@@ -19,11 +19,11 @@
   position: relative;
   transition: all 0.3s ease;
   background-color: rgb(119, 110, 39);
+  transition: all 0.3s ease-in-out;
 }
 
 .parfInputContainer:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  transform: scale(1.01);
+  box-shadow: 0 1px 20px rgba(68, 67, 67, 0.2);
 }
 
 
@@ -244,13 +244,21 @@
   justify-content: space-between; /* 确保顶部两个区域均匀水平排列 */
   gap: 0px; /* 顶部区域之间的间隙 */
   flex: 1; /* 顶部区域占据父容器的1倍高度 */
+  width: 100%;
 }
 
-.leftColumn,
-.rightColumn {
-  flex: 1; /* 确保左列和右列均分宽度 */
-  padding: 2px;
-}
+.leftColumn {  
+  flex: 5;  
+  min-width: 0; /* 防止内容溢出 */  
+  flex-shrink: 0; /* 防止收缩 */  
+}  
+
+.rightColumn {  
+  flex: 4;  
+  margin-left: auto;
+  min-width: 0;  
+  flex-shrink: 0;  
+}  
 
 .bottomSection {
   flex: 1; /* 底部区域占据父容器的1倍高度 */

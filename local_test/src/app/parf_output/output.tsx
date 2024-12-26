@@ -9,7 +9,7 @@ const Output_container = () => {
   return (
     <div className={styles.parentContainer} >
       <div className={styles.topSection}>
-        <div className={styles.leftColumn}>
+        <div className={styles.leftColumn} >
           <Initial_output/>
         </div>
         <div className={styles.rightColumn}>
