@@ -16,6 +16,8 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend);  
 
+
+
 interface CharPoiProps {  
   allValues: { min: number; max: number; lambda: number }[];  
   currentIteration: number;  
@@ -68,20 +70,38 @@ const CharPoi: React.FC<CharPoiProps> = ({ allValues, currentIteration }) => {
     datasets: datasets,  
   };  
 
+
+  const chartOptions = {
+    animation: {
+      duration: 0 // 禁用动画
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+      },
+    },
+    scales: {
+      y: { 
+        min: 0, 
+        max: Math.max(...datasets.flatMap((d) => d.data)) * 1.1,
+        ticks: {
+          stepSize: 0.1
+        }
+      }
+    }
+  };
+
+
   return (  
     <motion.div  
       initial={{ opacity: 0 }}  
       animate={{ opacity: 1 }}  
-      transition={{ duration: 0.5 }}  
+      transition={{ duration: 0.5 }} 
+      style={{ height: '100%' }} 
     >  
-      <Line  
-        data={data}  
-        options={{  
-          scales: {  
-            y: { min: 0, max: Math.max(...datasets.flatMap((d) => d.data)) * 1.1 },  
-          },  
-        }}  
-      />  
+       <Line data={data} options={chartOptions} />  
     </motion.div>  
   );  
 };  

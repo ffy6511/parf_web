@@ -7,6 +7,28 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);  
 
+const chartOptions = {
+  animation: {
+    duration: 0 // 禁用动画
+  },
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      display: true,
+    },
+  },
+  scales: {
+    y: { 
+      min: 0, 
+      max: 1,
+      ticks: {
+        stepSize: 0.1
+      }
+    }
+  }
+};
+
 interface CharBerVecProps {  
   allValues: number[][];  
   currentIteration: number;  
@@ -51,8 +73,9 @@ const CharBerVec: React.FC<CharBerVecProps> = ({ allValues, currentIteration }) 
       initial={{ opacity: 0 }}  
       animate={{ opacity: 1 }}  
       transition={{ duration: 0.5 }}  
+      style={{ height: '100%' }}
     >  
-      <Bar data={data} options={{ scales: { y: { min: 0, max: 1 } } }} />  
+      <Bar data={data} options={chartOptions} />  
     </motion.div>  
   );  
 };  

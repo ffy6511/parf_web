@@ -1,104 +1,116 @@
-import { useState, useEffect } from "react";  
-import { trpc } from '../../../trpc/react';  
+import { useState, useEffect, useCallback } from "react";
+import { trpc } from '../../../trpc/react';
 
-export const useIterationData = () => {  
-  const [tempPath, setTempPath] = useState<string | null>(null);  
-  const [currentIteration, setCurrentIteration] = useState(0);  
-  const [isQueryEnabled, setIsQueryEnabled] = useState(false);  
+export const useIterationData = () => {
+  const [tempPath, setTempPath] = useState<string | null>(null);
+  const [currentIteration, setCurrentIteration] = useState(0);
+  const [isQueryEnabled, setIsQueryEnabled] = useState(false);
+  const [queryEndTime, setQueryEndTime] = useState<number | null>(null);
+  const INITIAL_DELAY = 3000; // 3秒的初始延迟
 
-  // 从 localStorage 获取时间预算  
-  const getTimeBudgetFromLocalStorage = () => {  
-    const selectedGroup = localStorage.getItem('selectedGroup');  
-    if (selectedGroup) {  
-      const groupData = JSON.parse(selectedGroup);  
-      return Math.max(groupData.timeBudget || 30, 3);  
-    }  
-    return 30;  
-  };  
+  // 获取时间预算，设置最小值为3秒
+  const getTimeBudget = useCallback(() => {
+    try {
+      const selectedGroup = localStorage.getItem('selectedGroup');
+      if (selectedGroup) {
+        const groupData = JSON.parse(selectedGroup);
+        return Math.max(groupData.timeBudget || 30, 3);
+      }
+    } catch (error) {
+      console.error('Error parsing time budget:', error);
+    }
+    return 30;
+  }, []);
 
-  // 初始化和监听 tempPath 变化  
-  useEffect(() => {  
-    // 立即获取初始值  
-    const storedTempPath = localStorage.getItem('tempPath');  
-    console.log('初始 tempPath:', storedTempPath);  
-    if (storedTempPath) {  
-      setTempPath(storedTempPath);  
-    }  
+  // 处理tempPath更新
+  const handleTempPathUpdate = useCallback((newPath: string | null) => {
+    console.log('Handling tempPath update:', newPath);
+    if (newPath) {
+      setTempPath(newPath);
+      // 先设置 isQueryEnabled 为 false，等待延迟后再启用
+      setIsQueryEnabled(false);
+      const budget = getTimeBudget();
+      
+      // 设置结束时间为：当前时间 + 初始延迟 + 预算时间
+      const endTime = Date.now() + INITIAL_DELAY + (budget * 1000);
+      setQueryEndTime(endTime);
+      
+      console.log(`Query will start in 3 seconds and run for ${budget} seconds until ${new Date(endTime).toISOString()}`);
+      
+      // 延迟启用查询
+      setTimeout(() => {
+        console.log('Starting delayed query');
+        setIsQueryEnabled(true);
+      }, INITIAL_DELAY);
+    }
+  }, [getTimeBudget]);
 
-    // 设置事件监听器  
-    const handleTempPathUpdated = () => {  
-      const updatedPath = localStorage.getItem('tempPath');  
-      console.log('tempPath 更新为:', updatedPath);  
-      if (updatedPath) {  
-        setTempPath(updatedPath);  
-        setIsQueryEnabled(false); // 重置查询状态  
-      }  
-    };  
+  // 初始化
+  useEffect(() => {
+    const storedPath = localStorage.getItem('tempPath');
+    if (storedPath) {
+      handleTempPathUpdate(storedPath);
+    }
 
-    // 监听自定义事件  
-    window.addEventListener('tempPathUpdated', handleTempPathUpdated);  
-    // 同时监听 storage 事件，以捕获其他标签页的更改  
-    window.addEventListener('storage', (e) => {  
-      if (e.key === 'tempPath') {  
-        console.log('storage event tempPath 更新为:', e.newValue);  
-        if (e.newValue) {  
-          setTempPath(e.newValue);  
-          setIsQueryEnabled(false);  
-        }  
-      }  
-    });  
+    const handleTempPathUpdated = () => {
+      const updatedPath = localStorage.getItem('tempPath');
+      handleTempPathUpdate(updatedPath);
+    };
 
-    return () => {  
-      window.removeEventListener('tempPathUpdated', handleTempPathUpdated);  
-      window.removeEventListener('storage', handleTempPathUpdated);  
-    };  
-  }, []); // 空依赖数组，只在组件挂载时运行一次  
+    window.addEventListener('tempPathUpdated', handleTempPathUpdated);
 
-  // 处理查询启用和时间限制  
-  useEffect(() => {  
-    if (tempPath) {  
-      console.log('启动查询流程, tempPath:', tempPath);  
-      const timeBudget = getTimeBudgetFromLocalStorage();  
-      console.log('时间预算:', timeBudget, '秒');  
+    return () => {
+      window.removeEventListener('tempPathUpdated', handleTempPathUpdated);
+    };
+  }, [handleTempPathUpdate]);
 
-      // 立即启用查询  
-      setIsQueryEnabled(true);  
+  // 查询时间控制
+  useEffect(() => {
+    if (!queryEndTime || !isQueryEnabled) return;
 
-      // 设置定时器在时间预算到期后停止查询  
-      const timer = setTimeout(() => {  
-        console.log('查询时间到期');  
-        setIsQueryEnabled(false);  
-      }, timeBudget * 1000);  
+    const timeRemaining = queryEndTime - Date.now();
+    if (timeRemaining <= 0) {
+      console.log('Query time budget expired');
+      setIsQueryEnabled(false);
+      setQueryEndTime(null);
+      return;
+    }
 
-      return () => {  
-        clearTimeout(timer);  
-        setIsQueryEnabled(false);  
-      };  
-    }  
-  }, [tempPath]);  
+    const timer = setTimeout(() => {
+      console.log('Query time budget expired');
+      setIsQueryEnabled(false);
+      setQueryEndTime(null);
+    }, timeRemaining);
 
-  // 使用 trpc 查询  
-  const { data: iterationData = [], refetch } = trpc.iterationdata.getIterationData.useQuery(  
-    { tempPath: tempPath || "" },  
-    {  
-      enabled: Boolean(tempPath) && isQueryEnabled,  
-      refetchInterval: (data) => {  
-        return isQueryEnabled ? 5000 : false;  
-      },  
-      retry: 1,  
-      refetchOnWindowFocus: false,  
-      refetchOnMount: true,  
-    }  
-  );  
+    return () => clearTimeout(timer);
+  }, [queryEndTime, isQueryEnabled]);
 
-  // 更新当前迭代  
-  useEffect(() => {  
-    if (iterationData.length > 0) {  
-      setCurrentIteration(iterationData.length - 1);  
-      console.log('更新当前迭代为:', iterationData.length - 1);  
-    }  
-  }, [iterationData]);  
+  // TRPC查询
+  const { data: iterationData = [], refetch } = trpc.iterationdata.getIterationData.useQuery(
+    { tempPath: tempPath || "" },
+    {
+      enabled: Boolean(tempPath) && isQueryEnabled,
+      refetchInterval: (data) => {
+        if (!isQueryEnabled) return false;
+        if (!queryEndTime || Date.now() >= queryEndTime) {
+          setIsQueryEnabled(false);
+          return false;
+        }
+        return 3000; // 3秒间隔
+      },
+      retry: 1,
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+    }
+  );
 
-  // 导出数据和状态  
-  return [iterationData, currentIteration, refetch] as const;  
+  // 更新当前迭代
+  useEffect(() => {
+    if (iterationData.length > 0) {
+      setCurrentIteration(iterationData.length - 1);
+      console.log('Current iteration updated:', iterationData.length - 1);
+    }
+  }, [iterationData]);
+
+  return [iterationData, currentIteration, refetch] as const;
 };

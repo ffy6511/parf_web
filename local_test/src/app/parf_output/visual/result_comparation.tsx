@@ -52,7 +52,7 @@ const ResultComparation = () => {
         const timer = setTimeout(() => {  
           setDelayedQuery(true); 
 
-        }, (timeBudget+2) * 1000);  
+        }, (timeBudget+5) * 1000);  
         setFiles([]);
 
         return () => clearTimeout(timer);  
