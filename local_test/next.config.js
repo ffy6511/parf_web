@@ -7,8 +7,8 @@ await import("./src/env.js");
 /** @type {import("next").NextConfig} */
 
 const config = {
-    assetPrefix:'home/',
-    basePath:'/home',
+    assetPrefix: '/parf/', // 静态资源路径的前缀
+    basePath: '',           // 应用的基础路径
 };
 
 export default config;
