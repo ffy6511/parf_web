@@ -299,7 +299,7 @@ const Log_output: React.FC = () => {
         ? <span style={{ color: '#333399', fontWeight: 'bold' }}><Spin /> Performing 𝑃𝑎𝑟𝑓 analysis: Loading...</span>
         : positionQuery.isError
           ? 'Unable to load queue information.'
-          : <span style={{ color: '#333399', fontWeight: 'bold' }}><Spin /> --Analyzing-- Current queue position: {(positionQuery.data?.queueLength ?? 0) + 1}</span>
+          : <span style={{ color: '#333399', fontWeight: 'bold' }}><Spin /> --Analysing-- Current queue position: {(positionQuery.data?.queueLength ?? 0) + 1}</span>
     : 'No pending analysis tasks.';
 
   return (

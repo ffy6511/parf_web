@@ -145,7 +145,7 @@ const Page: React.FC = () => {
                 fontSize: '1em', 
                 marginTop: '0px',
                 }}>
-                <Tooltip title="收起文件列表" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2} onClick={toggleFileListVisibility}
+                <Tooltip title="Close file list" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2} onClick={toggleFileListVisibility}
                 scale = 'isHovered ? 1.1 : 1'
                 cursor = 'pointer' 
                 >
@@ -163,7 +163,7 @@ const Page: React.FC = () => {
               </div>    //上传组件
             ): (
               // 当文件列表收起时，只显示图标，通过 Tooltip 实现悬停提示
-              <Tooltip title="展开文件列表" color="grey" 
+              <Tooltip title="Unfold file list" color="grey" 
               mouseEnterDelay={0.1} mouseLeaveDelay={0.2}
               onClick={toggleFileListVisibility}
               onMouseEnter={() => setIsHovered(true)}

@@ -292,10 +292,10 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
           showUploadList={false}
           multiple
         >
-          <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: 'center',alignItems:'center' }}>
             <InboxOutlined style={{ fontSize: '48px', color: '#1890ff' }} />
-            <p>点击或拖拽代码文件上传</p>
-            <p>支持不超过10MB的代码文件单个或批量上传</p>
+            <p>Click or drag to upload a file.</p>
+            <p>Support for uploading code files up to 10MB, either individually or in batches.</p>
           </div>
         </Upload>
       </Modal>
@@ -328,7 +328,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         visible={showFolderUploadPrompt}
         onCancel={() => setShowFolderUploadPrompt(false)}
         footer={null}
-        style={{maxWidth:'20vw'}}
+        style = {{padding:'10px'}}
       >
         <Upload
           beforeUpload={(file, fileList) => {
@@ -339,10 +339,10 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
           multiple
           showUploadList={false}
         >
-          <div style={{ textAlign: 'center'}}>
+          <div style={{ textAlign: 'center', alignItems:'center'}}>
             <InboxOutlined style={{ fontSize: '48px', color: '#1890ff' }} />
-            <p>点击或拖拽文件夹上传</p>
-            <p>支持上传文件夹中的所有文件</p>
+            <p>Click or drag to upload a folder.</p>
+            <p>Support for uploading code files up to 10MB, either individually or in batches.</p>
           </div>
         </Upload>
       </Modal>

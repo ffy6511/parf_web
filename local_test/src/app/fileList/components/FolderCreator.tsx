@@ -23,7 +23,7 @@ const FolderCreator: React.FC<FolderCreatorProps> = ({ onFolderCreate, className
       setIsModalVisible(false);
       setTempFolderName('');
     } else {
-      message.warning('请输入文件夹名称');
+      message.warning('Please enter a folder name.');
     }
   };
 
@@ -53,17 +53,17 @@ const FolderCreator: React.FC<FolderCreatorProps> = ({ onFolderCreate, className
       >
       </Button>
       <Modal
-        title="新建文件夹"
+        title="Create a folder"
         open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
-        okText="确定"
-        cancelText="取消"
+        okText="Submit"
+        cancelText="Cancel"
         destroyOnClose
       >
         <Input
           autoFocus
-          placeholder="输入文件夹名称"
+          placeholder="Please enter folder name."
           value={tempFolderName}
           onChange={e => setTempFolderName(e.target.value)}
           onKeyDown={handleKeyPress}
