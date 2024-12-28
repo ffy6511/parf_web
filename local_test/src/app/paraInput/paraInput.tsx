@@ -25,10 +25,10 @@ interface TimeBudgetInputProps {
 const TimeBudgetInput: React.FC<TimeBudgetInputProps> = ({ value, onChange }) => (
   <Row style={{ width: '100%' }}>
     <Col span={'18'}>
-      <Slider min={1} max={2000} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
+      <Slider min={1} max={3600} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
     </Col>
     <Col span={'6'}>
-      <InputNumber min={0} max={2000} value={value} onChange={onChange} style={{ 
+      <InputNumber min={0} max={3600} value={value} onChange={onChange} style={{ 
         width: '80%',
         marginRight:'2vw',
         fontSize:'0.8em',
@@ -46,10 +46,10 @@ interface CoreInputProps {
 const CoreInput: React.FC<CoreInputProps> = ({ value, onChange }) => (
   <Row style={{ width: '100%' }}>
     <Col span={'18'}>
-      <Slider min={1} max={64} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
+      <Slider min={1} max={8} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
     </Col>
     <Col span={'6'}>
-      <InputNumber min={1} max={64} value={value} onChange={onChange} style={{ 
+      <InputNumber min={1} max={8} value={value} onChange={onChange} style={{ 
         width: '80%',
         marginRight:'2vw',
         fontSize:'0.8em',
@@ -67,10 +67,10 @@ interface SampleSizeInputProps {
 const SampleSizeInput: React.FC<SampleSizeInputProps> = ({ value, onChange }) => (
   <Row style={{ width: '100%' }}>
     <Col span={'18'}>
-      <Slider min={1} max={1000} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
+      <Slider min={1} max={16} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
     </Col>
     <Col span={'6'}>
-      <InputNumber min={1} max={1000} value={value} onChange={onChange} style={{ 
+      <InputNumber min={1} max={16} value={value} onChange={onChange} style={{ 
         width: '80%',
         marginRight:'2vw',
         fontSize:'0.8em',

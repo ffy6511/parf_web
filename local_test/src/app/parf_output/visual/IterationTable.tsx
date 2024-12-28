@@ -88,7 +88,22 @@ const IterationTable = () => {
       </div>
     </div>
   ) : (
-    <div className="text-center text-xl" style ={{marginTop:'20vh'}}>加载中，请稍候...</div>
+    <div style ={{
+      fontSize: '1.5rem',
+      padding: '10px',
+      textAlign: 'center',
+      marginTop: '20vh',
+      marginLeft:'5vw',
+      marginRight:'5vw',
+      border: '0.5px dashed gray',
+      borderRadius:'15px',
+      color: 'gray'
+    }}
+    >No graph results
+    <div style = {{fontSize: '1rem', padding: '5px', textAlign: 'center', marginTop: '5vh'}}>
+       Select files to analyse.
+    </div>
+    </div>
   );
 };
 

@@ -165,7 +165,7 @@ const Log_output: React.FC = () => {
 
     // 确保存在 config.txt
     if (!result.some(file => file.path.endsWith('config.txt'))) {
-      throw new Error('文件夹中必须包含 config.txt 文件');
+      throw new Error('files must include config.txt.');
     }
 
     return result;
@@ -174,10 +174,10 @@ const Log_output: React.FC = () => {
   // 错误处理函数
   const handleError = (error: unknown, controller: AbortController) => {
     if (controller.signal.aborted) {
-      setDisplayData('调用已中止');
+      setDisplayData('Analysis has been aborted.');
     } else {
       console.error("Error executing command:", error);
-      setDisplayData('命令执行失败,请检查代码文件');
+      setDisplayData('Failed to analyse. Please check input files.');
     }
     setLoading(false);
   };
@@ -191,7 +191,7 @@ const Log_output: React.FC = () => {
     const fileData = localStorage.getItem('selectedFile');
 
     if (!groupData || !fileData) {
-      alert('请选择一个参数组和文件！');
+      alert('Please select a parameter group and files.');
       return;
     }
 
@@ -199,7 +199,7 @@ const Log_output: React.FC = () => {
     const selectedFile = JSON.parse(fileData) as FileDetails;
 
     if (!selectedGroup || !selectedFile) {
-      alert('请选择一个参数组和文件！');
+      alert('Please select a parameter group and files.');
       return;
     }
     const path = require('path');
@@ -247,7 +247,7 @@ const Log_output: React.FC = () => {
         // 处理单个文件
         const fileContent = await getFileContentFromIndexedDB(selectedFile.id);
         if (!fileContent) {
-          alert('无法获取文件内容');
+          alert('Failed to get file content. Please check.');
           setLoading(false);
           return;
         }
@@ -273,7 +273,7 @@ const Log_output: React.FC = () => {
       }
     } catch (error) {
       console.error("Error executing command:", error);
-      setDisplayData('命令执行失败,请检查代码文件');
+      setDisplayData('Failed to analyse. Please check input files.');
       setLoading(false);
     }
   };
@@ -284,7 +284,7 @@ const Log_output: React.FC = () => {
       abortController.abort();
       setLoading(false);
       setSubmitted(false);
-      setDisplayData('调用已中止');
+      setDisplayData('Analysis has been aborted.');
     }
   };
 
@@ -294,25 +294,19 @@ const Log_output: React.FC = () => {
 
   const returnMessage = submitted
     ? displayData
-      ? '点击查看详情'
+      ? 'Click to expand and view details.'
       : positionQuery.isLoading
-        ? <span style={{ color: '#333399', fontWeight: 'bold' }}><Spin /> 正在调用𝑷𝒂𝒓𝒇分析: 加载中...</span>
+        ? <span style={{ color: '#333399', fontWeight: 'bold' }}><Spin /> Performing 𝑃𝑎𝑟𝑓 analysis: Loading...</span>
         : positionQuery.isError
-          ? '无法加载队列信息'
-          : <span style={{ color: '#333399', fontWeight: 'bold' }}><Spin /> --正在分析-- 所处队列位置: {(positionQuery.data?.queueLength ?? 0) + 1}</span>
-    : '尚无待分析任务';
+          ? 'Unable to load queue information.'
+          : <span style={{ color: '#333399', fontWeight: 'bold' }}><Spin /> --Analyzing-- Current queue position: {(positionQuery.data?.queueLength ?? 0) + 1}</span>
+    : 'No pending analysis tasks.';
 
   return (
     <div className={styles.parfOutputContainer}>
       <div className={styles.displayMonitor2}>
-        <strong>
-          调用返回区
-          {displayData && (
-            <Tooltip title="查看分析结果">
-              <ArrowsAltOutlined onClick={toggleExpand} className={styles.expandIcon} />
-            </Tooltip>
-          )}
-        </strong>
+
+
 
         <div
           className={styles.codeBlock}
@@ -326,27 +320,34 @@ const Log_output: React.FC = () => {
         </div>
         
       <div>
-        <Tooltip title={loading ? '中止当前调用' : '调用Parf分析当前设置'}>
+        <Tooltip title={loading ? 'Cancel the current call.' : 'Click to analyse'}>
           <button
             className={loading ? styles.submitButton_abort : styles.submitButton}
             onClick={loading ? handleAbort : handleSubmit}
             disabled={loading && !abortController}
           >
             {loading ? <StopOutlined /> : <UploadOutlined />}
-            {loading ? ' 中止调用' : ' 提交调用'}
+            {loading ? ' Abort' : ' Analyse'}
           </button>
         </Tooltip>
       </div>
 
+      {displayData && (
+            <Tooltip title="Click to check detailed analysis.">
+              <ArrowsAltOutlined onClick={toggleExpand} className={styles.expandIcon} />
+            </Tooltip>
+          )}
+          
+
       </div>
 
       <Modal
-        title="查看返回数据"
+        title="View the detailed analysis"
         open={isExpandedFully}
         onCancel={toggleExpand}
         footer={[
           <Button key="close" type="primary" onClick={toggleExpand}>
-            关闭
+            Close
           </Button>,
         ]}
         width={800}
