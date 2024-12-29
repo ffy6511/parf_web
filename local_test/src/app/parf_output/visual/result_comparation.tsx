@@ -70,7 +70,7 @@ const ResultComparation = () => {
       enabled: !!tempPath && delayedQuery,  
       refetchOnWindowFocus: false,  
       refetchOnMount: false,  
-      retry: false  
+      retry: 1  
     }  
   );  
 
@@ -112,7 +112,7 @@ const ResultComparation = () => {
       ) : (
         // 如果内容都存在，则显示主内容
         <>
-          <div style={{ flex: 1, padding: '10px', overflowY: 'auto', overflowX: 'auto' }}>
+          <div style={{ flex: 1, padding: '10px', overflowY: 'hidden', overflowX: 'auto' }}>
             <div className="text-3xl font-bold text-center mb-8">
               <h2 className="text-2xl font-bold text-center mb-4">Analysis Results</h2>
             </div>

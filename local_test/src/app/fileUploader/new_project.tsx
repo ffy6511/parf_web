@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, Input, Upload, message, Modal, Dropdown, Menu } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import styles from './fileUpload.module.css';
 import TextArea from 'antd/lib/input/TextArea';
+import { FileContext } from '../contexts/FileContext';
 import "~/styles/globals.css";
 
 interface FileUploadContainerProps {
@@ -28,6 +29,8 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
   const [showManualInput, setShowManualInput] = useState<boolean>(false);
   const [showUploadPrompt, setShowUploadPrompt] = useState<boolean>(false);
   const [showFolderUploadPrompt, setShowFolderUploadPrompt] = useState<boolean>(false);
+
+  const { reloadFileList } = useContext(FileContext)!;
 
   useEffect(() => {
     const request = indexedDB.open('FileStorage', 3);
@@ -188,6 +191,10 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
 
       // message.success(`Folder ${folderName} uploaded successfully`);
       onFileUploadSuccess();
+
+      // 上传成功后，重新加载文件列表
+      await reloadFileList();
+
       setShowFolderUploadPrompt(false);
     } catch (error) {
       message.error('Failed to upload folder');

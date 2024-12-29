@@ -1,11 +1,11 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Button, Tooltip, Spin } from 'antd';
 import { ArrowsAltOutlined, UploadOutlined, LoadingOutlined, StopOutlined } from '@ant-design/icons';
 import styles from './parf_output.module.css';
 import { trpc } from '../../trpc/react';
+import { FileContext } from '../contexts/FileContext';
 import "~/styles/globals.css"
-
 
 // 更新接口定义
 interface GroupDetails {
@@ -36,7 +36,8 @@ const Log_output: React.FC = () => {
   const [isExpandedFully, setIsExpandedFully] = useState<boolean>(false);
   const [selectedGroup, setSelectedGroup] = useState<GroupDetails | null>(null);
   const [selectedFile, setSelectedFile] = useState<FileDetails | null>(null);
-  const [fileList, setFileList] = useState<FileDetails[]>([]);
+
+  const { fileList, reloadFileList, getFileContent } = useContext(FileContext)!;
 
   const [tempPath, setTempPathState] = useState<string | undefined>(() => {
     // 初始化时从 localStorage 读取
@@ -45,6 +46,39 @@ const Log_output: React.FC = () => {
     }
     return undefined;
   });
+
+  //获取configuration
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'selectedGroup') {
+        setSelectedGroup(JSON.parse(event.newValue || 'null'));
+      }
+      if (event.key === 'selectedFile') {
+        setSelectedFile(JSON.parse(event.newValue || 'null'));
+      }
+    };
+  
+    window.addEventListener('storage', handleStorageChange);
+  
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+  
+  // 初始化时从 localStorage 读取
+  useEffect(() => {
+    const groupData = localStorage.getItem('selectedGroup');
+    const fileData = localStorage.getItem('selectedFile');
+  
+    if (groupData) {
+      setSelectedGroup(JSON.parse(groupData));
+    }
+    if (fileData) {
+      setSelectedFile(JSON.parse(fileData));
+    }
+  }, []);
+
+
 
   const setTempPath = (newPath: string | undefined) => {
     setTempPathState(newPath);
@@ -58,9 +92,6 @@ const Log_output: React.FC = () => {
     }
   };
 
-
-
-
   const mutation = trpc.analyse.executeCommand.useMutation();
   const folderMutation = trpc.analyse.analyseFolder.useMutation();
   const positionQuery = trpc.analyse.getQueueLength.useQuery(undefined, {
@@ -70,56 +101,23 @@ const Log_output: React.FC = () => {
   const [abortController, setAbortController] = useState<AbortController | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
-  // 从IndexedDB加载文件列表
+  // 初始化时加载文件列表
   useEffect(() => {
-    const loadFileList = async () => {
-      const request = indexedDB.open('FileStorage', 3);
-
-      request.onsuccess = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-        const transaction = db.transaction(['files'], 'readonly');
-        const store = transaction.objectStore('files');
-        const getAllRequest = store.getAll();
-
-        getAllRequest.onsuccess = () => {
-          setFileList(getAllRequest.result);
-        };
-      };
-    };
-
-    loadFileList();
-  }, []);
+    reloadFileList();
+  }, [reloadFileList]);
 
   // 从IndexedDB获取文件内容
   const getFileContentFromIndexedDB = async (fileId: number): Promise<string | null> => {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open('FileStorage', 3);
-
-      request.onsuccess = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-        const transaction = db.transaction(['files'], 'readonly');
-        const store = transaction.objectStore('files');
-        const fileRequest = store.get(fileId);
-
-        fileRequest.onsuccess = () => {
-          if (fileRequest.result) {
-            const fileData = fileRequest.result.fileContent;
-            const blob = new Blob([fileData]);
-            const reader = new FileReader();
-            reader.onload = () => {
-              resolve(reader.result as string);
-            };
-            reader.readAsText(blob);
-          } else {
-            resolve(null);
-          }
-        };
-
-        fileRequest.onerror = () => {
-          reject(new Error('Failed to load file from IndexedDB'));
-        };
-      };
-    });
+    const content = await getFileContent(fileId);
+    if (content) {
+      const blob = new Blob([content]);
+      const reader = new FileReader();
+      return new Promise((resolve) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsText(blob);
+      });
+    }
+    return null;
   };
 
   // 获取文件夹中所有文件的函数
@@ -167,7 +165,8 @@ const Log_output: React.FC = () => {
     if (!result.some(file => file.path.endsWith('config.txt'))) {
       throw new Error('files must include config.txt.');
     }
-
+    
+    console.log('All files loaded:', result); // 添加日志
     return result;
   };
 
@@ -204,15 +203,10 @@ const Log_output: React.FC = () => {
     }
     const path = require('path');
 
-
     // 生成新的临时路径
-    // 创建文件夹名称
     const folderName = `frama_c_folder_${Date.now()}`;
-
-    // 拼接路径，output作为父文件夹
     const newTempPath = path.join('output', folderName);
-    setTempPath(newTempPath); // 使用 hook 设置新的临时路径
-
+    setTempPath(newTempPath);
 
     setLoading(true);
     const controller = new AbortController();
@@ -305,9 +299,6 @@ const Log_output: React.FC = () => {
   return (
     <div className={styles.parfOutputContainer}>
       <div className={styles.displayMonitor2}>
-
-
-
         <div
           className={styles.codeBlock}
           style={
@@ -319,26 +310,24 @@ const Log_output: React.FC = () => {
           {returnMessage}
         </div>
         
-      <div>
-        <Tooltip title={loading ? 'Cancel the current call.' : 'Click to analyse'}>
-          <button
-            className={loading ? styles.submitButton_abort : styles.submitButton}
-            onClick={loading ? handleAbort : handleSubmit}
-            disabled={loading && !abortController}
-          >
-            {loading ? <StopOutlined /> : <UploadOutlined />}
-            {loading ? ' Abort' : ' Analyse'}
-          </button>
-        </Tooltip>
-      </div>
+        <div>
+          <Tooltip title={loading ? 'Cancel the current call.' : 'Click to analyse'}>
+            <button
+              className={loading ? styles.submitButton_abort : styles.submitButton}
+              onClick={loading ? handleAbort : handleSubmit}
+              disabled={loading && !abortController}
+            >
+              {loading ? <StopOutlined /> : <UploadOutlined />}
+              {loading ? ' Abort' : ' Analyse'}
+            </button>
+          </Tooltip>
+        </div>
 
-      {displayData && (
-            <Tooltip title="Click to check detailed analysis.">
-              <ArrowsAltOutlined onClick={toggleExpand} className={styles.expandIcon} />
-            </Tooltip>
-          )}
-          
-
+        {displayData && (
+          <Tooltip title="Click to check detailed analysis.">
+            <ArrowsAltOutlined onClick={toggleExpand} className={styles.expandIcon} />
+          </Tooltip>
+        )}
       </div>
 
       <Modal
@@ -355,8 +344,6 @@ const Log_output: React.FC = () => {
       >
         <pre className={styles.modalCodeBlock}>{displayData}</pre>
       </Modal>
-
-
     </div>
   );
 };

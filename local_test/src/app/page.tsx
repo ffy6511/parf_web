@@ -1,6 +1,7 @@
 'use client';
 import styles from './index.module.css';
 import React, { useState, useRef } from 'react';
+import FileContextProvider from './contexts/FileContext';
 
 
 import FolderCreator from './fileList/components/FolderCreator'; //新建文件夹
@@ -98,6 +99,7 @@ const Page: React.FC = () => {
     }
   };
   return (
+    <FileContextProvider>
     <div style={{ display: 'flex', flexDirection: 'column',minHeight:'100vh',overflow:'auto'}}>
       {/* 主体内容部分 */}
       <div style={{ display: 'flex', flex: 1,overflow:'auto' }}>
@@ -254,6 +256,7 @@ const Page: React.FC = () => {
         </a>
       </footer>
     </div>
+    </FileContextProvider>
   );
 }
 
