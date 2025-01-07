@@ -332,7 +332,7 @@ const Log_output: React.FC = () => {
 
       <Modal
         title="View the detailed analysis"
-        open={isExpandedFully}
+        visible={isExpandedFully}
         onCancel={toggleExpand}
         footer={[
           <Button key="close" type="primary" onClick={toggleExpand}>

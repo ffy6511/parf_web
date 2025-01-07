@@ -23,7 +23,7 @@ const FolderCreator: React.FC<FolderCreatorProps> = ({ onFolderCreate, className
       setIsModalVisible(false);
       setTempFolderName('');
     } else {
-      message.warning('Please enter a folder name.');
+      message.info('Please enter a folder name.');
     }
   };
 
@@ -54,12 +54,11 @@ const FolderCreator: React.FC<FolderCreatorProps> = ({ onFolderCreate, className
       </Button>
       <Modal
         title="Create a folder"
-        open={isModalVisible}
+        visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
         okText="Submit"
         cancelText="Cancel"
-        destroyOnClose
       >
         <Input
           autoFocus
@@ -68,7 +67,6 @@ const FolderCreator: React.FC<FolderCreatorProps> = ({ onFolderCreate, className
           onChange={e => setTempFolderName(e.target.value)}
           onKeyDown={handleKeyPress}
           maxLength={50}
-          showCount
         />
       </Modal>
     </>

@@ -27,7 +27,7 @@ export default function RootLayout({
             </ul> */}
             {/* 右侧标题 */}
             <div className={styles.navTitle}>
-              <h2>Parf : Adaptive Parameter Refining for Abstract Interpretation</h2>
+              <h2>Parf: An Adaptive Abstraction-Strategy Tuner for Static Analysis</h2>
             </div>
           </nav>
         </header>

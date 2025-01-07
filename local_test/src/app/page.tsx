@@ -241,7 +241,7 @@ const Page: React.FC = () => {
       {/* 页脚部分 */}
       <footer className= {styles.footerStyle}>
         <a
-          href="https://hub.docker.com/r/parfdocker/parf"
+          href="https://hub.docker.com/repository/docker/parfdocker/parf-jcst/general"
           target="_blank"
           rel="noopener noreferrer"
           className={styles.link}

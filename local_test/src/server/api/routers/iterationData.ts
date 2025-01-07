@@ -7,9 +7,9 @@ import { ol } from "framer-motion/client";
 export const iterationDataRouter = createTRPCRouter({
   getIterationData: publicProcedure
     .input(z.object({
-      tempPath: z.string().optional()
+      tempPath: z.string()
     }))
-    .query(async ({ input }) => {
+    .query(async ({ input  }) => {
       // 如果没有提供 tempPath，使用默认路径
       const old_dirPath = input.tempPath;
       const dirPath = path.join(process.cwd(), old_dirPath, '.parf_temp_files');
@@ -39,7 +39,7 @@ export const iterationDataRouter = createTRPCRouter({
 
     getTxtFilesContent: publicProcedure
     .input(z.object({
-      tempPath: z.string().optional(), // 可选的 tempPath 参数
+      tempPath: z.string(),
     }))
     .query(async ({ input }) => {
       // 如果没有提供 tempPath，使用默认路径

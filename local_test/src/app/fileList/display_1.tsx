@@ -98,7 +98,7 @@ const handleCreateFolder = async (folderName: string) => {
       });
 
       if (existing) {
-        message.warning(`Folder ${folderName} already exists`);
+        message.error(`Folder ${folderName} already exists`);
         return;
       }
 
@@ -365,7 +365,7 @@ const handleCreateFolder = async (folderName: string) => {
 
       <Modal
         title="编辑文件内容"
-        open={isEditModalVisible}
+        visible={isEditModalVisible}
         onCancel={() => setIsEditModalVisible(false)}
         footer={[
           <Button key="save" type="primary" onClick={handleSaveContent}>
@@ -385,7 +385,7 @@ const handleCreateFolder = async (folderName: string) => {
 
       <Modal
         title="预览文件内容"
-        open={isPreviewModalVisible}
+        visible={isPreviewModalVisible}
         onCancel={() => setIsPreviewModalVisible(false)}
         footer={null}
         width={800}

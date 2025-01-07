@@ -27,7 +27,7 @@ const IterationTable = () => {
       <div className="lg:col-span-2 bg-white shadow-md rounded-lg p-4">
         <h2 className="text-2xl font-bold text-center mb-4">Poisson-Distributed Parameters</h2>
         <div className="grid grid-cols-2 gap-4">
-          {categorizedParams.Char_Poi.map((paramKey) => (
+          {(categorizedParams.Char_Poi)!.map((paramKey) => (
             <div key={paramKey} className="h-48 p-2 bg-gray-50 rounded-lg shadow-sm">
               <h3 className="text-sm font-semibold text-center mb-2">{paramKey}</h3>
               <CharPoi
@@ -51,7 +51,7 @@ const IterationTable = () => {
         <div className="flex-1 bg-gray-50 rounded-lg p-4">
           <h2 className="text-2xl font-bold text-center mb-4">Bernoulli-Distributed Parameters</h2>
           <div className="grid grid-cols-2 gap-4">
-            {categorizedParams.Char_Ber.map((paramKey) => (
+            {(categorizedParams.Char_Ber)!.map((paramKey) => (
               <div key={paramKey} className="h-40 p-2 bg-white rounded-lg shadow-sm">
                 <h3 className="text-sm font-semibold text-center mb-2">{paramKey}</h3>
                 <CharBer
@@ -72,7 +72,7 @@ const IterationTable = () => {
         <div className="flex-1 bg-gray-50 rounded-lg p-4">
           <h2 className="text-2xl font-bold text-center mb-4">Joint Distributed Parameters</h2>
           <div>
-            {categorizedParams.Char_BerVec.map((paramKey) => (
+            {(categorizedParams.Char_BerVec)!.map((paramKey) => (
               <div key={paramKey} className="h-40 p-2 bg-white rounded-lg shadow-sm">
                 <h3 className="text-sm font-semibold text-center mb-2">{paramKey}</h3>
                 <CharBerVec

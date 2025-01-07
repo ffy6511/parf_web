@@ -184,7 +184,7 @@ export const analyseRouter = createTRPCRouter({
             return reject(error);
           }
           if (result) {
-            resolve(result);
+            resolve({ result: result.result }); 
           } else {
             reject(new Error('No result returned from command execution'));
           }
@@ -212,12 +212,12 @@ export const analyseRouter = createTRPCRouter({
     .output(z.object({ result: z.string() }))
     .mutation(async ({ input }) => {
       return new Promise<{ result: string }>((resolve, reject) => {
-        commandQueue.push(input, (error, result) => {
+        commandQueue.push(input, (error: Error | null | undefined, result?: CommandResult) => {
           if (error != null) {
             return reject(error);
           }
-          if (result) {
-            resolve(result);
+          if (result  && 'result' in result) {
+            resolve({ result: result.result });
           } else {
             reject(new Error('No result returned from folder analysis'));
           }

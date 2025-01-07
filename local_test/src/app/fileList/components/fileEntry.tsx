@@ -84,21 +84,21 @@ const FileEntry: React.FC<FileEntryProps> = ({
     e.preventDefault();
     if (isFolder) {
       setIsDragOver(true);
-      e.currentTarget.style.background = 'rgba(24, 144, 255, 0.1)';
+      (e.currentTarget as HTMLElement).style.background = 'rgba(24, 144, 255, 0.1)';
     }
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    e.currentTarget.style.background = '';
+    (e.currentTarget as HTMLElement).style.background = '';
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragOver(false);
-    e.currentTarget.style.background = '';
+    (e.currentTarget as HTMLElement).style.background = '';
     
     if (isFolder && onDrop) {
       const draggedFileId = parseInt(e.dataTransfer.getData('fileId'));
@@ -208,7 +208,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
         {isMultiSelect && (
           <Checkbox
             checked={isMultiSelected}
-            onChange={(e) => {
+            onChange={(e:MouseEvent) => {
               e.stopPropagation();
               onMultiSelect?.(fileId);
             }}

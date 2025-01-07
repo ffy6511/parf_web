@@ -36,7 +36,7 @@ const MultiSelector: React.FC<MultiSelectorProps> = ({
       </Button>
       {isMultiSelect && selectedCount > 0 && (
         <Button
-          danger
+          type = {'danger'}
           icon={<DeleteOutlined />}
           onClick={onBatchDelete}
           style={{
