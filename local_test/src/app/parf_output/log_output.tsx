@@ -4,6 +4,7 @@ import { Modal, Button, Tooltip, Spin } from 'antd';
 import { ArrowsAltOutlined, UploadOutlined, LoadingOutlined, StopOutlined } from '@ant-design/icons';
 import styles from './parf_output.module.css';
 import { trpc } from '../../trpc/react';
+import path from 'path';
 import { FileContext } from '../contexts/FileContext';
 import "~/styles/globals.css"
 
@@ -201,7 +202,6 @@ const Log_output: React.FC = () => {
       alert('Please select a parameter group and files.');
       return;
     }
-    const path = require('path');
 
     // 生成新的临时路径
     const folderName = `frama_c_folder_${Date.now()}`;

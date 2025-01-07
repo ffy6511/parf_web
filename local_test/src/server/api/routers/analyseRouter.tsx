@@ -75,7 +75,7 @@ const analyseFolderFiles = async ({ budget, process, sampleNum, files, folderPat
       // 使用config.txt中的内容构建命令
       command = `opam switch 5.1.0 && eval $(opam env) && frama-c ${configContent} -parf -parf-budget ${budget} -parf-process ${process} -parf-sample-num ${sampleNum}`;
     } catch (error) {
-      throw new Error(`Error parsing config file: ${error}`);
+      throw new Error(`Error parsing config file: ${error instanceof Error ? error.message : String(error)}`);
     }
 
 

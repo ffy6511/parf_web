@@ -108,8 +108,14 @@ const FileContextProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // 初始化时加载文件列表
   useEffect(() => {
-    reloadFileList();
-  }, []);
+    (async () => {
+        try {
+            await reloadFileList();
+        } catch (error) {
+            console.error('Failed to load file list:', error);
+        }
+    })();
+}, []);
 
   return (
     <FileContext.Provider value={{ fileList, reloadFileList, getFileContent }}>

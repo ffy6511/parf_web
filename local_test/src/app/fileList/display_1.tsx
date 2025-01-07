@@ -22,7 +22,12 @@ interface Display_1Props {
   onMultiSelect: (fileId: number) => void;
 }
 
-const Display_1 = React.forwardRef<any, Display_1Props>((props, ref) => {
+interface DisplayRef {
+  handleBatchDelete: (fileIds: number[]) => Promise<void>;
+  handleCreateFolder: (folderName: string) => Promise<void>;
+}
+
+const Display_1 = React.forwardRef<DisplayRef, Display_1Props>((props, ref) => {
   const [fileList, setFileList] = useState<FileData[]>([]);
   const [selectedFileId, setSelectedFileId] = useState<number | null>(null);
   const [selectedFileContent, setSelectedFileContent] = useState<string>("");
@@ -400,5 +405,9 @@ const handleCreateFolder = async (folderName: string) => {
     </div>
   );
 });
+
+// 添加显示名称
+Display_1.displayName = 'Display_1';
+
 
 export default Display_1;

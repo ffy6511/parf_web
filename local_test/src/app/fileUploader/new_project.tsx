@@ -4,10 +4,15 @@ import { InboxOutlined } from '@ant-design/icons';
 import styles from './fileUpload.module.css';
 import TextArea from 'antd/lib/input/TextArea';
 import { FileContext } from '../contexts/FileContext';
+import type { RcFile } from 'antd/lib/upload';  // 添加这行导入
 import "~/styles/globals.css";
 
 interface FileUploadContainerProps {
   onFileUploadSuccess: () => void;
+}
+
+interface ExistingData{
+  id: number;
 }
 
 // 定义文件夹结构接口
@@ -18,7 +23,7 @@ interface FileNode {
   content?: ArrayBuffer;
   parentId: number | null;
   children?: FileNode[];
-  path: string;
+  path: string | undefined;
   lastModified: string;
 }
 
@@ -55,24 +60,36 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result as ArrayBuffer);
-      reader.onerror = () => reject(reader.error);
+      reader.onerror = () => reject(new Error(reader.error?.message ||  'Failed to read file'))
       reader.readAsArrayBuffer(file);
     });
   };
 
   // 构建文件夹树结构
-  const buildFileTree = async (files: File[]): Promise<FileNode> => {
+  const buildFileTree = async (files: RcFile[]): Promise<FileNode> => {
+
+    if (!files || files.length === 0) {
+      throw new Error('No files provided');
+  }
+
+  const firstFile = files[0];
+  if (!firstFile || !firstFile.webkitRelativePath) {
+      throw new Error('Invalid file structure');
+  }
+
+    const rootPath = firstFile.webkitRelativePath.split('/')[0];
+
     const root: FileNode = {
-      fileName: files[0].webkitRelativePath.split('/')[0],
+      fileName: rootPath as string,
       isFolder: true,
       parentId: null,
       children: [],
-      path: files[0].webkitRelativePath.split('/')[0],
+      path: rootPath,
       lastModified: new Date().toISOString()
     };
 
     const pathMap = new Map<string, FileNode>();
-    pathMap.set(root.path, root);
+    pathMap.set(root.path as string, root);
 
     for (const file of files) {
       const pathParts = file.webkitRelativePath.split('/');
@@ -81,12 +98,12 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
       // 处理每一级路径
       for (let i = 0; i < pathParts.length; i++) {
         const part = pathParts[i];
-        currentPath = currentPath ? `${currentPath}/${part}` : part;
+        currentPath = (currentPath ? `${currentPath}/${part}` : part) as string;  
 
         if (!pathMap.has(currentPath)) {
           const isFile = i === pathParts.length - 1;
           const newNode: FileNode = {
-            fileName: part,
+            fileName: part as string,
             isFolder: !isFile,
             parentId: null, // 将在后续设置
             children: isFile ? undefined : [],
@@ -124,8 +141,8 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
 
   // 检查是否已存在同路径文件
   const pathIndex = store.index('path');
-  const existing = await new Promise(resolve => {
-    const request = pathIndex.get(node.path);
+  const existing = await new Promise<ExistingData | null>(resolve => {
+    const request = pathIndex.get(node.path as string);
     request.onsuccess = () => resolve(request.result);
   });
 
@@ -137,7 +154,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
   const nodeData = {
     fileName: node.fileName,
     isFolder: node.isFolder,
-    fileContent: node.content || new ArrayBuffer(0),
+    fileContent: node.content ?? new ArrayBuffer(0),
     parentId: parentId,
     path: node.path,
     lastModified: node.lastModified
@@ -161,12 +178,12 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
 };
 
   // 处理文件夹上传
-  const handleFolderUpload = async (files: FileList) => {
+  const handleFolderUpload = async (files: RcFile[]) => {
     if (!db || files.length === 0) return;
 
     try {
-      const filesArray = Array.from(files);
-      const folderName = filesArray[0].webkitRelativePath.split('/')[0];
+      const filesArray = files;
+      const folderName = (filesArray[0]!.webkitRelativePath.split('/')[0]);
 
       // 检查是否已存在
       const transaction = db.transaction(['files'], 'readwrite');
@@ -174,12 +191,12 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
       const pathIndex = store.index('path');
       
       const existing = await new Promise(resolve => {
-        const request = pathIndex.get(folderName);
+        const request = pathIndex.get(folderName as string);
         request.onsuccess = () => resolve(request.result);
       });
 
       if (existing) {
-        message.warning(`Folder ${folderName} already exists`);
+        message.info(`Folder ${folderName} already exists`);
         return;
       }
       
@@ -292,7 +309,8 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         style={{maxWidth:'27vw'}}
       >
         <Upload
-          beforeUpload={(file) => {
+          action = {''}
+          beforeUpload={(file :RcFile) => {
             handleUpload(file);
             return false;
           }}
@@ -338,7 +356,8 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         style = {{padding:'10px'}}
       >
         <Upload
-          beforeUpload={(file, fileList) => {
+        action=''
+          beforeUpload={(file: RcFile, fileList: RcFile[]) => {
             handleFolderUpload(fileList);
             return false;
           }}
