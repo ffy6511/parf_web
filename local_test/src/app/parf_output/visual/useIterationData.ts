@@ -98,7 +98,7 @@ export const useIterationData = () => {
         }
         return 3000; // 3秒间隔
       },
-      retry: 1,
+      retry: 5,
       refetchOnWindowFocus: false,
       refetchOnMount: true,
     }

@@ -70,7 +70,7 @@ const ResultComparation = () => {
       enabled: !!tempPath && delayedQuery,  
       refetchOnWindowFocus: false,  
       refetchOnMount: false,  
-      retry: 1  
+      retry: 5  
     }  
   );  
 
