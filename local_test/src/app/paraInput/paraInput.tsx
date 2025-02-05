@@ -23,18 +23,23 @@ interface TimeBudgetInputProps {
 
 // 时间预算输入
 const TimeBudgetInput: React.FC<TimeBudgetInputProps> = ({ value, onChange }) => (
-  <Row style={{ width: '100%' }}>
-    <Col span={'18'}>
+  <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', gap: '10px', paddingLeft: '20px' }}>
+    <div style={{ flex: '0 1 70%' }}>
       <Slider min={1} max={3600} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
-    </Col>
-    <Col span={'6'}>
-      <InputNumber min={0} max={3600} value={value} onChange={onChange} style={{ 
-        width: '80%',
-        marginRight:'2vw',
-        fontSize:'0.8em',
-        }} />
-    </Col>
-  </Row>
+    </div>
+    <div style={{ width: '80px' }}>
+      <InputNumber 
+        min={0} 
+        max={3600} 
+        value={value} 
+        onChange={onChange} 
+        style={{ 
+          width: '100%',
+          fontSize: '0.8em'
+        }} 
+      />
+    </div>
+  </div>
 );
 
 interface CoreInputProps {
@@ -44,18 +49,23 @@ interface CoreInputProps {
 
 // 核输入
 const CoreInput: React.FC<CoreInputProps> = ({ value, onChange }) => (
-  <Row style={{ width: '100%' }}>
-    <Col span={'18'}>
+  <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', gap: '10px', paddingLeft: '20px' }}>
+    <div style={{ flex: '0 1 70%' }}>
       <Slider min={1} max={8} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
-    </Col>
-    <Col span={'6'}>
-      <InputNumber min={1} max={8} value={value} onChange={onChange} style={{ 
-        width: '80%',
-        marginRight:'2vw',
-        fontSize:'0.8em',
-        }} />
-    </Col>
-  </Row>
+    </div>
+    <div style={{ width: '80px' }}>
+      <InputNumber 
+        min={1} 
+        max={8} 
+        value={value} 
+        onChange={onChange} 
+        style={{ 
+          width: '100%',
+          fontSize: '0.8em'
+        }} 
+      />
+    </div>
+  </div>
 );
 
 interface SampleSizeInputProps {
@@ -65,18 +75,23 @@ interface SampleSizeInputProps {
 
 // 采样数量输入
 const SampleSizeInput: React.FC<SampleSizeInputProps> = ({ value, onChange }) => (
-  <Row style={{ width: '100%' }}>
-    <Col span={'18'}>
+  <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', gap: '10px', paddingLeft: '20px' }}>
+    <div style={{ flex: '0 1 70%' }}>
       <Slider min={1} max={16} onChange={onChange} value={typeof value === 'number' ? value : 0} step={1} />
-    </Col>
-    <Col span={'6'}>
-      <InputNumber min={1} max={16} value={value} onChange={onChange} style={{ 
-        width: '80%',
-        marginRight:'2vw',
-        fontSize:'0.8em',
-        }} />
-    </Col>
-  </Row>
+    </div>
+    <div style={{ width: '80px' }}>
+      <InputNumber 
+        min={1} 
+        max={16} 
+        value={value} 
+        onChange={onChange} 
+        style={{ 
+          width: '100%',
+          fontSize: '0.8em'
+        }} 
+      />
+    </div>
+  </div>
 );
 
 const InputPanel = () => {
@@ -211,7 +226,7 @@ const InputPanel = () => {
         </div>
 
         {/* 显示已保存的参数组 */}
-        <strong style={{ textShadow: '0px 1px 50px #a49f9f', marginTop: '1px', fontSize: '1em', color: '#4f4e4e',marginLeft:'0.5vw' }}>
+        <strong style={{  marginTop: '1px', fontSize: '1em',marginLeft:'0.5vw' }}>
           <UnorderedListOutlined /> Configuration Groups
         </strong>
         <div
@@ -239,7 +254,15 @@ const InputPanel = () => {
                   <div className={styles.parameterContent}>
                     <strong>{item.groupName}</strong>
                     <div className={styles.parameterDetails}>
-                      Time Budget: {item.timeBudget} _Processes: {item.core}_Samples: {item.sampleSize}
+                      <div>
+                        Time Budget: {item.timeBudget} 
+                      </div> 
+                      <div>
+                       Processes: {item.core} 
+                       </div>
+                       <div>
+                       Samples: {item.sampleSize}
+                       </div>
                     </div>
                   </div>
                   <Button

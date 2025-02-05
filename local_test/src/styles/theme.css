@@ -1,0 +1,29 @@
+:root[data-theme="light"] {
+  --background-color: rgba(240, 228, 211, 0.2);
+  --text-color: rgba(0, 0, 0, 0.85);
+  --navbar-bg: #f9efef;
+  --navbar-text: #000000;
+  --scrollbar-thumb: rgba(0, 0, 0, 0.2);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.4);
+  --scrollbar-track: #f1f1f1;
+  --button-gradient: linear-gradient(50deg, #53595b, #c9d7e6);
+  --button-text: #ffffff;
+  --link-color: #343232;
+  --delete-button: #ff4d4f;
+  --delete-button-hover: #ff7875;
+}
+
+:root[data-theme="dark"] {
+  --background-color: #1a1a1a;
+  --text-color: rgba(255, 255, 255, 0.85);
+  --navbar-bg: #2d2d2d;
+  --navbar-text: #ffffff;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.2);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.4);
+  --scrollbar-track: #333333;
+  --button-gradient: linear-gradient(50deg, #2d2d2d, #4a4a4a);
+  --button-text: #ffffff;
+  --link-color: #a6a6a6;
+  --delete-button: #ff4d4f;
+  --delete-button-hover: #ff7875;
+}

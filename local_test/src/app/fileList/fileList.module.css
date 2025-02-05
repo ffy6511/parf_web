@@ -2,17 +2,17 @@
 
 .container {
   padding: 1px;
-  border: 2px solid #e6e4e4;
+  border: 2px solid var(--scrollbar-track);
   border-radius: 15px;
   text-align: center;
   transition: all 0.2s ease;
-  width: 98%; /* 使用百分比替代最大宽度 */
+  width: 100%;
   margin: 0 auto;
 }
 
 .container:hover {
-  box-shadow: 0px 5px 10px rgba(78, 74, 74, 0.25);
-  transform: scale(1.02); /* 更大的放大效果 */
+  box-shadow: 0px 5px 10px var(--scrollbar-thumb);
+  transform: scale(1.02);
 }
 
 @media (max-width: 600px) {
@@ -47,16 +47,15 @@
   .menu {
     position: absolute;
     right: 15px;
-    color: #c2c1be;
+    color: var(--text-color);
     display: flex;
-    
     align-items: center;
     justify-content: center;
-    border: 1px solid #c2c1be;
+    border: 1px solid var(--scrollbar-track);
     border-radius: 50%;
-    width: 20px; /* 确保按钮是一个正方形 */
+    width: 20px;
     height: 20px;
-    padding: 0; /* 去除内边距 */
+    padding: 0;
     background-color: transparent;
     transition: all 0.2s ease;
   }
@@ -80,9 +79,9 @@
   }
   
   .menu:hover {
-    color: #fff;
-    background-color: #c2c1be;
-    border-color: #c2c1be;
+    color: var(--button-text);
+    background-color: var(--scrollbar-thumb);
+    border-color: var(--scrollbar-thumb);
     cursor:pointer;
   }
   
@@ -107,12 +106,12 @@
   }
 
   .modalCodeBlock {
-    background-color: #141010 !important;
+    background-color: var(--navbar-bg);
     padding: 5px;
     border-radius: 5px;
     font-family: 'Courier New', Courier, monospace;
     font-size: 0.9em;
-    color: #f5f2f2;
+    color: var(--text-color);
     overflow-y: auto;
     overflow-x: auto;
   }
@@ -123,8 +122,8 @@
 }
 
 .customModal .ant-modal-content {
-  background: rgba(255, 255, 255, 0.3); /* 半透明背景 */
-  border-radius: 10px; /* 可选：圆角 */
+  background: var(--navbar-bg);
+  border-radius: 10px;
 }
 
 .operationBar {

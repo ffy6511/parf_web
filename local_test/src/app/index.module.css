@@ -206,12 +206,12 @@
   justify-content: center;
   align-items: center;
   font-size: 0.8em;
-  padding: 0px 0; /* Increase padding to make footer larger */
-  background-color: #f1f1f1;
+  padding: 0px 0;
+  background-color: var(--navbar-bg);
   width: 100%;
-  border-top: 1px solid #e0e0e0;
-  margin-top: 0px; /* Adjust margin-top to add spacing between footer and content */
+  border-top: 1px solid var(--scrollbar-track);
+  margin-top: 0px;
   gap: 5vw;
-  flex-shrink: 0; /* Ensure the footer does not get compressed */
+  flex-shrink: 0;
   height: 3vh;
 }

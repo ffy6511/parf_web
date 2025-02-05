@@ -5,9 +5,9 @@
   margin-top:32px;
   /* border: 1px solid #ddd; */
   border-radius: 8px;
-  background: #ffffff; /* 整体容器的背景 */
+  background: var(--navbar-bg); /* 使用主题变量 */
   width: 100%;
-  border:1px solid rgb(229, 223, 223);
+  border:1px solid var(--scrollbar-track);
   max-width: 400px; /* 调整宽度，确保更紧凑 */
   margin-bottom: 0px;
   transition: all 0.3s ease;
@@ -19,13 +19,13 @@
 }
 
 .titleSection {
-  background: linear-gradient(50deg, #dae6ed,#F0ECF0);
+  background: var(--button-gradient);
   padding: 0px;
   border-radius: 8px 8px 0 0; /* 顶部的圆角 */
   text-align: center;
   font-weight: bold;
   font-size: 14px;
-  border-bottom: 2px solid #ccc; /* 分隔线 */
+  border-bottom: 2px solid var(--scrollbar-track); /* 分隔线 */
 }
 
 .detailsSection {
@@ -40,21 +40,21 @@
 .fileSection {
   padding: 5px 10px;
   border-radius: 4px;
-  background: #f8f9fa; /* 使每个部分有轻微的背景色区分 */
+  background: var(--background-color); /* 使用主题变量 */
   transition: background-color 0.3s ease;
 }
 
 .noFile,
 .noGroup {
   font-size: 0.9em;
-  color: #999;
+  color: var(--text-color);
 }
 
 .groupName,
 .fileName {
   cursor: pointer;
   font-weight: bold;
-  color: #6f6e6c;
+  color: var(--text-color);
   display: inline-block;
   padding: 5px;
   transition: all 0.3s ease;
@@ -62,15 +62,15 @@
 
 .groupName:hover,
 .fileName:hover {
-  background-color: #e3f2f7;
-  color:#454544
+  background-color: var(--scrollbar-thumb);
+  color: var(--text-color);
 }
 
 .tooltipContent {
   background-color: #000000; /* 设置为黑色背景 */
   padding: 5px;
   font-size: 0.9em;
-  color: #ffffff; /* 设置文本为白色 */
+  color: var(--button-text); /* 使用主题变量 */
   border-radius: 5px; /* 使 tooltip 内容有一定的圆角 */
 }
 

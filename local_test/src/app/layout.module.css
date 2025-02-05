@@ -4,26 +4,27 @@
   box-sizing: border-box;
   font-family: Arial, sans-serif;
   height: 100%;
-  overflow: auto; /* 确保整个页面可以滚动 */
+  overflow: auto;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .navbar {
-  /*position: sticky; /* 使导航栏在页面滚动时保持在顶部 */
   top: 0;
   width: 100%;
-  background-color: #585858;
-  height: 40px; /* 固定高度设置为 50px 确保导航栏高度一致 */
-  z-index: 1000; /* 确保导航栏在其他内容之上 */
-  display: flex; /* 使用 Flex 布局来控制内部内容的分布 */
-  align-items: center; /* 垂直居中对齐导航栏内部内容 */
-  padding: 0 1em; /* 水平方向的 padding，确保链接和标题不贴边 */
+  background-color: var(--navbar-bg);
+  height: 40px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 1em;
 }
 
 .navContainer {
   display: flex;
-  justify-content: space-between; /* 左侧导航链接和右侧标题两边对齐 */
-  width: 100%; /* 使容器的宽度占满导航栏 */
-  align-items: center; /* 确保内容垂直居中 */
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
 }
 
 .navList {
@@ -35,19 +36,40 @@
 }
 
 .navList li a {
-  color: rgb(225, 224, 224);
+  color: var(--navbar-text);
   text-decoration: none;
 }
 
 .navTitle {
-  color: rgb(239, 237, 237);
+  color: var(--text-color);
   font-size: 1em; 
-  text-align: right;
-  margin-right:3em;
+  text-align: left;
+  margin-right: 0;
+}
+
+.themeToggleContainer {
+  margin-right: 2em;
+}
+
+.themeToggle {
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.themeToggle:hover {
+  background-color: var(--scrollbar-thumb);
+  transform: scale(1.1);
 }
 
 .content {
-  padding: 1em;
-  min-height: calc(100vh - 50px); /* 确保内容部分高度减去导航栏的高度 */
-  height: 100%; /* 允许内容部分根据页面内容的大小自动扩展 */
+  min-height: calc(100vh - 50px);
+  height: 100%;
 }

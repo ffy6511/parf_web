@@ -2,38 +2,38 @@
 .foldcreator {
     background-color: transparent !important;
     border: none !important;
-    color: rgba(0, 0, 0, 0.85) !important;
+    color: var(--text-color) !important;
 }
 
 .foldcreator:hover {
-    background-color: rgb(220, 220, 220) !important;
+    background-color: var(--scrollbar-thumb) !important;
     transition: all 0.3s ease;
-    color: rgba(0, 0, 0, 0.85) !important;
+    color: var(--text-color) !important;
 }
 
 .foldcreator.active {
-    background-color: rgb(220, 220, 220) !important;
-    color: rgba(0, 0, 0, 0.85) !important;
+    background-color: var(--scrollbar-thumb) !important;
+    color: var(--text-color) !important;
 }
 
 .foldcreator.active:hover {
-    background-color: rgb(220, 220, 220) !important;
-    color: rgba(0, 0, 0, 0.85) !important;
+    background-color: var(--scrollbar-thumb) !important;
+    color: var(--text-color) !important;
 }
 
 .deleteButton {
     background-color: transparent !important;
     border: none !important;
-    color: #ff4d4f !important;
+    color: var(--delete-button) !important;
 }
 
 .deleteButton:hover {
-    background-color: rgb(220, 220, 220) !important;
+    background-color: var(--scrollbar-thumb) !important;
     transition: all 0.3s ease;
-    color: #ff4d4f !important;
+    color: var(--delete-button) !important;
 }
 
 .deleteButton:active {
-    background-color: #fafafa !important;
-    color: #ff7875 !important;
+    background-color: var(--navbar-bg) !important;
+    color: var(--delete-button-hover) !important;
 }

@@ -6,7 +6,7 @@
   margin: 5px auto;
   position: relative;
   transition: all 0.3s ease;
-  background-color: rgb(215, 214, 206);
+  background-color: var(--background-color);
 }
 
 .parfOutputContainer {
@@ -18,7 +18,7 @@
   margin: 5px auto;
   position: relative;
   transition: all 0.3s ease;
-  background-color: rgb(119, 110, 39);
+  background-color: var(--navbar-bg);
   transition: all 0.3s ease-in-out;
 }
 
@@ -63,21 +63,19 @@
       
       
 .displayMonitor {
-  background: rgb(250, 237, 237);
+  background: var(--navbar-bg);
   border-radius: 8px;
   padding: 0px;
   text-align: center;
   margin-bottom: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* min-height: 40vh;
-  max-height: 80vh; */
   height: 75vh;
   overflow: auto;
   position: relative;
 }    
 
 .displayMonitor2 {
-  background: rgb(250, 237, 237);
+  background: var(--background-color);
   border-radius: 8px;
   padding: 10px;
   text-align: center;
@@ -88,7 +86,7 @@
 }
 
 .displayMonitor strong {
-  color: #838586;
+  color: var(--text-color);
   display: block;
   margin-bottom: 10px;
 }
@@ -98,14 +96,14 @@
 }
 
 .codeBlock {
-  background-color: transparent;
+  background-color: var(--background-color);
   padding: 10px;
   border-radius: 5px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 1em;
   height: calc(100% - 60px);
   overflow-y: auto;
-  color: #333;
+  color: var(--text-color);
   white-space: nowrap;
   text-overflow: ellipsis;
   text-align: left;
@@ -135,8 +133,8 @@
 }
 
 .submitButton_abort {
-  background: linear-gradient(50deg, #53595b, #c9d7e6);
-  color: #fff;
+  background: var(--button-gradient);
+  color: var(--button-text);
   border: none;
   padding: 10px 15px;
   border-radius: 10px;
@@ -145,13 +143,22 @@
   float: right;
   margin-right: 10px;
   font-weight: bold;
-
 }
 
 .submitButton_abort:hover {
-  background: linear-gradient(90deg, #ea5a58,#ee3b32) ;
+  background: linear-gradient(90deg, var(--delete-button), var(--delete-button-hover));
   box-shadow: 3px 6px 15px rgba(239, 93, 61, 0.5);
   transform: scale(1.03);
+}
+
+.closeModalButton {
+  background: var(--button-gradient);
+  color: var(--button-text);
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
 }
 
 .submitButton:disabled {
@@ -164,7 +171,7 @@
   top: 10px;
   right: 10px;
   font-size: 1.5em;
-  color: #1394ea;
+  color: var(--text-color);
   cursor: pointer;
   transition: color 0.3s ease, transform 0.3s ease;
 }
@@ -175,12 +182,12 @@
 }
 
 .modalCodeBlock {
-  background-color: #141010;
+  background-color: var(--navbar-bg);
   padding: 0px;
   border-radius: 5px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.9em;
-  color: #f5f2f2;
+  color: var(--text-color);
   overflow-y: auto;
   overflow-x: auto;
 

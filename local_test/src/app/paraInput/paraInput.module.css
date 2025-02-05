@@ -1,77 +1,89 @@
 /* container 是外部包裹容器 */
 .container {
   padding: 5px;
-  border: 1px solid rgba(241, 240, 232, 0.924);
-  border-radius: 15px;
-  background: #f7f5f5;
-  transition: all 0.3s ease;
-  max-width: 90%; /* 设定一个最大宽度，确保内容不超出 */
-  margin: 0 auto; /* 居中容器 */
-  box-shadow: 5px 10px 20px rgba(149, 149, 149, 0.2);
-  overflow: auto;
+
 }
 
-.container:hover {
-  transform: scale(1.02);
+/* paramLabel 独立的参数名称样式 */
+.paramLabel {
+  color: var(--text-color);
+  font-weight: 400;
+  min-width: 130px;
+  text-align: left;
 }
 
 /* inputRow 用于单行输入布局 */
 .inputRow {
   display: flex;
-  justify-content: space-between; /* 在两端对齐 */
   align-items: center;
-  padding: 0px 0;
+  padding: 8px 0;
   margin-bottom: 1px;
-  margin-top: -1px;
+  gap: 20px;
+  width: 100%;
 }
 
-/* 输入框和标签的布局 */
 .inputRow strong {
-  min-width: 130px; /* 为标签设置最小宽度，保持对齐 */
-  color: #6f6e6c;
-  font-weight: 400;
+  flex: 3;
+  min-width: 0;
+  margin-left: 1em;
 }
 
-.inputRow .ant-input-number, .inputRow .ant-slider {
-  flex: 1; /* 让输入框和滑动条占据剩余空间 */
-  max-width: 600px; /* 给输入框和滑块一个最大宽度 */
-}
-
-.inputRow .ant-input-number {
-  margin-right: 10px;
-  width: 60px; /* 确保输入框宽度合适 */
+.inputRow > div:last-child {
+  flex: 7;
+  min-width: 0;
+  margin-right: 1em;
 }
 
 .List {
-  list-style: none; /* 去除默认列表样式 */
+  list-style: none;
   padding: 0;
   margin: 0;
 }
 
 .parameterListItem {
-  background: #f9f9f9;
   cursor: pointer;
-  transition: all 0.2s ease; /* 过渡时间较短，保证平滑 */
-  padding: 12px;
-  margin-bottom: 3px;
-  border: 1px solid #ddd; /* 使用浅灰色边框，保持柔和 */
-  border-radius: 5px;
-  color: #333; /* 深灰色字体，易于阅读 */
+  transition: all 0.3s ease;
+  padding: 16px;
+  margin-bottom: 0px;
+  border-radius: 8px;
+  color: var(--text-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative; /* 为了配合删除按钮的定位 */
+  position: relative;
+  background: var(--background-color);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .parameterListItem:hover {
-  background: #f0faff; /* 悬停时背景稍微提亮并有轻微蓝色，增强交互感 */
-  border-color: #7ba9ce; /* 边框变为蓝色，柔和地突出交互感 */
-  transform: translateY(-2px); /* 悬停时轻微浮起 */
+  background: var(--hover-background, rgba(255, 255, 255, 0.05));
+  transform: translateY(-2px);
+  border-color: var(--border-hover-color, rgba(35, 103, 170, 0.2));
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .parameterListItem.selected {
-  background: #e6f7ff; /* 选中状态使用浅蓝色背景 */
-  border-color: #1890ff; /* 蓝色边框，用于选中状态 */
+  background: var(--selected-background, rgba(64, 149, 209, 0.1));
+  border-color: var(--border-selected-color, rgba(75, 159, 214, 0.3));
+  box-shadow: 0 0 0 2px var(--border-selected-color, rgba(255, 255, 255, 0.3));
+}
+
+.parameterDetails {
+  margin-top: 8px;
+  font-size: 0.9em;
+  color: var(--text-secondary);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+  padding-right: 40px;
+}
+
+.parameterDetails span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .parameterContent {
@@ -81,37 +93,45 @@
 }
 
 .parameterContent strong {
-  font-size: 1em; /* 标题大小 */
-  color: #2f82e8; /* 使用蓝色强调标题内容 */
+  font-size: 1em;
+  color: var(--text-color);
 }
 
 .parameterDetails {
   margin-top: 4px;
   font-size: 0.9em;
-  color: #666; /* 使用中灰色，以减弱参数信息的视觉重量 */
+  color: var(--text-secondary);
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding-right: 40px;
 }
 
-@keyframes fadeInDown {  
-  from {  
-    opacity: 0.3;  
-    transform: translateX(10px);  
-  }  
-  to {  
-    opacity: 1;  
-    transform: translateX(0);  
-  }  
-} 
+@keyframes fadeInDown {
+  from {
+    opacity: 0.3;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
 .parameterListItem .deleteButton {
-  position: absolute; /* 绝对定位 */
+  position: absolute;
   right: 10px;
-  font-weight: 700;
-  top: 40%;
+  top: 10%;
   transform: translateY(-50%);
-  opacity: 0; /* 初始状态为隐藏 */
-  transition: all 0.3s ease; /* 在悬停时逐渐显示 */
-  color: #6f6e6c; /* 删除按钮的颜色 */
-  border-color: #6f6e6c;
+  opacity: 0;
+  transition: all 0.3s ease;
+  background-color: var(--btn-bg-color, rgb(199, 193, 193));
+  color: var(--btn-text-color, rgb(92, 88, 88));
+}
+
+[data-theme='dark'] .deleteButton{
+  --btn-text-color: #b8b5b5;
+  --btn-bg-color: #605b5b;
 }
 
 .parameterListItem:hover .deleteButton {
@@ -119,6 +139,6 @@
 }
 
 .parameterListItem .deleteButton:hover {
-  color: #ff7875 !important; /* 强制将颜色变为红色 */
+  color: var(--delete-button) !important;
   scale: 1.03;
 }

@@ -111,8 +111,8 @@ const Page: React.FC = () => {
             flex:isFileListVisible?3:0,
             flexDirection: 'column', 
             position: 'relative',
-            boxShadow: '1px 0 5px rgba(0, 0, 0, 0.3)',  
-            background: 'linear-gradient(90deg, rgba(242, 242, 242, 0.5), rgba(241, 237, 234, 0.5), rgba(233, 226, 226, 0.5))',
+            boxShadow: '1px 0 5px rgba(0, 0, 0, 0.3)',
+            background:' var(--navbar-bg)',  
           }}
         >
           {/* 控制按钮固定在左侧 */}
@@ -125,7 +125,6 @@ const Page: React.FC = () => {
               // alignItems: 'center',
               justifyContent: 'center',
               transition: 'all 0.3s ease',
-              color: isHovered ? '#1890ff' : 'black',
             }}
             
           >
@@ -153,7 +152,7 @@ const Page: React.FC = () => {
                 >
                   <MenuFoldOutlined style={{ filter: 'drop-shadow(2px 2px 10px grey)',color:'#1ea0f2' }} />
                 </Tooltip>
-                <strong style={{ fontSize: '1.2em', marginTop: '0px', textShadow: '1px 1px 10px #a49f9f',marginLeft:'0.5em'  }}>Project</strong>
+                <strong style={{ fontSize: '1.2em', marginTop: '0px',marginLeft:'0.5em'  }}>Project</strong>
             
               </div>
                 <div style = {{
@@ -184,7 +183,6 @@ const Page: React.FC = () => {
                 marginTop: '0vh',
                 marginLeft: '0.5vw',
                 overflow: 'auto',
-                borderRight: '1.5px solid #e0e0e0',
                 transition: 'max-height 0.5s ease, width 0.5s ease, opacity 0.5s ease',
                 display: 'flex', // 添加这个样式使内容竖直排列
                 flexDirection: 'column', // 设置为竖直排列
@@ -212,7 +210,7 @@ const Page: React.FC = () => {
                 minHeight:'35vh'
                 }}> {/* InputPanel */}
 
-              <strong style={{ fontSize: '1.2em', marginTop: '0px', textShadow: '1px 1px 10px #a49f9f' }}>
+              <strong style={{ fontSize: '1.2em', marginTop: '0px'}}>
               <FunctionOutlined /> Hyperparameters Configuration
                </strong>
 
