@@ -6,33 +6,51 @@ import os from "os";
 import path from "path";
 import { queue } from "async";
 
-// 定义输入类型
+// 定义文件存储类型
+type StoredFile = {
+  id: string;
+  content: string;
+  path: string;
+  isFolder: boolean;
+};
+
+// 定义文件上传输入类型
+type FileUploadInput = {
+  content: string;
+  path: string;
+  isFolder: boolean;
+};
+
+// 定义分析输入类型
 type ExecuteCommandInput = {
   budget: number;
   process: number;
   sampleNum: number;
-  fileContent: string;
+  fileId: string;
   tempDirPath: string;
 };
 
-// 新增文件夹分析的输入类型
+// 文件夹分析的输入类型
 type FolderAnalyseInput = {
   budget: number;
   process: number;
   sampleNum: number;
-  files: {
-    path: string;
-    content: string;
-  }[];
-  folderPath: string;
+  folderId: string;
   tempDirPath: string;
 };
 
-
 // 定义结果类型
 type CommandResult = { 
-  result: string ;
+  result: string;
 };
+
+// 定义文件上传结果类型
+type FileUploadResult = {
+  id: string;
+};
+
+// 内存存储模拟数据库
+const fileStorage = new Map<string, StoredFile>();
 
 // 创建队列
 const commandQueue = queue(async (task: ExecuteCommandInput | FolderAnalyseInput) => {
@@ -163,24 +181,66 @@ const executeCommand = async ({ budget, process, sampleNum, fileContent,tempDirP
 
 // 创建 API 路由
 export const analyseRouter = createTRPCRouter({
+  // 上传文件
+  uploadFile: publicProcedure
+    .input(
+      z.object({
+        content: z.string(),
+        path: z.string(),
+        isFolder: z.boolean(),
+      })
+    )
+    .output(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => {
+      // 在后端生成时间戳
+      const timestamp = Date.now().toString(); // 使用时间戳字符串作为 ID
+      const fileId = timestamp;
+
+      fileStorage.set(fileId, {
+        id: fileId,
+        content: input.content,
+        path: input.path,
+        isFolder: input.isFolder,
+      });
+      return { id: fileId };
+    }),
+
+
+  getFile: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      const file = fileStorage.get(input.id);
+      if (!file) {
+        throw new Error('File not found');
+      }
+      return file;
+    }),
+
   executeCommand: publicProcedure
     .input(
       z.object({
         budget: z.number().min(1),
         process: z.number().min(1),
         sampleNum: z.number().min(1),
-        fileContent: z.string(),
+        fileId: z.string(),
         tempDirPath: z.string(),
       })
     )
-    .output(z.object({
-       result: z.string() ,
-      }))
+    .output(z.object({ result: z.string() }))
     .mutation(async ({ input }) => {
+      const file = fileStorage.get(input.fileId);
+      if (!file) {
+        throw new Error('File not found');
+      }
+
+      const commandInput = {
+        ...input,
+        fileContent: file.content,
+      };
+
       return new Promise<{ result: string }>((resolve, reject) => {
-        // 将任务添加到队列
-        commandQueue.push(input, (error: Error | null | undefined, result?: CommandResult) => {
-          if (error != null) { // 使用 != 来同时检查 null 和 undefined
+        commandQueue.push(commandInput, (error: Error | null | undefined, result?: CommandResult) => {
+          if (error != null) {
             return reject(error);
           }
           if (result) {

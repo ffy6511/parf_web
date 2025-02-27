@@ -3,9 +3,10 @@ import { Button, Input, Upload, message, Modal, Dropdown, Menu } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import styles from './fileUpload.module.css';
 import TextArea from 'antd/lib/input/TextArea';
-import { FileContext } from '../contexts/FileContext';
-import type { RcFile } from 'antd/lib/upload';  // 添加这行导入
+import { FileContext, FileDetails } from '../contexts/FileContext';
+import type { RcFile } from 'antd/lib/upload';
 import "~/styles/globals.css";
+import { trpc } from '../../trpc/react';
 
 interface FileUploadContainerProps {
   onFileUploadSuccess: () => void;
@@ -15,16 +16,10 @@ interface ExistingData{
   id: number;
 }
 
-// 定义文件夹结构接口
-interface FileNode {
+// 定义文件夹结构接口，继承自FileDetails
+interface FileNode extends Omit<FileDetails, 'id'> {
   id?: number;
-  fileName: string;
-  isFolder: boolean;
-  content?: ArrayBuffer;
-  parentId: number | null;
   children?: FileNode[];
-  path: string | undefined;
-  lastModified: string;
 }
 
 const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadSuccess }) => {
@@ -37,12 +32,59 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
 
   const { reloadFileList } = useContext(FileContext)!;
 
+  // 使用 useMutation Hook
+  const { mutate: uploadFile } = trpc.analyse.uploadFile.useMutation({
+    onSuccess: (data) => {
+      // data 是后端函数的返回值，即 { id: fileId }
+      const fileId = data.id; // 获取后端返回的 ID
+      console.log('File uploaded successfully, file ID:', fileId);
+      message.success(`File uploaded successfully with ID: ${fileId}`);
+
+      // 将 fileId 保存到本地数据库
+      const saveFileToDB = async () => {
+        if (!db) return;
+
+        try {
+          const transaction = db.transaction(['files'], 'readwrite');
+          const store = transaction.objectStore('files');
+
+          const request = store.put({
+            id: fileId,  // 使用后端返回的 fileId 作为 id
+            fileName: fileName,
+            isFolder: false,
+            fileContent: new TextEncoder().encode(fileContent).buffer,
+            parentId: null,
+            path: fileName,
+            lastModified: new Date().toISOString()
+          });
+
+          request.onsuccess = () => {
+            console.log(`File with ID ${fileId} saved to database`);
+            onFileUploadSuccess();
+            reloadFileList();
+          };
+
+          request.onerror = () => {
+            console.error('Failed to save file to database');
+          };
+        } catch (error) {
+          console.error('Error saving file to database:', error);
+        }
+      };
+      saveFileToDB();
+    },
+    onError: (error) => {
+      message.error('Failed to upload file');
+      console.error(error);
+    }
+  });
+
   useEffect(() => {
     const request = indexedDB.open('FileStorage', 3);
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
       if (!db.objectStoreNames.contains('files')) {
-        const store = db.createObjectStore('files', { keyPath: 'id', autoIncrement: true });
+        const store = db.createObjectStore('files', { keyPath: 'id', autoIncrement: false }); // 关闭自增
         store.createIndex('parentId', 'parentId');
         store.createIndex('path', 'path');
         store.createIndex('isFolder', 'isFolder');
@@ -84,7 +126,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
       isFolder: true,
       parentId: null,
       children: [],
-      path: rootPath,
+      path: rootPath!,
       lastModified: new Date().toISOString()
     };
 
@@ -113,7 +155,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
 
           if (isFile) {
             // 如果是文件，读取内容
-            newNode.content = await readFileAsArrayBuffer(file);
+            newNode.fileContent = await readFileAsArrayBuffer(file);
           }
 
           // 找到父节点并添加关系
@@ -150,7 +192,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
     return existing.id;
   }
 
-  // 准备保存的数据
+  // 准备保存的数据 
   const nodeData = {
     fileName: node.fileName,
     isFolder: node.isFolder,
@@ -183,7 +225,8 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
 
     try {
       const filesArray = files;
-      const folderName = (filesArray[0]!.webkitRelativePath.split('/')[0]);
+      const timestamp = Date.now();
+      const folderName = `${filesArray[0]!.webkitRelativePath.split('/')[0]}_${timestamp}`;
 
       // 检查是否已存在
       const transaction = db.transaction(['files'], 'readwrite');
@@ -191,7 +234,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
       const pathIndex = store.index('path');
       
       const existing = await new Promise(resolve => {
-        const request = pathIndex.get(folderName as string);
+        const request = pathIndex.get(folderName);
         request.onsuccess = () => resolve(request.result);
       });
 
@@ -202,16 +245,26 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
       
       // 构建文件树
       const fileTree = await buildFileTree(filesArray);
+      fileTree.fileName = folderName;
+      fileTree.path = folderName;
       
-      // 保存到数据库
+      // 上传每个文件到后端
+      const uploadPromises = files.map(async (file) => {
+        const content = await readFileAsArrayBuffer(file);
+        const uniquePath = `${folderName}/${file.webkitRelativePath.split('/').slice(1).join('/')}`;
+        return await uploadFile({ // 使用 mutate 函数
+          content: new TextDecoder().decode(content),
+          path: uniquePath,
+          isFolder: false
+        });
+      });
+
+      await Promise.all(uploadPromises);
+
+      // 保存到本地数据库
       await saveFileTree(fileTree);
-
-      // message.success(`Folder ${folderName} uploaded successfully`);
       onFileUploadSuccess();
-
-      // 上传成功后，重新加载文件列表
       await reloadFileList();
-
       setShowFolderUploadPrompt(false);
     } catch (error) {
       message.error('Failed to upload folder');
@@ -225,22 +278,15 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
 
     try {
       const content = await readFileAsArrayBuffer(file);
-      const transaction = db.transaction(['files'], 'readwrite');
-      const store = transaction.objectStore('files');
 
-      const fileNode: FileNode = {
-        fileName: file.name,
-        isFolder: false,
-        content: content,
-        parentId: null,
+      setFileName(file.name);
+
+      // 先上传到后端
+      uploadFile({ // 使用 mutate 函数
+        content: new TextDecoder().decode(content),
         path: file.name,
-        lastModified: new Date().toISOString()
-      };
-
-      await saveFileTree(fileNode);
-
-      //message.success(`File ${file.name} saved successfully`);
-      onFileUploadSuccess();
+        isFolder: false
+      });
     } catch (error) {
       message.error('Failed to upload file');
       console.error(error);
@@ -254,27 +300,11 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
       return;
     }
 
-    const fileNode: FileNode = {
-      fileName,
-      isFolder: false,
-      content: new TextEncoder().encode(fileContent).buffer,
-      parentId: null,
+    uploadFile({
+      content: fileContent,
       path: fileName,
-      lastModified: new Date().toISOString()
-    };
-
-    saveFileTree(fileNode)
-      .then(() => {
-        message.success(`File ${fileName} created successfully`);
-        setFileName('');
-        setFileContent('');
-        setShowManualInput(false);
-        onFileUploadSuccess();
-      })
-      .catch(error => {
-        message.error('Failed to create file');
-        console.error(error);
-      });
+      isFolder: false
+    });
   };
 
   // UI 部分保持不变
@@ -309,10 +339,9 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         style={{maxWidth:'27vw'}}
       >
         <Upload
-          action = {''}
-          beforeUpload={(file :RcFile) => {
-            handleUpload(file);
-            return false;
+          action=''
+          customRequest={({ file }) => {
+            handleUpload(file as File); // 确保类型正确
           }}
           showUploadList={false}
           multiple
@@ -356,10 +385,8 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         style = {{padding:'10px'}}
       >
         <Upload
-        action=''
-          beforeUpload={(file: RcFile, fileList: RcFile[]) => {
-            handleFolderUpload(fileList);
-            return false;
+          customRequest={({ file, fileList }) => {
+            handleFolderUpload(fileList as RcFile[]); // 确保类型正确
           }}
           directory
           multiple

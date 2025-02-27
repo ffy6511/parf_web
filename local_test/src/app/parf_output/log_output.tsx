@@ -5,7 +5,7 @@ import { ArrowsAltOutlined, UploadOutlined, LoadingOutlined, StopOutlined } from
 import styles from './parf_output.module.css';
 import { trpc } from '../../trpc/react';
 import path from 'path';
-import { FileContext } from '../contexts/FileContext';
+import { FileContext, FileDetails } from '../contexts/FileContext';
 import "~/styles/globals.css"
 
 // 更新接口定义
@@ -14,16 +14,6 @@ interface GroupDetails {
   timeBudget: number;
   core: number;
   sampleSize: number;
-}
-
-interface FileDetails {
-  id: number;
-  fileName: string;
-  fileContent?: ArrayBuffer;
-  isFolder?: boolean;
-  parentId?: number | null;
-  path?: string;
-  lastModified: string;
 }
 
 interface AnalyseResponse {
@@ -96,7 +86,8 @@ const Log_output: React.FC = () => {
   const mutation = trpc.analyse.executeCommand.useMutation();
   const folderMutation = trpc.analyse.analyseFolder.useMutation();
   const positionQuery = trpc.analyse.getQueueLength.useQuery(undefined, {
-    refetchInterval: 2000,
+    refetchInterval: loading ? 2000 : false, // 只在loading为true时才启用轮询
+    enabled: loading, 
   });
 
   const [abortController, setAbortController] = useState<AbortController | null>(null);
@@ -241,7 +232,7 @@ const Log_output: React.FC = () => {
         // 处理单个文件
         const fileContent = await getFileContentFromIndexedDB(selectedFile.id);
         if (!fileContent) {
-          alert('Failed to get file content. Please check.');
+          alert('Failed to get file content. Please try again.');
           setLoading(false);
           return;
         }
@@ -251,7 +242,7 @@ const Log_output: React.FC = () => {
             budget: selectedGroup.timeBudget,
             process: selectedGroup.core,
             sampleNum: selectedGroup.sampleSize,
-            fileContent,
+            fileContent: fileContent,
             tempDirPath: newTempPath,
           },
           {

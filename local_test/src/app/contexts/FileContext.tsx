@@ -1,13 +1,14 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 
 // 定义文件类型
-interface FileDetails {
+export interface FileDetails {
   id: number;
   fileName: string;
   isFolder: boolean;
   parentId: number | null;
   path: string;
   lastModified: string;
+  fileContent?: ArrayBuffer;
 }
 
 // 定义 Context 的类型
@@ -33,7 +34,8 @@ const FileContextProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
      request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
         if (!db.objectStoreNames.contains('files')) {
-          db.createObjectStore('files', { keyPath: 'id' });
+          const store = db.createObjectStore('files', { keyPath: 'id' });
+          store.createIndex('path', 'path', { unique: true });
         }
       };
       
@@ -77,7 +79,8 @@ const FileContextProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
        request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
         if (!db.objectStoreNames.contains('files')) {
-          db.createObjectStore('files', { keyPath: 'id' });
+          const store = db.createObjectStore('files', { keyPath: 'id' });
+          store.createIndex('path', 'path', { unique: true });
         }
       };
 
