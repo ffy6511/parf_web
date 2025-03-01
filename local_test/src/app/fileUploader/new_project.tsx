@@ -33,7 +33,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
   const { reloadFileList } = useContext(FileContext)!;
 
   // 使用 useMutation Hook
-  const { mutate: uploadFile } = trpc.analyse.uploadFile.useMutation({
+  const { mutate: uploadFile } = trpc.file.uploadFile.useMutation({
     onSuccess: (data) => {
       // data 是后端函数的返回值，即 { id: fileId }
       const fileId = data.id; // 获取后端返回的 ID

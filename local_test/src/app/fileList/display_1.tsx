@@ -5,7 +5,7 @@ import FileEntry from './components/fileEntry';
 import { Modal, Button, message } from 'antd';
 import styles from './fileList.module.css';
 import TextArea from 'antd/lib/input/TextArea';
-
+import {trpc} from '../../trpc/react';
 interface FileData {
   id: number;
   fileName: string;
@@ -37,6 +37,8 @@ const Display_1 = React.forwardRef<DisplayRef, Display_1Props>((props, ref) => {
   const [isAnyHovered, setIsAnyHovered] = useState(false);
   const [expandedFolders, setExpandedFolders] = useState<Set<number>>(new Set());
   const { isMultiSelect, selectedFiles, onMultiSelect } = props;
+
+  const {mutate: deleteFile}  = trpc.file.deleteFile.useMutation();
 
   useEffect(() => {
     const request = indexedDB.open('FileStorage', 3); // 版本号改为3
@@ -129,7 +131,7 @@ const handleCreateFolder = async (folderName: string) => {
             return [...acc, child.id, ...getAllChildren(child.id)];
           }, [] as number[]);
         };
-
+  
         const filesToDelete = fileIds.reduce((acc, fileId) => {
           const file = fileList.find(f => f.id === fileId);
           if (file?.isFolder) {
@@ -137,17 +139,33 @@ const handleCreateFolder = async (folderName: string) => {
           }
           return [...acc, fileId];
         }, [] as number[]);
-
+  
         const transaction = db.transaction(['files'], 'readwrite');
         const store = transaction.objectStore('files');
-        
+  
         let deletedCount = 0;
         filesToDelete.forEach(id => {
-          store.delete(id).onsuccess = () => {
+          store.delete(id).onsuccess = async () => {
             deletedCount++;
             if (deletedCount === filesToDelete.length) {
               setFileList(prevFiles => prevFiles.filter(file => !filesToDelete.includes(file.id)));
-              message.success(`成功删除 ${fileIds.length} 个项目`);
+              // 删除后更新 expandedFolders
+              setExpandedFolders(prev => {
+                const newSet = new Set(prev);
+                filesToDelete.forEach(id => newSet.delete(id));
+                return newSet;
+              });
+              
+              // 调用 tRPC 后端删除文件
+              try {
+                for (const id of filesToDelete) {
+                  await deleteFile({ id });
+                }
+                message.success(`成功删除 ${filesToDelete.length} 个项目`);
+              } catch (error) {
+                message.error(`删除文件时发生错误: ${error}`);
+                console.error('删除文件错误:', error);
+              }
             }
           };
         });
@@ -307,10 +325,10 @@ const handleCreateFolder = async (folderName: string) => {
 
       const transaction = db.transaction(['files'], 'readwrite');
       const store = transaction.objectStore('files');
-      
+
       let deletedCount = 0;
       filesToDelete.forEach(id => {
-        store.delete(id).onsuccess = () => {
+        store.delete(id).onsuccess = async () => {
           deletedCount++;
           if (deletedCount === filesToDelete.length) {
             setFileList(prevFiles => prevFiles.filter(file => !filesToDelete.includes(file.id)));
@@ -323,6 +341,17 @@ const handleCreateFolder = async (folderName: string) => {
               filesToDelete.forEach(id => newSet.delete(id));
               return newSet;
             });
+
+            // 调用 tRPC 后端删除文件
+            try {
+              for (const id of filesToDelete) {
+                await deleteFile({ id });
+              }
+              message.success(`成功删除 ${filesToDelete.length} 个项目`);
+            } catch (error) {
+              message.error(`删除文件时发生错误: ${error}`);
+              console.error('删除文件错误:', error);
+            }
           }
         };
       });
