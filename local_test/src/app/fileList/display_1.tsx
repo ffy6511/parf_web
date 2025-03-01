@@ -42,10 +42,7 @@ const Display_1 = React.forwardRef<DisplayRef, Display_1Props>((props, ref) => {
     handleBatchDelete,
     handleDeleteFile,
     handleFileDrop,
-    handleFilePreview,
     handleFileClick,
-    handleFileOperation,
-    handleSaveContent,
     toggleFolder,
     setSelectedFileContent
   } = useFileOperations();
@@ -78,8 +75,6 @@ const Display_1 = React.forwardRef<DisplayRef, Display_1Props>((props, ref) => {
               lastModified={item.lastModified}
               onClick={handleFileClick}
               onDelete={handleDeleteFile}
-              onEdit={() => handleFileOperation(item.id, 'edit')}
-              onPreview={() => handleFileOperation(item.id, 'preview')}
               isSelected={selectedFileId === item.id}
               isAnyHovered={isAnyHovered}
               parentId={item.parentId}
@@ -116,49 +111,11 @@ const Display_1 = React.forwardRef<DisplayRef, Display_1Props>((props, ref) => {
         <div style={{color: '#6f6e6c'}}>𝐄𝐦𝐩𝐭𝐲 𝐋𝐢𝐬𝐭</div>
       )}
 
-      <Modal
-        title="编辑文件内容"
-        visible={isEditModalVisible}
-        onCancel={() => setIsEditModalVisible(false)}
-        footer={[
-          <Button key="save" type="primary" onClick={() => {
-            handleSaveContent(selectedFileId!, selectedFileContent);
-            setIsEditModalVisible(false);
-          }}>
-            保存
-          </Button>,
-        ]}
-        width={800}
-        style={{ top: 0 }}
-      >
-        <TextArea
-          value={selectedFileContent}
-          className={styles.modalCodeBlock}
-          rows={25}
-          onChange={(e) => setSelectedFileContent(e.target.value)}
-        />
-      </Modal>
-
-      <Modal
-        title="预览文件内容"
-        visible={isPreviewModalVisible}
-        onCancel={() => setIsPreviewModalVisible(false)}
-        footer={null}
-        width={800}
-        style={{ 
-          top: '0px',
-          borderRadius: '10px',
-        }}
-        className={styles.customModal}
-      >
-        <pre className={styles.modalCodeBlock}>{selectedFileContent}</pre>
-      </Modal>
     </div>
   );
 });
 
 // 添加显示名称
 Display_1.displayName = 'Display_1';
-
 
 export default Display_1;

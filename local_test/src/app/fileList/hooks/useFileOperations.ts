@@ -180,46 +180,6 @@ export const useFileOperations = () => {
     }
   };
 
-  const handleFileOperation = async (fileId: number, operation: 'edit' | 'preview') => {
-    if (db) {
-      const transaction = db.transaction(['files'], 'readonly');
-      const store = transaction.objectStore('files');
-      const request = store.get(fileId);
-
-      request.onsuccess = () => {
-        if (request.result) {
-          const fileData = request.result.fileContent;
-          const blob = new Blob([fileData]);
-          const reader = new FileReader();
-          reader.onload = () => {
-            setSelectedFileContent(reader.result as string);
-          };
-          reader.readAsText(blob);
-        }
-      };
-    }
-  };
-
-  const handleSaveContent = async (fileId: number, content: string) => {
-    if (db && fileId) {
-      const transaction = db.transaction(['files'], 'readwrite');
-      const store = transaction.objectStore('files');
-      const encoder = new TextEncoder();
-      const updatedContent = encoder.encode(content).buffer;
-
-      const request = store.get(fileId);
-      request.onsuccess = () => {
-        const fileData = request.result;
-        if (fileData) {
-          fileData.fileContent = updatedContent;
-          store.put(fileData).onsuccess = () => {
-            message.success('文件内容已保存');
-            loadFilesFromDB(db);
-          };
-        }
-      };
-    }
-  };
 
   const toggleFolder = (folderId: number) => {
     setExpandedFolders((prev) => {
@@ -279,26 +239,6 @@ export const useFileOperations = () => {
     }
   };
 
-  const handleFilePreview = (fileId: number) => {
-    if (db) {
-      const transaction = db.transaction(['files'], 'readonly');
-      const store = transaction.objectStore('files');
-      const request = store.get(fileId);
-
-      request.onsuccess = () => {
-        if (request.result) {
-          const fileData = request.result.fileContent;
-          const blob = new Blob([fileData]);
-          const reader = new FileReader();
-          reader.onload = () => {
-            setSelectedFileContent(reader.result as string);
-            setIsPreviewModalVisible(true);
-          };
-          reader.readAsText(blob);
-        }
-      };
-    }
-  };
 
 
   return {
@@ -310,10 +250,7 @@ export const useFileOperations = () => {
     handleBatchDelete,
     handleDeleteFile,
     handleFileDrop,
-    handleFilePreview,
     handleFileClick,
-    handleFileOperation,
-    handleSaveContent,
     toggleFolder,
     setSelectedFileContent,
   };

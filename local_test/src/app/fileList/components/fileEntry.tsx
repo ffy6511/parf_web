@@ -10,8 +10,6 @@ interface FileEntryProps {
   lastModified: string | null;
   onClick: (fileId: number) => void;
   onDelete: (fileId: number) => void;
-  onEdit: () => void;
-  onPreview: () => void;
   isSelected: boolean;
   isAnyHovered: boolean;
   parentId?: number | null;
@@ -50,8 +48,6 @@ const FileEntry: React.FC<FileEntryProps> = ({
   lastModified,
   onClick,
   onDelete,
-  onEdit,
-  onPreview,
   isSelected,
   isAnyHovered,
   parentId,
@@ -110,16 +106,6 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
   const menu = (
     <Menu>
-      {!isFolder && (
-        <>
-          <Menu.Item key="preview" icon={<EyeOutlined />} onClick={onPreview} className={styles.menu_turnOut}>
-            Preview
-          </Menu.Item>
-          <Menu.Item key="edit" icon={<EditOutlined />} onClick={onEdit} className={styles.menu_turnOut}>
-            Edit
-          </Menu.Item>
-        </>
-      )}
       <Menu.Item key="delete" icon={<CloseCircleOutlined />} onClick={() => onDelete(fileId)} className={styles.menu_turnOut_delete}>
         Delete
       </Menu.Item>
