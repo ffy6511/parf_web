@@ -1,31 +1,18 @@
 // analyseRouter.ts
 import { exec } from "child_process";
-import fileStorage from "./fileStorage"; // 导入共享的 fileStorage
+import fileStorage from "./fileStorage";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import fs from "fs/promises";
-import os from "os";
 import path from "path";
 import { queue } from "async";
 
 // 定义分析输入类型
-type ExecuteCommandInput = {
+type AnalyseInput = {
   budget: number;
   process: number;
   sampleNum: number;
   fileId: string;
-  tempDirPath: string;
-};
-
-// 文件夹分析的输入类型
-type FolderAnalyseInput = {
-  budget: number;
-  process: number;
-  sampleNum: number;
-  folderId: string;
-  tempDirPath: string;
-  files: { path: string; content: string }[]; // 确保 files 属性存在
-  folderPath: string;
 };
 
 // 定义结果类型
@@ -35,204 +22,161 @@ type CommandResult = {
 
 // 创建队列
 const commandQueue = queue(
-  async (task: ExecuteCommandInput | FolderAnalyseInput) => {
-    if ('files' in task) {
-      return analyseFolderFiles(task);
-    }
-    return executeCommand(task);
+  async (task: AnalyseInput) => {
+    return analyseFolder(task);
   },
   1
 );
 
-// 文件夹分析函数
-const analyseFolderFiles = async ({
+// 统一的分析函数
+const analyseFolder = async ({
   budget,
-  process,
+  process:coreCount,
   sampleNum,
-  files,
-  folderPath,
-  tempDirPath,
-}: FolderAnalyseInput): Promise<CommandResult> => {
+  fileId,
+}: AnalyseInput): Promise<CommandResult> => {
   try {
-    // 创建临时目录
-    await fs.mkdir(tempDirPath, { recursive: true });
+    const project_root = process.cwd();
+    const folderPath = path.join(project_root, 'output', fileId);
 
-    // 写入所有文件并寻找config.txt
-    let configContent = "";
-    for (const file of files) {
-      const filePath = path.join(tempDirPath, file.path);
-      // 确保文件的目录存在
-      await fs.mkdir(path.dirname(filePath), { recursive: true });
-      await fs.writeFile(filePath, file.content);
+    // 检查是否为文件夹
+    const stats = await fs.stat(folderPath);
+    if (stats.isDirectory()) {
+      // 处理文件夹
+      const files = await readFolderFiles(folderPath);
 
-      // 检查是否是config.txt文件
-      if (file.path.endsWith("config.txt")) {
-        configContent = file.content.trim();
-      }
-    }
-
-    if (!configContent) {
-      throw new Error("Config file not found in the folder");
-    }
-
-    // 构建命令
-    let command: string;
-    try {
-      // 使用config.txt中的内容构建命令
-      command = `opam switch 5.1.0 && eval $(opam env) && frama-c ${configContent} -parf -parf-budget ${budget} -parf-process ${process} -parf-sample-num ${sampleNum}`;
-    } catch (error) {
-      throw new Error(
-        `Error parsing config file: ${
-          error instanceof Error ? error.message : String(error)
-        }`
-      );
-    }
-
-    // 执行命令
-    const { stdout, stderr } = await new Promise<{
-      stdout: string;
-      stderr: string;
-    }>((resolve, reject) => {
-      exec(
-        command,
-        {
-          maxBuffer: 1024 * 1024 * 20,
-          cwd: tempDirPath, // 设置工作目录为临时目录
-        },
-        (error, stdout, stderr) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve({ stdout, stderr });
-          }
+      // 寻找config.txt
+      let configContent = "";
+      for (const file of files) {
+        if (file.path.endsWith("config.txt")) {
+          configContent = file.content.trim();
+          break;
         }
-      );
-    });
+      }
 
-    const combinedOutput = `${stdout}${stderr}`
-      .split("\n")
-      .filter((line) => !line.includes(".parf_temp_files"))
-      .join("\n");
+      if (!configContent) {
+        throw new Error("Config file not found in the folder");
+      }
 
-    return {
-      result: combinedOutput,
-    };
+      const command = `opam switch 5.1.0 && eval $(opam env) && frama-c ${configContent} -parf -parf-budget ${budget} -parf-process ${coreCount} -parf-sample-num ${sampleNum}`;
+
+      const { stdout, stderr } = await new Promise<{
+        stdout: string;
+        stderr: string;
+      }>((resolve, reject) => {
+        exec(
+          command,
+          {
+            maxBuffer: 1024 * 1024 * 20,
+            cwd: folderPath,
+          },
+          (error, stdout, stderr) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve({ stdout, stderr });
+            }
+          }
+        );
+      });
+
+      const combinedOutput = `${stdout}${stderr}`
+        .split("\n")
+        .filter((line) => !line.includes(".parf_temp_files"))
+        .join("\n");
+
+      return { result: combinedOutput };
+    } else {
+      // 处理单个文件
+      const file = fileStorage.get(fileId);
+      if (!file) {
+        throw new Error("File not found");
+      }
+      const fileContent = file.content;
+      const tempFilePath = path.join(folderPath);
+
+      await fs.writeFile(tempFilePath, fileContent);
+
+      const command = `opam switch 5.1.0 && eval $(opam env) && frama-c ${tempFilePath} -parf -parf-budget ${budget} -parf-process ${coreCount} -parf-sample-num ${sampleNum}`;
+
+      const { stdout, stderr } = await new Promise<{
+        stdout: string;
+        stderr: string;
+      }>((resolve, reject) => {
+        exec(
+          command,
+          {
+            maxBuffer: 1024 * 1024 * 10,
+            cwd: path.dirname(tempFilePath),
+          },
+          (error, stdout, stderr) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve({ stdout, stderr });
+            }
+          }
+        );
+      });
+
+      const combinedOutput = `${stdout}${stderr}`
+        .split("\n")
+        .filter((line) => !line.includes(".parf_temp_files"))
+        .join("\n");
+
+      return { result: combinedOutput };
+    }
   } catch (error) {
-    console.error("Error in analyseFolderFiles:", error);
+    console.error("Error in analyseFolder:", error);
     if (error instanceof Error && error.message.includes("Config file not found")) {
       throw new Error("未找到配置文件config.txt");
     } else if (error instanceof Error && error.message.includes("Error parsing config")) {
       throw new Error("配置文件格式错误");
     }
     throw new Error(
-      `文件夹分析错误: ${error instanceof Error ? error.message : JSON.stringify(error)}`
+      `分析错误: ${error instanceof Error ? error.message : JSON.stringify(error)}`
     );
   }
 };
 
-// 实际的执行命令逻辑
-const executeCommand = async ({
-  budget,
-  process,
-  sampleNum,
-  fileId,
-  tempDirPath,
-}: ExecuteCommandInput): Promise<CommandResult> => {
-  const file = fileStorage.get(fileId);
-  if (!file) {
-    throw new Error("File not found");
+// 读取文件夹中所有文件的函数
+const readFolderFiles = async (folderPath: string): Promise<{ path: string; content: string }[]> => {
+  const result: { path: string; content: string }[] = [];
+  const files = await fs.readdir(folderPath, { withFileTypes: true });
+
+  for (const file of files) {
+    const filePath = path.join(folderPath, file.name);
+    if (file.isDirectory()) {
+      const subFiles = await readFolderFiles(filePath);
+      subFiles.forEach(subFile => {
+        result.push({
+          path: path.join(file.name, subFile.path),
+          content: subFile.content,
+        });
+      });
+    } else {
+      const content = await fs.readFile(filePath, 'utf-8');
+      result.push({ path: file.name, content });
+    }
   }
-  const fileContent = file.content;
-  const fullTempPath = path.join(os.tmpdir(), tempDirPath);
-  const tempFilePath = path.join(fullTempPath, "input.c");
 
-  try {
-    await fs.mkdir(fullTempPath, { recursive: true });
-
-    await fs.writeFile(tempFilePath, fileContent);
-
-    const command = `opam switch 5.1.0 && eval $(opam env) && frama-c ${tempFilePath} -parf -parf-budget ${budget} -parf-process ${process} -parf-sample-num ${sampleNum}`;
-
-    const { stdout, stderr } = await new Promise<{
-      stdout: string;
-      stderr: string;
-    }>((resolve, reject) => {
-      //设置文件的最大容量：当前:10 MB
-      exec(
-        command,
-        {
-          maxBuffer: 1024 * 1024 * 10,
-          cwd: fullTempPath,
-        },
-        (error, stdout, stderr) => {
-          if (error) {
-            reject(error); // 如果有错误，则拒绝 Promise
-          } else {
-            resolve({ stdout, stderr });
-          }
-        }
-      );
-    });
-
-    const combinedOutput = `${stdout}${stderr}`
-      .split("\n")
-      .filter((line) => !line.includes(".parf_temp_files"))
-      .join("\n");
-
-    return { result: combinedOutput };
-  } catch (error) {
-    console.error("Error in executeCommand:", error);
-    throw new Error(
-      `Command execution error: ${
-        error instanceof Error ? error.message : JSON.stringify(error)
-      }`
-    );
+  // 确保存在 config.txt
+  if (!result.some(file => file.path.endsWith('config.txt'))) {
+    throw new Error('files must include config.txt.');
   }
+
+  return result;
 };
 
 // 创建 API 路由
 export const analyseRouter = createTRPCRouter({
-  executeCommand: publicProcedure
-    .input(
-      z.object({
-        budget: z.number().min(1),
-        process: z.number().min(1),
-        sampleNum: z.number().min(1),
-        fileId: z.string(),
-        tempDirPath: z.string(),
-      })
-    )
-    .output(z.object({ result: z.string() }))
-    .mutation(async ({ input }) => {
-      return new Promise<{ result: string }>((resolve, reject) => {
-        commandQueue.push(input, (error: Error | null | undefined, result?: CommandResult) => {
-          if (error != null) {
-            return reject(error);
-          }
-          if (result) {
-            resolve({ result: result.result });
-          } else {
-            reject(new Error("No result returned from command execution"));
-          }
-        });
-      });
-    }),
-
-  // 新增的文件夹分析接口
   analyseFolder: publicProcedure
     .input(
       z.object({
         budget: z.number().min(1),
         process: z.number().min(1),
         sampleNum: z.number().min(1),
-        files: z.array(
-          z.object({
-            path: z.string(),
-            content: z.string(),
-          })
-        ),
-        folderPath: z.string(),
-        tempDirPath: z.string(),
+        fileId: z.string(),
       })
     )
     .output(z.object({ result: z.string() }))
@@ -245,7 +189,7 @@ export const analyseRouter = createTRPCRouter({
           if (result && "result" in result) {
             resolve({ result: result.result });
           } else {
-            reject(new Error("No result returned from folder analysis"));
+            reject(new Error("No result returned from analysis"));
           }
         });
       });

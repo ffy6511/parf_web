@@ -214,9 +214,7 @@ const Log_output: React.FC = () => {
             budget: selectedGroup.timeBudget,
             process: selectedGroup.core,
             sampleNum: selectedGroup.sampleSize,
-            files,
-            folderPath: selectedFile.fileName,
-            tempDirPath: newTempPath,
+            folderId: String(selectedFile.id),
           },
           {
             onSuccess: (response: AnalyseResponse) => {

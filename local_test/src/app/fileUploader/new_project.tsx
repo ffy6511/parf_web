@@ -225,8 +225,7 @@ const handleFolderUpload = async (files: RcFile[]) => {
   if (!db) return;
   try {
     const filesArray = files;
-    const timestamp = Date.now();
-    const folderName = `${filesArray[0]!.webkitRelativePath.split("/")[0]}_${timestamp}`;
+    const folderName = `${filesArray[0]!.webkitRelativePath.split("/")[0]}`;
 
     // 检查是否已存在
     const transaction = db.transaction(["files"], "readwrite");
