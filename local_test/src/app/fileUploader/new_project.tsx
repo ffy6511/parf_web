@@ -79,6 +79,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
     }
   });
 
+
   useEffect(() => {
     const request = indexedDB.open('FileStorage', 3);
     request.onupgradeneeded = (event) => {
@@ -220,57 +221,82 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
 };
 
   // 处理文件夹上传
-  const handleFolderUpload = async (files: RcFile[]) => {
-    if (!db || files.length === 0) return;
+const handleFolderUpload = async (files: RcFile[]) => {
+  if (!db) return;
+  try {
+    const filesArray = files;
+    const timestamp = Date.now();
+    const folderName = `${filesArray[0]!.webkitRelativePath.split("/")[0]}_${timestamp}`;
 
-    try {
-      const filesArray = files;
-      const timestamp = Date.now();
-      const folderName = `${filesArray[0]!.webkitRelativePath.split('/')[0]}_${timestamp}`;
+    // 检查是否已存在
+    const transaction = db.transaction(["files"], "readwrite");
+    const store = transaction.objectStore("files");
+    const pathIndex = store.index("path");
 
-      // 检查是否已存在
-      const transaction = db.transaction(['files'], 'readwrite');
-      const store = transaction.objectStore('files');
-      const pathIndex = store.index('path');
-      
-      const existing = await new Promise(resolve => {
-        const request = pathIndex.get(folderName);
-        request.onsuccess = () => resolve(request.result);
-      });
+    const existing = await new Promise((resolve) => {
+      const request = pathIndex.get(folderName);
+      request.onsuccess = () => resolve(request.result);
+    });
 
-      if (existing) {
-        message.info(`Folder ${folderName} already exists`);
-        return;
-      }
-      
-      // 构建文件树
-      const fileTree = await buildFileTree(filesArray);
-      fileTree.fileName = folderName;
-      fileTree.path = folderName;
-      
-      // 上传每个文件到后端
-      const uploadPromises = files.map(async (file) => {
-        const content = await readFileAsArrayBuffer(file);
-        const uniquePath = `${folderName}/${file.webkitRelativePath.split('/').slice(1).join('/')}`;
-        return await uploadFile({ // 使用 mutate 函数
-          content: new TextDecoder().decode(content),
-          path: uniquePath,
-          isFolder: false
-        });
-      });
-
-      await Promise.all(uploadPromises);
-
-      // 保存到本地数据库
-      await saveFileTree(fileTree);
-      onFileUploadSuccess();
-      await reloadFileList();
-      setShowFolderUploadPrompt(false);
-    } catch (error) {
-      message.error('Failed to upload folder');
-      console.error(error);
+    if (existing) {
+      message.info(`Folder ${folderName} already exists`);
+      return;
     }
-  };
+
+    // 构建文件树
+    const fileTree = await buildFileTree(filesArray);
+    fileTree.fileName = folderName;
+    fileTree.path = folderName;
+
+    console.log("File Tree:", fileTree);
+
+    // 整理文件数据
+    const folderFiles = filesArray.map(async (file) => {
+      const content = await readFileAsArrayBuffer(file);
+      const uniquePath = file.webkitRelativePath.split("/").slice(1).join("/");
+      return {
+        content: new TextDecoder().decode(content),
+        path: uniquePath,
+        isFolder: false,
+      };
+    });
+
+    console.log("Folder Files:", folderFiles);
+
+    const resolvedFiles = await Promise.all(folderFiles);
+
+    const requestBody = JSON.stringify({ json: resolvedFiles }); // 修改请求体结构
+    //console.log("Request Body:", requestBody); // 检查请求体
+
+    // 使用 fetch API 上传文件夹
+    const response = await fetch("/api/trpc/file.uploadFolder", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: requestBody,
+    });
+
+    console.log("Response Status:", response.status); // 检查响应状态
+    
+    if (!response.ok) {
+      throw new Error("Failed to upload folder");
+    }
+
+    const result = await response.json();
+    const folderId = result.result.data.json.folderId;
+    console.log("Folder ID:", folderId);
+
+    // 保存到本地数据库
+    await saveFileTree(fileTree);
+    onFileUploadSuccess();
+    await reloadFileList();
+    setShowFolderUploadPrompt(false);
+  } catch (error) {
+    message.error("Failed to upload folder");
+    console.error(error);
+  }
+};
 
   // 单文件上传处理
   const handleUpload = async (file: File) => {
@@ -293,28 +319,12 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
     }
   };
 
-  // 处理手动输入
-  const handleManualInputSubmit = () => {
-    if (!db || !fileName || !fileContent) {
-      message.error('Please fill in both file name and content');
-      return;
-    }
-
-    uploadFile({
-      content: fileContent,
-      path: fileName,
-      isFolder: false
-    });
-  };
 
   // UI 部分保持不变
   const menu = (
     <Menu>
       <Menu.Item key="upload" onClick={() => setShowUploadPrompt(true)}>
         Upload
-      </Menu.Item>
-      <Menu.Item key="manual" onClick={() => setShowManualInput(true)}>
-        Input File
       </Menu.Item>
       <Menu.Item key="folder" onClick={() => setShowFolderUploadPrompt(true)}>
         Upload Folder
@@ -330,7 +340,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         </Button>
       </Dropdown>
 
-      {/* Modals 保持不变 */}
+      {/* Modals */}
       <Modal
         title="Upload"
         visible={showUploadPrompt}
@@ -354,28 +364,6 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         </Upload>
       </Modal>
 
-      <Modal
-        title="Input File"
-        visible={showManualInput}
-        onCancel={() => setShowManualInput(false)}
-        footer={null}
-      >
-        <Input
-          placeholder="File Name"
-          value={fileName}
-          onChange={(e) => setFileName(e.target.value)}
-          style={{ marginBottom: '10px' }}
-        />
-        <TextArea
-          placeholder="Please enter file content here."
-          rows={8}
-          value={fileContent}
-          onChange={(e) => setFileContent(e.target.value)}
-        />
-        <Button onClick={handleManualInputSubmit} type="primary" style={{ marginTop: '10px' }}>
-          Submit
-        </Button>
-      </Modal>
 
       <Modal
         title="Upload Folder"
@@ -385,8 +373,13 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         style = {{padding:'10px'}}
       >
         <Upload
-          customRequest={({ file, fileList }) => {
-            handleFolderUpload(fileList as RcFile[]); // 确保类型正确
+          action=''
+          beforeUpload={(file, fileList) => {
+            // 只在第一个文件时处理整个文件列表
+            if (file === fileList[0]) {
+              handleFolderUpload(fileList);
+            }
+            return false; // 阻止默认上传行为
           }}
           directory
           multiple
