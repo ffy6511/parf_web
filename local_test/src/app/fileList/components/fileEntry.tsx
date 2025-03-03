@@ -9,7 +9,7 @@ interface FileEntryProps {
   fileName: string;
   lastModified: string | null;
   onClick: (fileId: number) => void;
-  onDelete: (fileId: number) => void;
+  onDelete: (fileId: number, isFolder:boolean) => void;
   isSelected: boolean;
   isAnyHovered: boolean;
   parentId?: number | null;
@@ -106,7 +106,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
   const menu = (
     <Menu>
-      <Menu.Item key="delete" icon={<CloseCircleOutlined />} onClick={() => onDelete(fileId)} className={styles.menu_turnOut_delete}>
+      <Menu.Item key="delete" icon={<CloseCircleOutlined />} onClick={() => onDelete(fileId, isFolder as boolean)} className={styles.menu_turnOut_delete}>
         Delete
       </Menu.Item>
     </Menu>

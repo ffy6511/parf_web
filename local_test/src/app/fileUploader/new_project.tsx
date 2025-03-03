@@ -176,7 +176,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
   };
 
   // 保存文件树到数据库
-  const saveFileTree = async (node: FileNode, parentId: number | null = null): Promise<number> => {
+  const saveFileTree = async (node: FileNode, parentId: number | null = null, nodeId?: number): Promise<number> => {
   if (!db) throw new Error('Database not initialized');
 
   const transaction = db.transaction(['files'], 'readwrite');
@@ -193,31 +193,35 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
     return existing.id;
   }
 
-  // 准备保存的数据 
+  // 简化存储的数据结构，确保 id 字段存在
   const nodeData = {
+    id: nodeId || Math.floor(Math.random() * 1000000),  // 如果没有 nodeId，生成一个随机 ID
     fileName: node.fileName,
-    isFolder: node.isFolder,
-    fileContent: node.content ?? new ArrayBuffer(0),
-    parentId: parentId,
     path: node.path,
-    lastModified: node.lastModified
+    isFolder: node.isFolder,
+    parentId: parentId
   };
 
   // 保存节点
-  const nodeId = await new Promise<number>((resolve, reject) => {
-    const request = store.add(nodeData);
-    request.onsuccess = () => resolve(request.result as number);
-    request.onerror = () => reject(request.error);
-  });
+  try {
+    await new Promise((resolve, reject) => {
+      const request = store.add(nodeData);
+      request.onsuccess = () => resolve(undefined);
+      request.onerror = () => reject(request.error);
+    });
 
-  // 递归保存子节点
-  if (node.children) {
-    for (const child of node.children) {
-      await saveFileTree(child, nodeId);
+    // 递归保存子节点，确保传递正确的 parentId
+    if (node.children && node.children.length > 0) {
+      for (const child of node.children) {
+        await saveFileTree(child, nodeData.id);
+      }
     }
-  }
 
-  return nodeId;
+    return nodeData.id;
+  } catch (error) {
+    console.error('Error saving node:', error);
+    throw error;
+  }
 };
 
   // 处理文件夹上传
@@ -268,7 +272,7 @@ const handleFolderUpload = async (files: RcFile[]) => {
     //console.log("Request Body:", requestBody); // 检查请求体
 
     // 使用 fetch API 上传文件夹
-    const response = await fetch("/api/trpc/file.uploadFolder", {
+    const response = await fetch("/parf/api/trpc/file.uploadFolder", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -287,7 +291,7 @@ const handleFolderUpload = async (files: RcFile[]) => {
     console.log("Folder ID:", folderId);
 
     // 保存到本地数据库
-    await saveFileTree(fileTree);
+    await saveFileTree(fileTree, null, folderId);
     onFileUploadSuccess();
     await reloadFileList();
     setShowFolderUploadPrompt(false);

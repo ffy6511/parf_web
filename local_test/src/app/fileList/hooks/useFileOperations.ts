@@ -99,7 +99,7 @@ export const useFileOperations = () => {
           return [...acc, child.id, ...getAllChildren(child.id)];
         }, [] as number[]);
       };
-
+  
       const filesToDelete = fileIds.reduce((acc, fileId) => {
         const file = fileList.find((f) => f.id === fileId);
         if (file?.isFolder) {
@@ -107,10 +107,10 @@ export const useFileOperations = () => {
         }
         return [...acc, fileId];
       }, [] as number[]);
-
+  
       const transaction = db.transaction(['files'], 'readwrite');
       const store = transaction.objectStore('files');
-
+  
       let deletedCount = 0;
       filesToDelete.forEach((id) => {
         store.delete(id).onsuccess = async () => {
@@ -124,10 +124,15 @@ export const useFileOperations = () => {
               filesToDelete.forEach((id) => newSet.delete(id));
               return newSet;
             });
-
+  
             try {
+              // 为每个文件/文件夹调用删除时传入正确的 isFolder 参数
               for (const id of filesToDelete) {
-                await deleteFile({ id });
+                const file = fileList.find(f => f.id === id);
+                await deleteFile({ 
+                  id, 
+                  isFolder: file?.isFolder ?? false 
+                });
               }
               message.success(`成功删除 ${filesToDelete.length} 个项目`);
             } catch (error) {
@@ -193,7 +198,7 @@ export const useFileOperations = () => {
     });
   };
 
-  const handleDeleteFile = (fileId: number) => {
+  const handleDeleteFile = (fileId: number, isFolder:boolean) => {
     if (db) {
       const getAllChildren = (parentId: number): number[] => {
         const children = fileList.filter(file => file.parentId === parentId);
@@ -225,9 +230,11 @@ export const useFileOperations = () => {
 
             // 调用 tRPC 后端删除文件
             try {
-              for (const id of filesToDelete) {
-                await deleteFile({ id });
-              }
+              // 只发送第一个 ID 到后端，因为后端会递归删除文件夹内容
+              await deleteFile({ 
+                id: filesToDelete[0] as number, 
+                isFolder 
+              });
               message.success(`成功删除 ${filesToDelete.length} 个项目`);
             } catch (error) {
               message.error(`删除文件时发生错误: ${error}`);
