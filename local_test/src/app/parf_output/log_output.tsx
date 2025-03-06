@@ -83,8 +83,7 @@ const Log_output: React.FC = () => {
     }
   };
 
-  const mutation = trpc.analyse.executeCommand.useMutation();
-  const folderMutation = trpc.analyse.analyseFolder.useMutation();
+  const mutation = trpc.analyse.analyseFolder.useMutation();
   const positionQuery = trpc.analyse.getQueueLength.useQuery(undefined, {
     refetchInterval: loading ? 2000 : false, // 只在loading为true时才启用轮询
     enabled: loading, 
@@ -175,6 +174,7 @@ const Log_output: React.FC = () => {
 
   // 处理提交按钮
   const handleSubmit = async () => {
+    console.log("handlesubmit called!");
     setSubmitted(true);
     setDisplayData("");
 
@@ -205,16 +205,14 @@ const Log_output: React.FC = () => {
 
     try {
       if (selectedFile.isFolder) {
-        // 处理文件夹
-        const files = await getAllFilesInFolder(selectedFile.id);
 
         // 调用文件夹分析接口
-        folderMutation.mutate(
+        mutation.mutate(
           {
             budget: selectedGroup.timeBudget,
             process: selectedGroup.core,
             sampleNum: selectedGroup.sampleSize,
-            folderId: String(selectedFile.id),
+            fileId: selectedFile.id.toString(),
           },
           {
             onSuccess: (response: AnalyseResponse) => {
@@ -240,8 +238,7 @@ const Log_output: React.FC = () => {
             budget: selectedGroup.timeBudget,
             process: selectedGroup.core,
             sampleNum: selectedGroup.sampleSize,
-            fileContent: fileContent,
-            tempDirPath: newTempPath,
+            fileId: selectedFile.id.toString(),
           },
           {
             onSuccess: (response: AnalyseResponse) => {
@@ -259,6 +256,9 @@ const Log_output: React.FC = () => {
       setDisplayData('Failed to analyse. Please check input files.');
       setLoading(false);
     }
+
+    // 触发自定义事件
+    window.dispatchEvent(new CustomEvent('analysisTriggered'));
   };
 
   // 处理中止调用

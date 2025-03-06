@@ -88,7 +88,7 @@ const analyseFolder = async ({
       return { result: combinedOutput };
     } else {
       // 处理单个文件
-      const file = fileStorage.get(fileId);
+      const file = fileStorage.get(parseInt(fileId));
       if (!file) {
         throw new Error("File not found");
       }
