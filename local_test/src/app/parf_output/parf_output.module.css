@@ -6,7 +6,7 @@
   margin: 5px auto;
   position: relative;
   transition: all 0.3s ease;
-  background-color: var(--background-color);
+  background-color: var(--background-color) ;
 }
 
 .parfOutputContainer {
@@ -18,7 +18,7 @@
   margin: 5px auto;
   position: relative;
   transition: all 0.3s ease;
-  background-color: var(--navbar-bg);
+  background-color: var(--box-bg-color) ;
   transition: all 0.3s ease-in-out;
 }
 
@@ -63,7 +63,7 @@
       
       
 .displayMonitor {
-  background: var(--navbar-bg);
+  background: var(--box-bg-color);
   border-radius: 8px;
   padding: 0px;
   text-align: center;
@@ -75,7 +75,6 @@
 }    
 
 .displayMonitor2 {
-  background: var(--background-color);
   border-radius: 8px;
   padding: 10px;
   text-align: center;
@@ -182,7 +181,7 @@
 }
 
 .modalCodeBlock {
-  background-color: var(--navbar-bg);
+  background-color: var(--background-color);
   padding: 0px;
   border-radius: 5px;
   font-family: 'Courier New', Courier, monospace;

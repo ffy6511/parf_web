@@ -1,7 +1,9 @@
 :root[data-theme="light"] {
-  --background-color: rgba(240, 228, 211, 0.2);
+  --background-color: rgba(255, 255, 255, 0.987);
+  --left-bg-color: rgba(240, 236, 236, 0.947);
+  --box-bg-color: rgb(242, 242, 242);
   --text-color: rgba(0, 0, 0, 0.85);
-  --navbar-bg: #f9efef;
+  --navbar-bg: #fee7e7;
   --navbar-text: #000000;
   --scrollbar-thumb: rgba(0, 0, 0, 0.2);
   --scrollbar-thumb-hover: rgba(0, 0, 0, 0.4);

@@ -108,11 +108,11 @@ const Page: React.FC = () => {
           style={{
             display: 'flex',
             marginTop:'-2vh',
-            flex:isFileListVisible?3:0,
+            flex:isFileListVisible?2:0,
             flexDirection: 'column', 
             position: 'relative',
             boxShadow: '1px 0 5px rgba(0, 0, 0, 0.3)',
-            background:' var(--navbar-bg)',  
+            background:' var(--left-bg-color)',  
           }}
         >
           {/* 控制按钮固定在左侧 */}
@@ -225,7 +225,7 @@ const Page: React.FC = () => {
 
         <div
           style={{
-            flex: isFileListVisible ? 7 : 10,
+            flex: isFileListVisible ? 8 : 10,
             padding: '0px',
             transition: 'flex 0.7s ease',
             marginLeft:isFileListVisible?'0.5vw' : '4vw'

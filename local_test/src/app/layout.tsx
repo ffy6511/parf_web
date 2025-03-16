@@ -30,18 +30,7 @@ export default function RootLayout({
       <ThemeProvider>
         <body className={styles.body}>
           {/* 添加导航栏 */}
-          <header className={styles.navbar} style = {{ marginBottom:'5px'}}>
-            <nav className={styles.navContainer}>
-              {/* 左侧标题 */}
-              <div className={styles.navTitle}>
-                <h2>Parf: An Adaptive Abstraction-Strategy Tuner for Static Analysis</h2>
-              </div>
-              {/* 右侧主题切换按钮 */}
-              <div className={styles.themeToggleContainer}>
-                <ThemeToggle />
-              </div>
-            </nav>
-          </header>
+          
           {/* 内容部分 */}
           <div className={styles.content}>
             <TRPCReactProvider>{children}</TRPCReactProvider>
