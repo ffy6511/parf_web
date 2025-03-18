@@ -11,6 +11,9 @@
   --link-color: #343232;
   --delete-button: #ff4d4f;
   --delete-button-hover: #ff7875;
+  --file-entry-bg: #f9f9f9;
+  --file-entry-hover:#e1dede;
+  --file-entry-selected:#d6d4d4;
 }
 
 :root[data-theme="dark"] {
@@ -26,4 +29,7 @@
   --link-color: #a6a6a6;
   --delete-button: #ff4d4f;
   --delete-button-hover: #ff7875;
+  --file-entry-bg:#353333 ;
+  --file-entry-hover:#787575;
+  --file-entry-selected:#8a8787;
 }

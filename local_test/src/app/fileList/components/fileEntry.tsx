@@ -176,17 +176,18 @@ const FileEntry: React.FC<FileEntryProps> = ({
           cursor: 'pointer',
           backgroundColor: isDragOver ? 'rgba(24, 144, 255, 0.1)' : 
                        isMultiSelected ? 'rgba(24, 144, 255, 0.1)' :
-                       isSelected? '#dedfe0':
-                       isHovered ? '#E9E9E9' : 
-                       'rgba(255, 255, 255, 0.4)',
+                       isSelected? 'var(--file-entry-selected)':
+                       isHovered ? 'var(--file-entry-hover)' : 
+                       'var(--file-entry-bg)',
           borderLeft: isAnyHovered ? '0.5px solid #d6d9d9' : '0.3px solid #d6d9d9',
           borderRight: isAnyHovered ? '0.5px solid #d6d9d9' : '0.3px solid #d6d9d9',
           transition: 'all 0s ease',
           position: 'relative',
-          borderBottom: isAnyHovered ? '1.4px solid #ccc' : 
-                       isSelected ? '2px solid #D9D9D9' : 
-                       '1px solid #ccc',
+          // borderBottom: isAnyHovered ? '1.4px solid #ccc' : 
+          //              isSelected ? '2px solid #D9D9D9' : 
+          //              '1px solid #ccc',
           borderRadius: '5px',
+          color: 'var(--text-color)',
           boxShadow: isDragOver && isFolder ? '0 0 5px rgba(24,144,255,0.5)' : 'none',
           border: isDragOver && isFolder ? '1px dashed #1890ff' : undefined,
         }}
@@ -211,7 +212,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
         <div style={{ flex: 1, marginLeft: '8px' }}>
           <div
             style={{
-              color: isSelected ? borderColor : isHovered ? '#202122' : '#888',
+              // color: isSelected ? borderColor : isHovered ? '#202122' : '#888',
               transition: 'all 0.2s ease',
               marginBottom: '0px',
               marginLeft:'0.5em',

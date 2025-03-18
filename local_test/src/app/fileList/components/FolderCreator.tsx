@@ -66,7 +66,6 @@ const FolderCreator: React.FC<FolderCreatorProps> = ({ onFolderCreate, className
           value={tempFolderName}
           onChange={e => setTempFolderName(e.target.value)}
           onKeyDown={handleKeyPress}
-          maxLength={50}
         />
       </Modal>
     </>

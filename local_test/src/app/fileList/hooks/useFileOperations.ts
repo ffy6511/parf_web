@@ -134,10 +134,10 @@ export const useFileOperations = () => {
                   isFolder: file?.isFolder ?? false 
                 });
               }
-              message.success(`成功删除 ${filesToDelete.length} 个项目`);
+              message.success(`Deleted ${filesToDelete.length} files successfully`);
             } catch (error) {
-              message.error(`删除文件时发生错误: ${error}`);
-              console.error('删除文件错误:', error);
+              message.error(`An error occurred while deleting the file: ${error}`);
+              console.error('Delete file wtih error:', error);
             }
           }
         };
@@ -235,10 +235,10 @@ export const useFileOperations = () => {
                 id: filesToDelete[0] as number, 
                 isFolder 
               });
-              message.success(`成功删除 ${filesToDelete.length} 个项目`);
+              message.success(`Deleted  ${filesToDelete.length} files successfully`);
             } catch (error) {
-              message.error(`删除文件时发生错误: ${error}`);
-              console.error('删除文件错误:', error);
+              message.error(`An error occurred while deleting the file: ${error}`);
+              console.error('Delete file with error:', error);
             }
           }
         };

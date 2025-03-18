@@ -59,7 +59,6 @@ const analyseFolder = async ({
       }
 
       const command = `opam switch 5.1.0 && eval $(opam env) && frama-c ${configContent} -parf -parf-budget ${budget} -parf-process ${coreCount} -parf-sample-num ${sampleNum}`;
-
       const { stdout, stderr } = await new Promise<{
         stdout: string;
         stderr: string;
@@ -139,15 +138,25 @@ const analyseFolder = async ({
   }
 };
 
-// 读取文件夹中所有文件的函数
-const readFolderFiles = async (folderPath: string): Promise<{ path: string; content: string }[]> => {
+// 读取文件夹中所有文件的函数（只检查根目录的config.txt）
+const readFolderFiles = async (folderPath: string, isRoot = true): Promise<{ path: string; content: string }[]> => {
   const result: { path: string; content: string }[] = [];
   const files = await fs.readdir(folderPath, { withFileTypes: true });
-
+  
+  // 如果是根目录，检查是否包含config.txt
+  if (isRoot) {
+    const hasConfigFile = files.some(file => file.name === 'config.txt' && !file.isDirectory());
+    if (!hasConfigFile) {
+      throw new Error('Root directory must include config.txt.');
+    }
+  }
+  
   for (const file of files) {
     const filePath = path.join(folderPath, file.name);
+    
     if (file.isDirectory()) {
-      const subFiles = await readFolderFiles(filePath);
+      // 递归调用时，标记不是根目录
+      const subFiles = await readFolderFiles(filePath, false);
       subFiles.forEach(subFile => {
         result.push({
           path: path.join(file.name, subFile.path),
@@ -155,18 +164,16 @@ const readFolderFiles = async (folderPath: string): Promise<{ path: string; cont
         });
       });
     } else {
+      // 读取文件内容
       const content = await fs.readFile(filePath, 'utf-8');
       result.push({ path: file.name, content });
     }
   }
-
-  // 确保存在 config.txt
-  if (!result.some(file => file.path.endsWith('config.txt'))) {
-    throw new Error('files must include config.txt.');
-  }
-
+  
   return result;
 };
+
+
 
 // 创建 API 路由
 export const analyseRouter = createTRPCRouter({
