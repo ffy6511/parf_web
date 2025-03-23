@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Slider, InputNumber, Button, Input, message } from 'antd';
-import { AlignLeftOutlined, UnorderedListOutlined } from '@ant-design/icons';
+import { Row, Col, Slider, InputNumber, Button, Input, message, Switch, Select } from 'antd';
+import { AlignLeftOutlined, UnorderedListOutlined, SettingOutlined } from '@ant-design/icons';
 import styles from './paraInput.module.css';
 import "~/styles/globals.css";
+import { defaultParameters, availableDomains, equalityOptions } from './parameterConfig';
 
 // IndexedDB Setup
 const openDatabase = () => {
@@ -98,6 +99,8 @@ const InputPanel = () => {
   const [timeBudget, setTimeBudget] = useState(1);
   const [core, setCore] = useState(1);
   const [sampleSize, setSampleSize] = useState(1);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [advancedParams, setAdvancedParams] = useState(defaultParameters);
   const [groupName, setGroupName] = useState<string>('');
   const [savedGroups, setSavedGroups] = useState<any[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
@@ -121,18 +124,25 @@ const InputPanel = () => {
       return;
     }
 
+    const data = showAdvanced
+      ? {
+          groupName,
+          ...advancedParams
+        }
+      : {
+          groupName,
+          timeBudget,
+          core,
+          sampleSize,
+        };
+
     const request = openDatabase();
     request.onsuccess = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
       const transaction = db.transaction(['parameters'], 'readwrite');
       const store = transaction.objectStore('parameters');
 
-      const data = {
-        groupName,
-        timeBudget,
-        core,
-        sampleSize,
-      };
+      // 数据已在上面准备好
 
       store.put(data).onsuccess = () => {
         showMessage('success', ` "${groupName}" Saved`);
@@ -155,9 +165,24 @@ const InputPanel = () => {
   const handleSelectGroup = (group: any) => {
     setSelectedGroup(group.groupName);
     setGroupName(group.groupName);
-    setTimeBudget(group.timeBudget);
-    setCore(group.core);
-    setSampleSize(group.sampleSize);
+    if (showAdvanced) {
+      setAdvancedParams({
+        widening_delay: group.widening_delay || defaultParameters.widening_delay,
+        subdivide_non_linear: group.subdivide_non_linear || defaultParameters.subdivide_non_linear,
+        slevel: group.slevel || defaultParameters.slevel,
+        plevel: group.plevel || defaultParameters.plevel,
+        partition_history: group.partition_history || defaultParameters.partition_history,
+        min_loop_unroll: group.min_loop_unroll || defaultParameters.min_loop_unroll,
+        ilevel: group.ilevel || defaultParameters.ilevel,
+        equality_through_calls: group.equality_through_calls || defaultParameters.equality_through_calls,
+        auto_loop_unroll: group.auto_loop_unroll || defaultParameters.auto_loop_unroll,
+        domains: group.domains || defaultParameters.domains
+      });
+    } else {
+      setTimeBudget(group.timeBudget);
+      setCore(group.core);
+      setSampleSize(group.sampleSize);
+    }
     showMessage('info', `Group "${group.groupName}" selected`);
     localStorage.setItem('selectedGroup', JSON.stringify(group));
   };
@@ -178,10 +203,16 @@ const InputPanel = () => {
 
   return (
     <div>
-      
-
       <div style={{ width: '100%', marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <div className={styles.container}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+            <Switch
+              checkedChildren="高级"
+              unCheckedChildren="基础"
+              checked={showAdvanced}
+              onChange={setShowAdvanced}
+            />
+          </div>
 
           {/* 保存或更新参数组 */}
           <div style={{ display: 'flex', alignItems: 'center', marginTop: '0px' }}>
@@ -209,20 +240,80 @@ const InputPanel = () => {
             </Button>
           </div>
 
-          <div className={styles.inputRow}>
-            <strong>Time Budget(s)</strong>
-            <TimeBudgetInput value={timeBudget} onChange={setTimeBudget} />
-          </div>
+          {!showAdvanced ? (
+            <>
+              <div className={styles.inputRow}>
+                <strong>Time Budget(s)</strong>
+                <TimeBudgetInput value={timeBudget} onChange={setTimeBudget} />
+              </div>
 
-          <div className={styles.inputRow}>
-            <strong>Processes</strong>
-            <CoreInput value={core} onChange={setCore} />
-          </div>
+              <div className={styles.inputRow}>
+                <strong>Processes</strong>
+                <CoreInput value={core} onChange={setCore} />
+              </div>
 
-          <div className={styles.inputRow}>
-            <strong>Samples</strong>
-            <SampleSizeInput value={sampleSize} onChange={setSampleSize} />
-          </div>
+              <div className={styles.inputRow}>
+                <strong>Samples</strong>
+                <SampleSizeInput value={sampleSize} onChange={setSampleSize} />
+              </div>
+            </>
+          ) : (
+            <>
+              {Object.entries(advancedParams).map(([key, value]) => {
+                if (key === 'domains') {
+                  return (
+                    <div key={key} className={styles.inputRow}>
+                      <strong>Domains</strong>
+                      <Select
+                        mode="multiple"
+                        style={{ width: '70%', marginLeft: '20px' }}
+                        value={value}
+                        onChange={(newValue) => setAdvancedParams(prev => ({ ...prev, domains: newValue }))}
+                        options={availableDomains.map(domain => ({ label: domain, value: domain }))}
+                      />
+                    </div>
+                  );
+                } else if (key === 'equality_through_calls') {
+                  return (
+                    <div key={key} className={styles.inputRow}>
+                      <strong>Equality Through Calls</strong>
+                      <Select
+                        style={{ width: '70%', marginLeft: '20px' }}
+                        value={value}
+                        onChange={(newValue) => setAdvancedParams(prev => ({ ...prev, equality_through_calls: newValue }))}
+                        options={equalityOptions.map(option => ({ label: option, value: option }))}
+                      />
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div key={key} className={styles.inputRow}>
+                      <strong>{key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</strong>
+                      <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', gap: '10px', paddingLeft: '20px' }}>
+                        <div style={{ flex: '0 1 70%' }}>
+                          <Slider
+                            min={0}
+                            max={100}
+                            value={value}
+                            onChange={(newValue) => setAdvancedParams(prev => ({ ...prev, [key]: newValue }))}
+                          />
+                        </div>
+                        <div style={{ width: '80px' }}>
+                          <InputNumber
+                            min={0}
+                            max={100}
+                            value={value}
+                            onChange={(newValue) => setAdvancedParams(prev => ({ ...prev, [key]: newValue ?? 0 }))}
+                            style={{ width: '100%', fontSize: '0.8em' }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+              })}
+            </>
+          )}
         </div>
 
         {/* 显示已保存的参数组 */}

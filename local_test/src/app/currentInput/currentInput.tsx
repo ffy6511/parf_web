@@ -5,9 +5,19 @@ import styles from './currentInput.module.css';
 // 定义参数组和文件的类型
 interface GroupDetails {
   groupName: string;
-  timeBudget: number;
-  core: number;
-  sampleSize: number;
+  timeBudget?: number;
+  core?: number;
+  sampleSize?: number;
+  widening_delay?: number;
+  subdivide_non_linear?: number;
+  slevel?: number;
+  plevel?: number;
+  partition_history?: number;
+  min_loop_unroll?: number;
+  ilevel?: number;
+  equality_through_calls?: string;
+  auto_loop_unroll?: number;
+  domains?: string[];
 }
 
 interface FileDetails {
@@ -115,9 +125,26 @@ const CurrentInput: React.FC = () => {
             title={
               groupDetails ? (
                 <div>
-                  <p>时间预算: {groupDetails.timeBudget} 秒</p>
-                  <p>核数: {groupDetails.core}</p>
-                  <p>采样数量: {groupDetails.sampleSize}</p>
+                  {groupDetails.timeBudget !== undefined ? (
+                    <>
+                      <p>时间预算: {groupDetails.timeBudget} 秒</p>
+                      <p>核数: {groupDetails.core}</p>
+                      <p>采样数量: {groupDetails.sampleSize}</p>
+                    </>
+                  ) : (
+                    <>
+                      <p>Widening Delay: {groupDetails.widening_delay}</p>
+                      <p>Subdivide Non Linear: {groupDetails.subdivide_non_linear}</p>
+                      <p>SLevel: {groupDetails.slevel}</p>
+                      <p>PLevel: {groupDetails.plevel}</p>
+                      <p>Partition History: {groupDetails.partition_history}</p>
+                      <p>Min Loop Unroll: {groupDetails.min_loop_unroll}</p>
+                      <p>ILevel: {groupDetails.ilevel}</p>
+                      <p>Equality Through Calls: {groupDetails.equality_through_calls}</p>
+                      <p>Auto Loop Unroll: {groupDetails.auto_loop_unroll}</p>
+                      <p>Domains: {groupDetails.domains?.join(', ')}</p>
+                    </>
+                  )}
                 </div>
               ) : (
                 '加载中...'
