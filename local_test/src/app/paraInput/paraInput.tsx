@@ -3,7 +3,7 @@ import { Row, Col, Slider, InputNumber, Button, Input, message, Switch, Select }
 import { AlignLeftOutlined, UnorderedListOutlined, SettingOutlined } from '@ant-design/icons';
 import styles from './paraInput.module.css';
 import "~/styles/globals.css";
-import { defaultParameters, availableDomains, equalityOptions } from './parameterConfig';
+import { defaultParameters, defaultBasicParameters, availableDomains, equalityOptions } from './parameterConfig';
 
 // IndexedDB Setup
 const openDatabase = () => {
@@ -96,9 +96,9 @@ const SampleSizeInput: React.FC<SampleSizeInputProps> = ({ value, onChange }) =>
 );
 
 const InputPanel = () => {
-  const [timeBudget, setTimeBudget] = useState(1);
-  const [core, setCore] = useState(1);
-  const [sampleSize, setSampleSize] = useState(1);
+  const [timeBudget, setTimeBudget] = useState(defaultBasicParameters.timeBudget);
+  const [core, setCore] = useState(defaultBasicParameters.core);
+  const [sampleSize, setSampleSize] = useState(defaultBasicParameters.sampleSize);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [advancedParams, setAdvancedParams] = useState(defaultParameters);
   const [groupName, setGroupName] = useState<string>('');
@@ -124,17 +124,22 @@ const InputPanel = () => {
       return;
     }
 
-    const data = showAdvanced
-      ? {
-          groupName,
-          ...advancedParams
-        }
-      : {
-          groupName,
-          timeBudget,
-          core,
-          sampleSize,
-        };
+    const data = {
+      groupName,
+      timeBudget,
+      core,
+      sampleSize,
+      widening_delay: advancedParams.widening_delay,
+      subdivide_non_linear: advancedParams.subdivide_non_linear,
+      slevel: advancedParams.slevel,
+      plevel: advancedParams.plevel,
+      partition_history: advancedParams.partition_history,
+      min_loop_unroll: advancedParams.min_loop_unroll,
+      ilevel: advancedParams.ilevel,
+      equality_through_calls: advancedParams.equality_through_calls,
+      auto_loop_unroll: advancedParams.auto_loop_unroll,
+      domains: advancedParams.domains
+    };
 
     const request = openDatabase();
     request.onsuccess = (event) => {
@@ -195,7 +200,7 @@ const InputPanel = () => {
       const store = transaction.objectStore('parameters');
 
       store.delete(groupName).onsuccess = () => {
-        showMessage('info', `参数组 "${groupName}" 已删除`);
+        showMessage('info', ` Group "${groupName}" deleted`);
         loadSavedGroups(db);
       };
     };
@@ -206,12 +211,15 @@ const InputPanel = () => {
       <div style={{ width: '100%', marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <div className={styles.container}>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
-            <Switch
-              checkedChildren="高级"
-              unCheckedChildren="基础"
-              checked={showAdvanced}
-              onChange={setShowAdvanced}
-            />
+            {/* <div> Initial Parameter </div> */}
+            <div>
+              <Switch
+                checkedChildren="IP"
+                unCheckedChildren="HP"
+                checked={showAdvanced}
+                onChange={setShowAdvanced}
+              />
+              </div>
           </div>
 
           {/* 保存或更新参数组 */}
@@ -234,7 +242,7 @@ const InputPanel = () => {
               marginRight:'1vw',
               maxHeight:'40%',
               marginBottom:'1vh',
-              fontSize:'0.3em'
+              fontSize:'0.8em'
             }}>
               {'Save'}
             </Button>
@@ -317,7 +325,7 @@ const InputPanel = () => {
         </div>
 
         {/* 显示已保存的参数组 */}
-        <strong style={{  marginTop: '1px', fontSize: '1em',marginLeft:'0.5vw' }}>
+        <strong style={{  marginTop: '1px', fontSize: '1em',marginLeft:'0.5vw', color:'var(--text-color)' }}>
           <UnorderedListOutlined /> Configuration Groups
         </strong>
         <div

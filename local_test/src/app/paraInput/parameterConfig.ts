@@ -1,4 +1,11 @@
-// 定义参数配置类型
+// 定义基本参数配置类型
+export interface BasicParameters {
+  timeBudget: number;
+  core: number;
+  sampleSize: number;
+}
+
+// 定义高级参数配置类型
 export interface ParameterConfig {
   widening_delay: number;
   subdivide_non_linear: number;
@@ -12,7 +19,14 @@ export interface ParameterConfig {
   domains: string[];
 }
 
-// 默认参数配置
+// 默认基本参数配置
+export const defaultBasicParameters: BasicParameters = {
+  timeBudget: 300,
+  core: 1,
+  sampleSize: 1
+};
+
+// 默认高级参数配置
 export const defaultParameters: ParameterConfig = {
   widening_delay: 5,
   subdivide_non_linear: 7,

@@ -162,7 +162,7 @@ const Page: React.FC = () => {
                 >
                   <MenuFoldOutlined style={{ filter: 'drop-shadow(2px 2px 10px grey)',color:'#1ea0f2' }} />
                 </Tooltip>
-                <strong style={{ fontSize: '1.2em', marginTop: '0px',marginLeft:'0.5em'  }}>Project</strong>
+                <strong style={{ fontSize: '1.2em', marginTop: '0px',marginLeft:'0.5em', color: 'var(--text-color)'  }}>Project</strong>
             
               </div>
                 <div style = {{
@@ -212,7 +212,7 @@ const Page: React.FC = () => {
 
         <Splitter.Panel>
         <div style={{ flex: 1, overflow: 'auto', marginTop: '1vh', minHeight: '35vh' }}>
-          <strong style={{ fontSize: '1.2em', marginTop: '0px' }}>
+          <strong style={{ fontSize: '1.2em', marginTop: '0px', color:' var(--text-color)' }}>
             <FunctionOutlined /> Hyperparameters Configuration
           </strong>
           <InputPanel />

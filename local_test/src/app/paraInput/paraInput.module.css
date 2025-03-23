@@ -1,6 +1,7 @@
 /* container 是外部包裹容器 */
 .container {
   padding: 5px;
+  color: var(--text-color);
 
 }
 
