@@ -16,7 +16,7 @@
     "@trpc/react-query": "^11.0.0-rc.446",
     "@trpc/server": "^11.0.0-rc.446",
     "@types/axios": "^0.9.36",
-    "antd": "^5.21.3",
+    "antd": "^5.24.4",
     "async": "^3.2.6",
     "axios": "^1.7.7",
     "express": "^4.21.1",

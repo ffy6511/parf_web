@@ -13,6 +13,15 @@ import Display_1 from './fileList/display_1';  // 文件列表组件
 import InputPanel from './paraInput/paraInput';
 import { DockerOutlined, FunctionOutlined , MenuUnfoldOutlined, MenuFoldOutlined,PaperClipOutlined,TeamOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd'; // 导入 Tooltip 组件
+import { Flex, Splitter, Typography } from 'antd';
+
+const Desc: React.FC<Readonly<{ text?: string | number }>> = (props) => (
+  <Flex justify="center" align="center" style={{ height: '100%' }}>
+    <Typography.Title type="secondary" level={5} style={{ whiteSpace: 'nowrap' }}>
+      {props.text}
+    </Typography.Title>
+  </Flex>
+);
 
 const Page: React.FC = () => {
   const [reloadTrigger, setReloadTrigger] = useState(0);
@@ -102,13 +111,15 @@ const Page: React.FC = () => {
     <FileContextProvider>
     <div style={{ display: 'flex', flexDirection: 'column',minHeight:'100vh',overflow:'auto'}}>
       {/* 主体内容部分 */}
+
       <div style={{ display: 'flex', flex: 1,overflow:'auto' }}>
+      <Splitter style={{ height: '100%', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
         {/* 控制按钮和文件列表的容器 */}
+        <Splitter.Panel collapsible  min = '15%' defaultSize = '30%' max = '40%'>
         <div
           style={{
             display: 'flex',
             marginTop:'-2vh',
-            flex:isFileListVisible?3:0,
             flexDirection: 'column', 
             position: 'relative',
             boxShadow: '1px 0 5px rgba(0, 0, 0, 0.3)',
@@ -126,7 +137,6 @@ const Page: React.FC = () => {
               justifyContent: 'center',
               transition: 'all 0.3s ease',
             }}
-            
           >
             {isFileListExpanded ? (
               // 当文件列表展开时显示图标和“文件列表”文本
@@ -174,55 +184,47 @@ const Page: React.FC = () => {
             )}
           </div>
   
-          {/* 文件列表 */}
-          {isFileListVisible && (
-            <div
-              className={`${styles.fileListContainer} ${isFileListExpanded ? styles.fileListExpanded : ''}`}
-              style={{
-                flex: 1,
-                marginTop: '0vh',
-                marginLeft: '0.5vw',
-                overflow: 'auto',
-                transition: 'max-height 0.5s ease, width 0.5s ease, opacity 0.5s ease',
-                display: 'flex', // 添加这个样式使内容竖直排列
-                flexDirection: 'column', // 设置为竖直排列
+    <Splitter layout="vertical">
+      <Splitter.Panel defaultSize='30%'>
+        <div
+          className={`${styles.fileListContainer} ${isFileListExpanded ? styles.fileListExpanded : ''}`}
+          style={{
+            flex: 1,
+            marginTop: '0vh',
+            marginLeft: '0.5vw',
+            overflow: 'auto',
+            transition: 'max-height 0.5s ease, width 0.5s ease, opacity 0.5s ease',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <div style={{ flex: 1, boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)', minHeight: '35vh' }}>
+            <Display_1
+              ref={displayRef}
+              key={reloadTrigger}
+              isMultiSelect={isMultiSelect}
+              selectedFiles={selectedFiles}
+              onMultiSelect={handleMultiSelect}
+            />
+          </div>
+        </div> 
+      </Splitter.Panel>
 
-              }}
-            >
-             <div style={{ 
-                flex: 1, 
-                boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)',
-                minHeight:'35vh'
-                }}> {/* Display_1 */}
-              <Display_1 
-                ref={displayRef}
-                key={reloadTrigger}
-                isMultiSelect={isMultiSelect}
-                selectedFiles={selectedFiles}
-                onMultiSelect={handleMultiSelect}
-              />
-              </div>
-             
-              <div style={{ 
-                flex: 1, 
-                overflow: 'auto',
-                marginTop:'1vh' ,
-                minHeight:'35vh'
-                }}> {/* InputPanel */}
+        <Splitter.Panel>
+        <div style={{ flex: 1, overflow: 'auto', marginTop: '1vh', minHeight: '35vh' }}>
+          <strong style={{ fontSize: '1.2em', marginTop: '0px' }}>
+            <FunctionOutlined /> Hyperparameters Configuration
+          </strong>
+          <InputPanel />
+        </div>
+       </Splitter.Panel>
+    </Splitter>
 
-              <strong style={{ fontSize: '1.2em', marginTop: '0px'}}>
-              <FunctionOutlined /> Hyperparameters Configuration
-               </strong>
-
-              <InputPanel />
-
-             </div>
-
-            </div>
-        )}
 
         </div>
+        </Splitter.Panel>
 
+        <Splitter.Panel>
         <div
           style={{
             flex: isFileListVisible ? 7 : 10,
@@ -233,6 +235,10 @@ const Page: React.FC = () => {
         >
           <  Output_container />
         </div>
+
+        </Splitter.Panel>
+
+      </Splitter>
 
       </div>
   
