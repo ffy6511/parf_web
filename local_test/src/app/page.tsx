@@ -2,7 +2,7 @@
 import styles from './index.module.css';
 import React, { useState, useRef } from 'react';
 import FileContextProvider from './contexts/FileContext';
-
+import FeatureExtraction from './feature_extraction/feature_extraction';
 
 import FolderCreator from './fileList/components/FolderCreator'; //新建文件夹
 import MultiSelector from './fileList/components/MultiSelector'; //多选控制组件
@@ -209,6 +209,7 @@ const Page: React.FC = () => {
           <strong style={{ fontSize: '1.2em', marginTop: '0px', color:' var(--text-color)' }}>
             <FunctionOutlined /> Hyperparameters Configuration
           </strong>
+          <FeatureExtraction />
           <InputPanel />
         </div>
        </Splitter.Panel>

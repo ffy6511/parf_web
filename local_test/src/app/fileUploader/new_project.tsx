@@ -316,6 +316,9 @@ const handleFolderUpload = async (files: RcFile[]) => {
         path: file.name,
         isFolder: false
       });
+
+      // 保存到本地数据库
+      setFileContent(new TextDecoder().decode(content));
     } catch (error) {
       message.error('Failed to upload file');
       console.error(error);

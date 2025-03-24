@@ -1,0 +1,92 @@
+/* feature_extraction.module.css */
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 60vh;
+  }
+  
+  .resultArea {
+    flex: 1;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    padding: 16px;
+    overflow: auto;
+    background-color: #f9f9f9; /* 添加浅色背景 */
+  }
+  
+  .inputArea {
+    padding: 20px;
+    border-top: 1px solid var(--scrollbar-thumb);
+    border-radius: 0 0 8px 8px;
+    background-color: #fff;
+  }
+  
+  .inputControls {
+    display: flex;
+    gap: 16px;
+    align-items: center; /* 确保垂直居中对齐 */
+  }
+  
+  .modeSelect {
+    min-width: 100px;
+  }
+  
+  .modeSelect :global(.ant-radio-button-wrapper) {
+    border: 1px solid #d9d9d9 !important;
+    background: #fff;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    height: 40px; /* 统一高度 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modeSelect :global(.ant-radio-button-wrapper:hover) {
+    background-color: #e6f7ff;
+    border-color: #40a9ff !important;
+  }
+  
+  .modeSelect :global(.ant-radio-button-wrapper-checked) {
+    background: linear-gradient(135deg, #68b4f2, #4390d8); /* 渐变背景 */
+    color: #fff !important;
+    border-color: #6195c6 !important;
+    animation: buttonClick 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .modeSelect :global(.ant-radio-button-wrapper-checked:hover) {
+    background: linear-gradient(135deg, #69b1ff, #40a9ff);
+    border-color: #40a9ff !important;
+  }
+  
+  @keyframes buttonClick {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  .fileSelect {
+    flex: 2;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-left: auto !important;
+    margin-right: 30%;    
+}
+  
+  .sendButton {
+    background: var(--button-gradient, linear-gradient(135deg, #40a9ff, #1890ff));
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 16px;
+    height: 40px; /* 与 Radio 按钮高度一致 */
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .sendButton:hover {
+    opacity: 0.9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
