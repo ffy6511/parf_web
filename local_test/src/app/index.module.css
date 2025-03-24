@@ -197,7 +197,6 @@
 
 .fileListExpanded {
   max-height: 100vh;
-  width: 35vw; /* 展开的宽度 */
   opacity: 1;
 }
 

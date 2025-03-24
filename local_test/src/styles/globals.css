@@ -61,3 +61,7 @@ a {
   transform: scale(1.1);
   box-shadow: 3px 6px 15px rgba(0, 102, 204, 0.5);
 }
+
+.halfOpacity {
+  opacity: 0.5;
+}

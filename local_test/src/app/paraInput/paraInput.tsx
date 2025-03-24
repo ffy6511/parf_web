@@ -152,7 +152,6 @@ const InputPanel = () => {
       store.put(data).onsuccess = () => {
         showMessage('success', ` "${groupName}" Saved`);
         loadSavedGroups(db);
-        setGroupName('');
       };
     };
   };
@@ -354,14 +353,17 @@ const InputPanel = () => {
                     <strong>{item.groupName}</strong>
                     <div className={styles.parameterDetails}>
                       <div>
-                        Time Budget: {item.timeBudget} 
+                        <span className='halfOpacity'>Time Budget(s) </span> {item.timeBudget} 
                       </div> 
+
                       <div>
-                       Processes: {item.core} 
-                       </div>
-                       <div>
-                       Samples: {item.sampleSize}
-                       </div>
+                       <span className='halfOpacity'> Processes</span> {item.core} 
+                      </div>
+
+                      <div>
+                       <span className='halfOpacity'> Samples</span>  {item.sampleSize}
+                      </div>
+                      
                     </div>
                   </div>
                   <Button

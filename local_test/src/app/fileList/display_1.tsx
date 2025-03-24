@@ -101,7 +101,6 @@ const Display_1 = React.forwardRef<DisplayRef, Display_1Props>((props, ref) => {
           padding: 8, 
           margin: 5,
           overflowY: 'scroll',
-          maxHeight: '38vh',
           overflowX: 'hidden',
           scrollbarWidth: 'thin',
         }}>

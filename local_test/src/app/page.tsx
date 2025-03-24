@@ -15,13 +15,7 @@ import { DockerOutlined, FunctionOutlined , MenuUnfoldOutlined, MenuFoldOutlined
 import { Tooltip } from 'antd'; // 导入 Tooltip 组件
 import { Flex, Splitter, Typography } from 'antd';
 
-const Desc: React.FC<Readonly<{ text?: string | number }>> = (props) => (
-  <Flex justify="center" align="center" style={{ height: '100%' }}>
-    <Typography.Title type="secondary" level={5} style={{ whiteSpace: 'nowrap' }}>
-      {props.text}
-    </Typography.Title>
-  </Flex>
-);
+
 
 const Page: React.FC = () => {
   const [reloadTrigger, setReloadTrigger] = useState(0);
@@ -227,7 +221,6 @@ const Page: React.FC = () => {
         <Splitter.Panel>
         <div
           style={{
-            flex: isFileListVisible ? 7 : 10,
             padding: '0px',
             transition: 'flex 0.7s ease',
             marginLeft:isFileListVisible?'0.5vw' : '4vw'
