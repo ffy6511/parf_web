@@ -2,12 +2,15 @@
 
 import React, { useState, useContext, useEffect } from 'react';
 import { analyzeCode } from './code_analyzer';
-import { Button, Modal, Select, Radio, Flex } from 'antd';
+import { Button, Modal, Select, Radio, Flex, Collapse, Descriptions, Typography } from 'antd';
 import { MessageOutlined, AreaChartOutlined } from '@ant-design/icons';
 import { FileContext, FileDetails } from '../contexts/FileContext';
 import styles from './feature_extraction.module.css';
 import FeatureChart from './FeatureChart';
 import ParametersChart from './ParametersChart';
+
+const { Title } = Typography;
+const { Panel } = Collapse;
 
 const FeatureExtraction: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -40,38 +43,42 @@ const FeatureExtraction: React.FC = () => {
     const numbers: Record<string, number> = {};
     const strings: Record<string, string> = {};
     
-    // 按空格分割参数字符串，并过滤掉空字符串
     const paramArray = paramString.trim().split(/\s+/).filter(Boolean);
     
     let i = 0;
     while (i < paramArray.length) {
-      // 确保当前元素是一个键（以 -eva- 开头）
       if (paramArray[i].startsWith('-eva-')) {
-        const key = paramArray[i].replace(/^-eva-/, ''); // 移除 -eva- 前缀
-        
-        // 检查下一个元素是否存在且不是一个新的键（即不以 -eva- 开头）
+        const key = paramArray[i].replace(/^-eva-/, '');
         if (i + 1 < paramArray.length && !paramArray[i + 1].startsWith('-eva-')) {
           const value = paramArray[i + 1];
-          // 尝试将值转换为数字
           const numValue = parseInt(value, 10);
           if (!isNaN(numValue)) {
             numbers[key] = numValue;
           } else {
             strings[key] = value;
           }
-          i += 2; // 跳过键和值，继续处理下一对
+          i += 2;
         } else {
-          // 如果没有值（例如 -eva-remove-redundant-alarms），将其作为字符串参数，值为空
           strings[key] = '';
-          i += 1; // 仅跳过键，继续处理下一个参数
+          i += 1;
         }
       } else {
-        // 如果当前元素不是以 -eva- 开头，可能是解析错误，跳过
         i += 1;
       }
     }
     
     return { numbers, strings };
+  };
+
+  // 规范化字符串参数
+  const normalizeStringParameters = (strings: Record<string, string>) => {
+    return Object.entries(strings).map(([key, value]) => {
+      if (!value) return { key, values: [] };
+      if (typeof value === 'string' && value.includes(',')) {
+        return { key, values: value.split(',').map((v) => v.trim()) };
+      }
+      return { key, values: [value] };
+    });
   };
 
   const handleSend = async () => {
@@ -133,6 +140,9 @@ const FeatureExtraction: React.FC = () => {
     }
   };
 
+  // 规范化后的字符串参数
+  const normalizedStringParams = normalizeStringParameters(parameters.strings);
+
   return (
     <div>
       <Button type="primary" onClick={showModal}>
@@ -143,37 +153,23 @@ const FeatureExtraction: React.FC = () => {
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
-        width={800}
+        width={1000}
       >
         <div className={styles.container}>
           <div className={styles.resultArea}>
             {features && (
               <div className={styles.featureSection}>
                 <h3>Code Features</h3>
-                <FeatureChart features={features} />
+                <FeatureChart features={features} parameters={parameters} />
               </div>
             )}
             <div className={styles.apiResponseSection}>
-              <h3>API Response</h3>
               <div>
-                <h4>Notes:</h4>
+                <h3>Notes:</h3>
                 <p>{notes}</p>
               </div>
-              {Object.keys(parameters.numbers).length > 0 && (
-                <div>
-                  <h4>Numeric Parameters:</h4>
-                  <ParametersChart parameters={parameters.numbers} />
-                </div>
-              )}
-              {Object.keys(parameters.strings).length > 0 && (
-                <div>
-                  <h4>String Parameters:</h4>
-                  <ul>
-                    {Object.entries(parameters.strings).map(([key, value]) => (
-                      <li key={key}>{`${key}: ${value}`}</li>
-                    ))}
-                  </ul>
-                </div>
+              {(Object.keys(parameters.numbers).length > 0 || normalizedStringParams.length > 0) && (
+                <ParametersChart numbers={parameters.numbers} strings={normalizedStringParams} />
               )}
             </div>
           </div>

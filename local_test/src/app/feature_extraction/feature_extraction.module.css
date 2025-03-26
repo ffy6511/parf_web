@@ -89,3 +89,13 @@
     opacity: 0.9;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
+
+  .featureSection{
+    text-align: center;
+    font-family: monospace;
+  }
+
+  .apiResponseSection h3{
+    text-align: center;
+    font-family: monospace;
+  }

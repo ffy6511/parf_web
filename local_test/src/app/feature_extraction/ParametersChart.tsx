@@ -3,9 +3,12 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Collapse, Descriptions } from 'antd';
 
 // 注册 Chart.js 所需的组件
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+const { Panel } = Collapse;
 
 // 定义固定的数值参数接口
 interface Parameters {
@@ -19,26 +22,28 @@ interface Parameters {
   'auto-loop-unroll': number;
 }
 
-interface ParametersChartProps {
-  parameters: Parameters;
+interface StringParameter {
+  key: string;
+  values: string[];
 }
 
-// 通用图表配置（保持性能优化）
+interface ParametersChartProps {
+  numbers: Parameters;
+  strings: StringParameter[];
+}
+
+// 通用图表配置
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
-  animation: {
-    duration: 0, // 禁用动画以提升性能
-  },
   plugins: {
     legend: {
-      display: false, // 隐藏图例
+      display: false,
     },
     tooltip: {
       enabled: true,
       mode: 'index' as const,
       intersect: false,
-      // 优化 tooltip 回调
       callbacks: {
         label: (context: any) => {
           const label = context.dataset.label || '';
@@ -46,77 +51,41 @@ const chartOptions = {
           return `${label}: ${value}`;
         },
       },
-      // 减少 tooltip 的更新频率
-    //   animation: false,
-    //   backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    //   titleFont: { size: 12 },
-    //   bodyFont: { size: 12 },
-    //   padding: 6,
     },
     title: {
-      display: true, // 启用标题（将在每个图表中设置）
+      display: true,
       font: { size: 14 },
     },
   },
   scales: {
     y: {
       beginAtZero: true,
-      title: {
-        display: true,
-        text: 'Value',
-        font: { size: 12 },
-      },
-      ticks: {
-        precision: 0,
-        font: { size: 10 },
-      },
     },
     x: {
       display: true,
-      title: {
-        display: false,
-        text: 'Parameter',
-        font: { size: 12 },
-      },
-      ticks: {
-        autoSkip: false,
-        maxRotation: 45,
-        minRotation: 45,
-        font: { size: 10 },
-      },
-    },
-  },
-  hover: {
-    mode: 'nearest' as const,
-    intersect: true,
-    animationDuration: 0,
-  },
-  elements: {
-    bar: {
-      borderWidth: 1,
     },
   },
 };
 
 // 使用 React.memo 避免不必要的重新渲染
-const ParametersChart: React.FC<ParametersChartProps> = React.memo(({ parameters }) => {
+const ParametersChart: React.FC<ParametersChartProps> = React.memo(({ numbers, strings }) => {
   // 图表 1：前 4 个参数
   const data1 = {
-    labels: ['Widening Delay', 'Subdivide Non-Linear', 'Slevel', 'Plevel'],
+    labels: ['WD', 'Non-Linear', 'Slevel', 'Plevel'],
     datasets: [
       {
         label: 'Key Parameters',
         data: [
-          parameters['widening-delay'],
-          parameters['subdivide-non-linear'],
-          parameters['slevel'],
-          parameters['plevel'],
+          numbers['widening-delay'] || 0,
+          numbers['subdivide-non-linear'] || 0,
+          numbers['slevel'] || 0,
+          numbers['plevel'] || 0,
         ],
         backgroundColor: [
-          'rgba(134, 63, 78, 0.8)', // Widening Delay
-          'rgba(255, 159, 64, 0.8)', // Subdivide Non-Linear
-          'rgba(54, 162, 235, 0.8)', // Slevel
-          'rgba(255, 206, 86, 0.8)', // Plevel
+          'rgba(134, 63, 78, 0.8)',
+          'rgba(255, 159, 64, 0.8)',
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(255, 206, 86, 0.8)',
         ],
         borderColor: [
           'rgba(134, 63, 78, 1)',
@@ -124,28 +93,27 @@ const ParametersChart: React.FC<ParametersChartProps> = React.memo(({ parameters
           'rgba(54, 162, 235, 1)',
           'rgba(255, 206, 86, 1)',
         ],
-        borderWidth: 1,
       },
     ],
   };
 
   // 图表 2：后 4 个参数
   const data2 = {
-    labels: ['Partition History', 'Min Loop Unroll', 'Ilevel', 'Auto Loop Unroll'],
+    labels: ['Partition', 'Min Loop Unroll', 'Ilevel', 'Auto Loop Unroll'],
     datasets: [
       {
         label: 'Other Parameters',
         data: [
-          parameters['partition-history'],
-          parameters['min-loop-unroll'],
-          parameters['ilevel'],
-          parameters['auto-loop-unroll'],
+          numbers['partition-history'] || 0,
+          numbers['min-loop-unroll'] || 0,
+          numbers['ilevel'] || 0,
+          numbers['auto-loop-unroll'] || 0,
         ],
         backgroundColor: [
-          'rgba(75, 192, 192, 0.8)', // Partition History
-          'rgba(153, 102, 255, 0.8)', // Min Loop Unroll
-          'rgba(199, 199, 199, 0.8)', // Ilevel
-          'rgba(83, 102, 255, 0.8)', // Auto Loop Unroll
+          'rgba(75, 192, 192, 0.8)',
+          'rgba(153, 102, 255, 0.8)',
+          'rgba(199, 199, 199, 0.8)',
+          'rgba(83, 102, 255, 0.8)',
         ],
         borderColor: [
           'rgba(75, 192, 192, 1)',
@@ -153,7 +121,6 @@ const ParametersChart: React.FC<ParametersChartProps> = React.memo(({ parameters
           'rgba(199, 199, 199, 1)',
           'rgba(83, 102, 255, 1)',
         ],
-        borderWidth: 1,
       },
     ],
   };
@@ -183,13 +150,47 @@ const ParametersChart: React.FC<ParametersChartProps> = React.memo(({ parameters
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: '20px' }}>
-      <div style={{ flex: 1, height: '300px' }}>
-        <Bar data={data1} options={options1} />
-      </div>
-      <div style={{ flex: 1, height: '300px' }}>
-        <Bar data={data2} options={options2} />
-      </div>
+    <div style={{ marginTop: '20px' }}>
+      {/* 数值参数部分 */}
+      {Object.keys(numbers).length > 0 && (
+        <Collapse defaultActiveKey={['numeric']} expandIconPosition="right">
+          <Panel header="Numeric Parameters" key="numeric">
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: '20px' }}>
+              <div style={{ flex: 1, height: '300px' }}>
+                <Bar data={data1} options={options1} />
+              </div>
+              <div style={{ flex: 1, height: '300px' }}>
+                <Bar data={data2} options={options2} />
+              </div>
+            </div>
+          </Panel>
+        </Collapse>
+      )}
+
+      {/* 字符串参数部分 */}
+      {strings.length > 0 && (
+        <Collapse defaultActiveKey={['string']} expandIconPosition="right" style={{ marginTop: '20px' }}>
+          <Panel header="String Parameters" key="string">
+            <Descriptions bordered column={1}>
+              {strings.map(({ key, values }) => (
+                <Descriptions.Item label={key} key={key}>
+                  {values.length === 0 ? (
+                    <span style={{ color: '#999' }}> ✅</span>
+                  ) : values.length === 1 ? (
+                    <span>{values[0]}</span>
+                  ) : (
+                    <ul style={{ paddingLeft: 20, margin: 0 }}>
+                      {values.map((val, index) => (
+                        <li key={index}>{val}</li>
+                      ))}
+                    </ul>
+                  )}
+                </Descriptions.Item>
+              ))}
+            </Descriptions>
+          </Panel>
+        </Collapse>
+      )}
     </div>
   );
 });

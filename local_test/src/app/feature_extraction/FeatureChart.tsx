@@ -67,7 +67,7 @@ const FeatureChart: React.FC<FeatureChartProps> = React.memo(({ features }) => {
 
   // 图表 2：其余字段
   const data2 = {
-    labels: ['Functions', 'Nesting Depth', 'Conditionals', 'Variables', 'Cyclomatic Complexity', 'Memory Operations'],
+    labels: ['Functions', 'Nesting', 'Conditionals', 'Variables', 'Cyclomatic', 'Memory Op.'],
     datasets: [
       {
         label: 'Other Metrics',
