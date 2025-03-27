@@ -4,9 +4,10 @@ import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Collapse, Descriptions } from 'antd';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 // 注册 Chart.js 所需的组件
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
 const { Panel } = Collapse;
 
@@ -36,6 +37,13 @@ interface ParametersChartProps {
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
+  animation: false,
+  hover: {
+    mode: 'nearest',
+    intersect: false,
+    animationDuration: 0
+  },
+  events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
   plugins: {
     legend: {
       display: false,
@@ -44,6 +52,8 @@ const chartOptions = {
       enabled: true,
       mode: 'index' as const,
       intersect: false,
+      animation: false,
+      position: 'nearest',
       callbacks: {
         label: (context: any) => {
           const label = context.dataset.label || '';
@@ -51,6 +61,12 @@ const chartOptions = {
           return `${label}: ${value}`;
         },
       },
+    },
+    datalabels: {
+      display: false,
+      color: '#666',
+      font: { size: 12 },
+      formatter: (value: number) => value
     },
     title: {
       display: true,
@@ -60,11 +76,19 @@ const chartOptions = {
   scales: {
     y: {
       beginAtZero: true,
+      ticks: {
+        maxTicksLimit: 5,
+        precision: 0
+      }
     },
     x: {
       display: true,
+      grid: {
+        display: false
+      }
     },
   },
+  devicePixelRatio: 1,
 };
 
 // 使用 React.memo 避免不必要的重新渲染

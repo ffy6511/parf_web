@@ -1,101 +1,144 @@
 /* feature_extraction.module.css */
 .container {
-    display: flex;
-    flex-direction: column;
-    height: 60vh;
-  }
-  
-  .resultArea {
-    flex: 1;
-    margin-bottom: 20px;
-    border-radius: 4px;
-    padding: 16px;
-    overflow: auto;
-    background-color: #f9f9f9; /* 添加浅色背景 */
-  }
-  
-  .inputArea {
-    padding: 20px;
-    border-top: 1px solid var(--scrollbar-thumb);
-    border-radius: 0 0 8px 8px;
-    background-color: #fff;
-  }
-  
-  .inputControls {
-    display: flex;
-    gap: 16px;
-    align-items: center; /* 确保垂直居中对齐 */
-    justify-content:space-around;
-  }
-  
-  .modeSelect {
-    min-width: 100px;
-  }
-  
-  .modeSelect :global(.ant-radio-button-wrapper) {
-    border: 1px solid #d9d9d9 !important;
-    background: #fff;
-    transition: all 0.3s ease;
-    padding: 8px 16px;
-    height: 40px; /* 统一高度 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .modeSelect :global(.ant-radio-button-wrapper:hover) {
-    background-color: #e6f7ff;
-    border-color: #40a9ff !important;
-  }
-  
-  .modeSelect :global(.ant-radio-button-wrapper-checked) {
-    background: linear-gradient(135deg, #68b4f2, #4390d8); /* 渐变背景 */
-    color: #fff !important;
-    border-color: #6195c6 !important;
-    animation: buttonClick 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .modeSelect :global(.ant-radio-button-wrapper-checked:hover) {
-    background: linear-gradient(135deg, #69b1ff, #40a9ff);
-    border-color: #40a9ff !important;
-  }
-  
-  @keyframes buttonClick {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-  }
-  
-  .fileSelect {
-    flex: 2;
-    display: flex;
-    align-items: center;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 60vh;
 }
-  
-  .sendButton {
-    background: var(--button-gradient, linear-gradient(135deg, #40a9ff, #1890ff));
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 4px 16px;
-    height: 40px; /* 与 Radio 按钮高度一致 */
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .sendButton:hover {
-    opacity: 0.9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
 
-  .featureSection{
-    text-align: center;
-    font-family: monospace;
-  }
+.resultArea {
+  flex: 1;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  padding: 16px;
+  overflow: auto;
+  background: transparent;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
 
-  .apiResponseSection h3{
-    text-align: center;
-    font-family: monospace;
-  }
+.inputArea {
+  padding: 20px;
+  border-top: 1px solid var(--scrollbar-thumb);
+  border-radius: 0 0 12px 12px;
+  background: transparent;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.inputControls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.modeSelect {
+  min-width: 100px;
+}
+
+.modeSelect :global(.ant-radio-button-wrapper) {
+  border: 1px solid rgba(217, 217, 217, 0.8) !important;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+  padding: 8px 16px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modeSelect :global(.ant-radio-button-wrapper:hover) {
+  background-color: rgba(230, 247, 255, 0.9);
+  border-color: rgba(64, 169, 255, 0.8) !important;
+}
+
+.modeSelect :global(.ant-radio-button-wrapper-checked) {
+  background: linear-gradient(135deg, rgba(104, 180, 242, 0.9), rgba(67, 144, 216, 0.9));
+  color: #fff !important;
+  border-color: rgba(97, 149, 198, 0.8) !important;
+  animation: buttonClick 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modeSelect :global(.ant-radio-button-wrapper-checked:hover) {
+  background: linear-gradient(135deg, rgba(105, 177, 255, 0.9), rgba(64, 169, 255, 0.9));
+  border-color: rgba(64, 169, 255, 0.8) !important;
+}
+
+@keyframes buttonClick {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.fileSelect {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.sendButton {
+  background: var(--button-gradient, linear-gradient(135deg, rgba(64, 169, 255, 0.9), rgba(24, 144, 255, 0.9)));
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 16px;
+  height: 40px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.sendButton:hover {
+  opacity: 0.95;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+.featureSection {
+  text-align: center;
+  font-family: monospace;
+}
+
+.apiResponseSection{
+  background: transparent;
+}
+
+.apiResponseSection h3 {
+  text-align: center;
+  font-family: monospace;
+}
+
+/* Modal样式 */
+.modalWrapper :global(.ant-modal-content) {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(30px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  overflow: hidden !important;
+  resize: both !important;
+}
+
+.modalWrapper :global(.ant-modal-header) {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+.modalWrapper :global(.ant-modal-title) {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
+.modalWrapper :global(.ant-modal-close) {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+.modalWrapper :global(.ant-modal-close:hover) {
+  color: rgba(0, 0, 0, 0.85) !important;
+}

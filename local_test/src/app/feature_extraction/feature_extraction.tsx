@@ -150,6 +150,7 @@ const FeatureExtraction: React.FC = () => {
       </Button>
       <Modal
         title="Feature Extraction"
+        className={styles.modalWrapper}
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
