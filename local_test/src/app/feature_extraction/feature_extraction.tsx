@@ -28,7 +28,9 @@ const FeatureExtraction: React.FC = () => {
   const [isFeatureLoading, setIsFeatureLoading] = useState(false); // 控制特征提取区域的加载状态
   const [isRequestLoading, setIsRequestLoading] = useState(false); // 控制API请求和参数区域的加载状态
 
+  // 获取FileContext中的文件列表更新函数
   const { fileList } = useContext(FileContext)!;
+  
   const filesWithContent = fileList.filter(file => file.fileContent);
 
   const showModal = () => setIsModalVisible(true);
@@ -42,7 +44,16 @@ const FeatureExtraction: React.FC = () => {
 
   const handleModeChange = (e: any) => setSelectedMode(e.target.value);
 
-  const handleFileSelect = (file: FileDetails) => setSelectedFile(file);
+  const handleFileSelect = (file: FileDetails) => {
+    setSelectedFile(file);
+    if (file.features) {
+      setFeatures(file.features);
+    }
+    if (file.preferredParameters) {
+      setParameters(file.preferredParameters);
+      setNotes('Loaded from previous analysis');
+    }
+  };
 
   const parseParameters = (paramString: string): { numbers: Record<string, number>, strings: Record<string, string> } => {
     const numbers: Record<string, number> = {};
@@ -89,6 +100,8 @@ const FeatureExtraction: React.FC = () => {
   const handleSend = async () => {
     if (!selectedFile?.fileContent) return;
     
+
+    
     setIsFeatureLoading(true);
     const extractedFeatures = analyzeCode(new TextDecoder().decode(selectedFile.fileContent));
     setFeatures(extractedFeatures);
@@ -133,6 +146,27 @@ const FeatureExtraction: React.FC = () => {
             const parsedParams = parseParameters(kfpData.parameters);
             setParameters(parsedParams);
             console.log('Parsed Parameters:', parsedParams);
+            
+            // 更新文件列表中的特征和推荐参数
+            // 更新IndexedDB中的文件数据
+            const request = indexedDB.open('FileStorage', 3);
+            request.onsuccess = (event) => {
+              const db = (event.target as IDBOpenDBRequest).result;
+              const transaction = db.transaction(['files'], 'readwrite');
+              const store = transaction.objectStore('files');
+              const getRequest = store.get(selectedFile.id);
+
+              getRequest.onsuccess = () => {
+                if (getRequest.result) {
+                  const updatedFile = {
+                    ...getRequest.result,
+                    features: extractedFeatures,
+                    preferredParameters: parsedParams
+                  };
+                  store.put(updatedFile);
+                }
+              };
+            };
           } else {
             setParameters({ numbers: {}, strings: {} });
           }

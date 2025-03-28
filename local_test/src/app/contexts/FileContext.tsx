@@ -9,6 +9,8 @@ export interface FileDetails {
   path: string;
   lastModified: string;
   fileContent?: ArrayBuffer;
+  features?: string[];
+  preferredParameters?: Record<string, any>;
 }
 
 // 定义 Context 的类型

@@ -6,6 +6,11 @@ export interface FileData {
   parentId: number | null;
   isFolder: boolean;
   path: string;
+  features?: any;
+  preferredParameters?: {
+    numbers: Record<string, number>;
+    strings: Record<string, string>;
+  };
 }
 
 export interface Display_1Props {
