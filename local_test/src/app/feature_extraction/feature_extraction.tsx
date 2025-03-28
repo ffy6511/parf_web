@@ -8,6 +8,8 @@ import { FileContext, FileDetails } from '../contexts/FileContext';
 import styles from './feature_extraction.module.css';
 import FeatureChart from './FeatureChart';
 import ParametersChart from './ParametersChart';
+import Stack from '@mui/material/Stack';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const { Title } = Typography;
 const { Panel } = Collapse;
@@ -22,6 +24,9 @@ const FeatureExtraction: React.FC = () => {
     numbers: Parameters;
     strings: Record<string, string>;
   }>({ numbers: {} as Parameters, strings: {} });
+  // 状态管理
+  const [isFeatureLoading, setIsFeatureLoading] = useState(false); // 控制特征提取区域的加载状态
+  const [isRequestLoading, setIsRequestLoading] = useState(false); // 控制API请求和参数区域的加载状态
 
   const { fileList } = useContext(FileContext)!;
   const filesWithContent = fileList.filter(file => file.fileContent);
@@ -83,9 +88,16 @@ const FeatureExtraction: React.FC = () => {
 
   const handleSend = async () => {
     if (!selectedFile?.fileContent) return;
-
+    
+    setIsFeatureLoading(true);
     const extractedFeatures = analyzeCode(new TextDecoder().decode(selectedFile.fileContent));
     setFeatures(extractedFeatures);
+    
+    // 强制显示至少1秒的加载状态
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setIsFeatureLoading(false);
+    
+    setIsRequestLoading(true);
     const requestBody = {
       inputs: {
         mode: selectedMode,
@@ -137,6 +149,8 @@ const FeatureExtraction: React.FC = () => {
       console.error('Error sending request:', error);
       setNotes('Error: Failed to fetch API response');
       setParameters({ numbers: {}, strings: {} });
+    } finally {
+      setIsRequestLoading(false);
     }
   };
 
@@ -154,23 +168,46 @@ const FeatureExtraction: React.FC = () => {
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
-        width={1000}
+        width={800}
       >
         <div className={styles.container}>
           <div className={styles.resultArea}>
-            {features && (
+            {/* 特征提取区域 */}
+            {isFeatureLoading ? (
+              <div className={styles.featureSection} style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+                <Stack spacing={2} direction="row" style={{alignItems:'center'}}>
+                  <CircularProgress size="3em" />
+                </Stack>
+              </div>
+            ) : features ? (
               <div className={styles.featureSection}>
                 <h3>Code Features</h3>
                 <FeatureChart features={features} parameters={parameters} />
               </div>
-            )}
-            <div className={styles.apiResponseSection}>
-              <div>
-                <h3>Notes:</h3>
-                <p>{notes}</p>
+            ) : (
+              <div className={styles.featureSection}>
+                <h3>Code Features</h3>
+                <p>Select a file to interact with LLM</p>
               </div>
-              {(Object.keys(parameters.numbers).length > 0 || normalizedStringParams.length > 0) && (
-                <ParametersChart numbers={parameters.numbers} strings={normalizedStringParams} />
+            )}
+            {/* API响应区域 */}
+            <div className={styles.apiResponseSection}>
+              {isRequestLoading ? (
+                <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+                  <Stack spacing={2} direction="row" style={{alignItems:'center'}}>
+                    <CircularProgress size="3em" />
+                  </Stack>
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <h3>Predicted Optimal Initial Parameters</h3>
+                    <p style={{textAlign:'center'}}>{notes}</p>
+                  </div>
+                  {(Object.keys(parameters.numbers).length > 0 || normalizedStringParams.length > 0) && (
+                    <ParametersChart numbers={parameters.numbers} strings={normalizedStringParams} />
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -215,6 +252,8 @@ const FeatureExtraction: React.FC = () => {
                     value: file.fileName,
                     label: file.fileName,
                   }))}
+                  showSearch = {true}
+                  style={{ width: '15em' }}
                 />
                 {selectedFile && (
                   <Button className={styles.sendButton} onClick={handleSend}>
