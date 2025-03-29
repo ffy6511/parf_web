@@ -10,6 +10,7 @@ import FeatureChart from './FeatureChart';
 import ParametersChart from './ParametersChart';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
+import ShinyText from '../_components/ShinyText';
 
 const { Title } = Typography;
 const { Panel } = Collapse;
@@ -228,9 +229,10 @@ const FeatureExtraction: React.FC = () => {
             <div className={styles.apiResponseSection}>
               {isRequestLoading ? (
                 <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
-                  <Stack spacing={2} direction="row" style={{alignItems:'center'}}>
+                  {/* <Stack spacing={2} direction="row" style={{alignItems:'center'}}>
                     <CircularProgress size="3em" />
-                  </Stack>
+                  </Stack> */}
+                  <ShinyText text="Analysing Prefered Parameters" speed={3} styles={{ fontSize: "1.3em" }} />
                 </div>
               ) : (
                 <>
