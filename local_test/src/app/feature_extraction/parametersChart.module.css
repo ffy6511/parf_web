@@ -1,0 +1,95 @@
+/* parametersChart.module.css */
+.container {
+  margin-top: 20px;
+}
+
+.sectionTitle {
+  font-size: 1.2em;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--scrollbar-thumb);
+}
+
+.chartsContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.chartWrapper {
+  flex: 1;
+  height: 300px;
+}
+
+.stringParamsContainer {
+  margin-top: 30px;
+}
+
+.checkIcon {
+  color: #999;
+}
+
+.valuesList {
+  padding-left: 20px;
+  margin: 0;
+}
+
+/* 暗色模式适配 */
+:global([data-theme="dark"]) .sectionTitle {
+  color: var(--text-color);
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+:global([data-theme="dark"]) .container,
+:global([data-theme="dark"]) .container h5,
+:global([data-theme="dark"]) .container p,
+:global([data-theme="dark"]) .container span,
+:global([data-theme="dark"]) .container li {
+  color: var(--text-color) !important;
+}
+
+:global([data-theme="dark"]) .checkIcon {
+  color: #8c8c8c;
+}
+
+.darkText {
+  color: var(--text-color) !important;
+}
+
+.darkItem {
+  color: var(--text-color) !important;
+}
+
+.darkDescriptions :global(.ant-descriptions-title),
+.darkDescriptions :global(.ant-descriptions-item-label),
+.darkDescriptions :global(.ant-descriptions-item-content),
+.darkDescriptions :global(.ant-descriptions-view) {
+  color: var(--text-color) !important;
+  background-color: rgba(40, 40, 40, 0.3) !important;
+}
+
+.descriptionsWrapper :global([data-theme="dark"]) :global(.ant-descriptions-title),
+.descriptionsWrapper :global([data-theme="dark"]) :global(.ant-descriptions-item-label),
+.descriptionsWrapper :global([data-theme="dark"]) :global(.ant-descriptions-item-content),
+.descriptionsWrapper :global([data-theme="dark"]) span,
+.descriptionsWrapper :global([data-theme="dark"]) li,
+:global([data-theme="dark"]) .descriptionsWrapper span,
+:global([data-theme="dark"]) .descriptionsWrapper li,
+:global([data-theme="dark"]) .stringParamsContainer {
+  color: var(--text-color) !important;
+}
+
+.descriptionsWrapper :global([data-theme="dark"]) :global(.ant-descriptions) {
+  background-color: rgba(40, 40, 40, 0.3) !important;
+  border-color: rgba(80, 80, 80, 0.5) !important;
+}
+
+.descriptionsWrapper :global([data-theme="dark"]) :global(.ant-descriptions-row) {
+  border-color: rgba(80, 80, 80, 0.5) !important;
+}
+
+.descriptionsWrapper :global([data-theme="dark"]) :global(.ant-descriptions-item-label) {
+  background-color: rgba(50, 50, 50, 0.5) !important;
+}

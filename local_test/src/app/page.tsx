@@ -61,8 +61,8 @@ const Page: React.FC = () => {
 
   // 在原有的 FileUploadContainer 旁边添加操作按钮
   const renderFileOperations = () => (
-    <div style={{ 
-      display: 'flex', 
+    <div style={{
+      display: 'flex',
       alignItems: 'center',
       gap: '1vw',
       marginLeft: '0vw',
@@ -114,17 +114,17 @@ const Page: React.FC = () => {
           style={{
             display: 'flex',
             marginTop:'-2vh',
-            flexDirection: 'column', 
+            flexDirection: 'column',
             position: 'relative',
             boxShadow: '1px 0 5px rgba(0, 0, 0, 0.3)',
-            background:' var(--navbar-bg)',  
+            background:' var(--navbar-bg)',
           }}
         >
           {/* 控制按钮固定在左侧 */}
           <div
             style={{
               padding: '1em',
-              flexShrink: 0, 
+              flexShrink: 0,
               top: '0px',
               display: 'flex',
               // alignItems: 'center',
@@ -141,23 +141,23 @@ const Page: React.FC = () => {
                   marginTop:'-1vh',
                  marginRight:'auto'
                 }}>
-              <div 
+              <div
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
-                style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                fontSize: '1em', 
+                style={{
+                display: 'flex',
+                alignItems: 'center',
+                fontSize: '1em',
                 marginTop: '0px',
                 }}>
                 <Tooltip title="Close file list" color="grey" mouseEnterDelay={0.1} mouseLeaveDelay={0.2} onClick={toggleFileListVisibility}
                 scale = 'isHovered ? 1.1 : 1'
-                cursor = 'pointer' 
+                cursor = 'pointer'
                 >
                   <MenuFoldOutlined style={{ filter: 'drop-shadow(2px 2px 10px grey)',color:'#1ea0f2' }} />
                 </Tooltip>
                 <strong style={{ fontSize: '1.2em', marginTop: '0px',marginLeft:'0.5em', color: 'var(--text-color)'  }}>Project</strong>
-            
+
               </div>
                 <div style = {{
                     marginLeft: '1vw',
@@ -168,7 +168,7 @@ const Page: React.FC = () => {
               </div>    //上传组件
             ): (
               // 当文件列表收起时，只显示图标，通过 Tooltip 实现悬停提示
-              <Tooltip title="Unfold file list" color="grey" 
+              <Tooltip title="Unfold file list" color="grey"
               mouseEnterDelay={0.1} mouseLeaveDelay={0.2}
               onClick={toggleFileListVisibility}
               onMouseEnter={() => setIsHovered(true)}
@@ -177,7 +177,7 @@ const Page: React.FC = () => {
               </Tooltip>
             )}
           </div>
-  
+
     <Splitter layout="vertical">
       <Splitter.Panel defaultSize='30%'>
         <div
@@ -201,15 +201,19 @@ const Page: React.FC = () => {
               onMultiSelect={handleMultiSelect}
             />
           </div>
-        </div> 
+        </div>
       </Splitter.Panel>
 
         <Splitter.Panel>
         <div style={{ flex: 1, overflow: 'auto', marginTop: '1vh', minHeight: '35vh' }}>
-          <strong style={{ fontSize: '1.2em', marginTop: '0px', color:' var(--text-color)' }}>
-            <FunctionOutlined /> Hyperparameters Configuration
-          </strong>
-          <FeatureExtraction />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
+            <strong style={{ fontSize: '1.2em', color: 'var(--text-color)' }}>
+              <FunctionOutlined /> Hyperparameters Configuration
+              </strong>
+            <div style={{marginRight:'2em', marginTop:'2em'}}>
+              <FeatureExtraction />
+            </div>
+          </div>
           <InputPanel />
         </div>
        </Splitter.Panel>
@@ -235,7 +239,7 @@ const Page: React.FC = () => {
       </Splitter>
 
       </div>
-  
+
       {/* 页脚部分 */}
       <footer className= {styles.footerStyle}>
         <a

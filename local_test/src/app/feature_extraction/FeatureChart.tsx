@@ -4,39 +4,100 @@ import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels'; // 引入数据标签插件
+import { useTheme } from '~/context/ThemeContext';
+import styles from './featureChart.module.css';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels); // 注册插件
 
-// 通用图表配置
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      display: false, // 隐藏图例
-      position: 'top',
+// 创建图表配置函数，根据主题返回不同配置
+const createChartOptions = (isDarkMode: boolean) => {
+  const textColor = isDarkMode ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)';
+  const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 0
     },
-    tooltip: {
-      enabled: true,
-      mode: 'index',
+    hover: {
+      mode: 'nearest' as const,
       intersect: false,
-      callbacks: {
-        label: (context) => {
-          const label = context.dataset.label || '';
-          const value = context.parsed.y;
-          return `${label}: ${value}`;
+    },
+    plugins: {
+      legend: {
+        display: false, // 隐藏图例
+        position: 'top' as const,
+        labels: {
+          color: textColor
+        }
+      },
+      tooltip: {
+        enabled: true,
+        mode: 'index' as const,
+        intersect: false,
+        animation: {
+          duration: 0
+        },
+        backgroundColor: isDarkMode ? 'rgba(50, 50, 50, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+        titleColor: isDarkMode ? '#fff' : '#000',
+        bodyColor: isDarkMode ? '#fff' : '#000',
+        borderColor: isDarkMode ? 'rgba(80, 80, 80, 0.5)' : 'rgba(200, 200, 200, 0.5)',
+        borderWidth: 1,
+        padding: 10,
+        cornerRadius: 4,
+        callbacks: {
+          label: (context: any) => {
+            const label = context.dataset.label || '';
+            const value = context.parsed.y;
+            return `${label}: ${value}`;
+          },
         },
       },
+      title: {
+        display: true,
+        font: {
+          size: 14,
+          weight: 'bold' as const
+        },
+        color: textColor,
+        padding: {
+          top: 10,
+          bottom: 10
+        }
+      },
     },
-  },
-  scales: {
-    y: {
-      beginAtZero: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          color: textColor,
+          font: {
+            size: 11
+          },
+          padding: 5
+        },
+        grid: {
+          color: gridColor,
+          drawBorder: false
+        }
+      },
+      x: {
+        display: true,
+        ticks: {
+          color: textColor,
+          font: {
+            size: 11
+          },
+          padding: 5
+        },
+        grid: {
+          display: false,
+          drawBorder: false
+        }
+      },
     },
-    x: {
-      display: true, 
-    },
-  },
+  };
 };
 
 interface FeatureChartProps {
@@ -50,9 +111,17 @@ interface FeatureChartProps {
     cyclomatic_complexity: number;
     memory_operations: number;
   };
+  parameters?: any; // 添加可选的parameters属性
 }
 
 const FeatureChart: React.FC<FeatureChartProps> = React.memo(({ features }) => {
+  // 获取当前主题
+  const { theme } = useTheme();
+  const isDarkMode = theme === 'dark';
+
+  // 获取图表配置
+  const chartOptions = createChartOptions(isDarkMode);
+
   // 图表 1：loc 和 function_call_count
   const data1 = {
     labels: ['Lines of Code', 'Function Calls'],
@@ -96,7 +165,7 @@ const FeatureChart: React.FC<FeatureChartProps> = React.memo(({ features }) => {
     plugins: {
       ...chartOptions.plugins,
       title: {
-        display: true,
+        ...chartOptions.plugins.title,
         text: 'Key Code Metrics',
       },
     },
@@ -107,18 +176,18 @@ const FeatureChart: React.FC<FeatureChartProps> = React.memo(({ features }) => {
     plugins: {
       ...chartOptions.plugins,
       title: {
-        display: true,
+        ...chartOptions.plugins.title,
         text: 'Other Code Metrics',
       },
     },
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: '20px' }}>
-      <div style={{ flex: 1, height: '300px' }}>
+    <div className={styles.container}>
+      <div className={styles.chartWrapper}>
         <Bar data={data1} options={options1} />
       </div>
-      <div style={{ flex: 4, height: '300px' }}>
+      <div className={styles.wideChartWrapper}>
         <Bar data={data2} options={options2} />
       </div>
     </div>

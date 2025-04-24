@@ -65,6 +65,19 @@
   border-color: rgba(97, 149, 198, 0.8) !important;
   animation: buttonClick 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.modeSelect :global(.ant-radio-button-wrapper-checked)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #ffffff;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
 }
 
 .modeSelect :global(.ant-radio-button-wrapper-checked:hover) {
@@ -98,8 +111,8 @@
   margin-left: 1em;
   cursor: pointer;
   transition: all 0.3s ease;
-  backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
 }
 
 .sendButton:hover {
@@ -113,6 +126,13 @@
   font-family: monospace;
 }
 
+.featureSectionLoading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
 .apiResponseSection{
   background: transparent;
   margin-top: 5em;
@@ -123,11 +143,139 @@
   font-family: monospace;
 }
 
+.apiResponseLoading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.notesText {
+  text-align: center;
+}
+
+/* 特征提取按钮样式 */
+.featureButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20%;
+  width: 30px;
+  height: 30px;
+  transition: all 0.3s ease;
+  background: var(--button-gradient);
+  color: var(--button-text);
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.featureButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 暗色模式适配 */
+:global([data-theme="dark"]) .featureButton {
+  background: var(--button-gradient);
+  color: var(--button-text);
+}
+
+:global([data-theme="dark"]) .modalWrapper :global(.ant-modal-content) {
+  background: rgba(40, 40, 40, 0.8) !important;
+  border: 1px solid rgba(80, 80, 80, 0.3) !important;
+}
+
+:global([data-theme="dark"]) .modalWrapper :global(.ant-modal-title) {
+  color: var(--text-color) !important;
+}
+
+:global([data-theme="dark"]) .modalWrapper :global(.ant-modal-close) {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+:global([data-theme="dark"]) .modalWrapper :global(.ant-modal-close:hover) {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* 暗色模式下的文本颜色 */
+:global([data-theme="dark"]) .container {
+  color: var(--text-color);
+}
+
+:global([data-theme="dark"]) .featureSection h3,
+:global([data-theme="dark"]) .featureSection p,
+:global([data-theme="dark"]) .apiResponseSection h3,
+:global([data-theme="dark"]) .notesText {
+  color: var(--text-color);
+}
+
+:global([data-theme="dark"]) .modeSelect :global(.ant-radio-button-wrapper) {
+  background: rgba(60, 60, 60, 0.8);
+  border-color: rgba(80, 80, 80, 0.8) !important;
+  color: var(--text-color);
+}
+
+:global([data-theme="dark"]) .modeSelect :global(.ant-radio-button-wrapper:hover) {
+  background-color: rgba(70, 70, 70, 0.9);
+  border-color: rgba(100, 100, 100, 0.8) !important;
+}
+
+:global([data-theme="dark"]) .modeSelect :global(.ant-radio-button-wrapper-checked) {
+  background: linear-gradient(135deg, rgba(64, 120, 192, 0.9), rgba(32, 84, 149, 0.9)) !important;
+  color: #ffffff !important;
+  border-color: rgba(64, 120, 192, 0.8) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+:global([data-theme="dark"]) .modeSelect :global(.ant-radio-button-wrapper-checked)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #00c2ff;
+  box-shadow: 0 0 8px rgba(0, 194, 255, 0.8);
+}
+
+:global([data-theme="dark"]) .modeSelect :global(.ant-radio-button-wrapper-checked:hover) {
+  background: linear-gradient(135deg, rgba(75, 135, 210, 0.9), rgba(45, 100, 170, 0.9)) !important;
+  border-color: rgba(75, 135, 210, 0.8) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+:global([data-theme="dark"]) .fileSelect :global(.ant-select-selector) {
+  background-color: rgba(60, 60, 60, 0.8) !important;
+  color: var(--text-color) !important;
+  border-color: rgba(80, 80, 80, 0.8) !important;
+}
+
+:global([data-theme="dark"]) .fileSelect :global(.ant-select-selection-placeholder),
+:global([data-theme="dark"]) .fileSelect :global(.ant-select-selection-item) {
+  color: var(--text-color) !important;
+}
+
+:global([data-theme="dark"]) .fileSelect :global(.ant-select-dropdown) {
+  background-color: rgba(50, 50, 50, 0.95) !important;
+}
+
+:global([data-theme="dark"]) .fileSelect :global(.ant-select-item) {
+  color: var(--text-color) !important;
+}
+
+:global([data-theme="dark"]) .fileSelect :global(.ant-select-item-option-active),
+:global([data-theme="dark"]) .fileSelect :global(.ant-select-item-option-selected) {
+  background-color: rgba(70, 70, 70, 0.8) !important;
+}
+
 /* Modal样式 */
 .modalWrapper :global(.ant-modal-content) {
   background: rgba(255, 255, 255, 0.2) !important;
-  backdrop-filter: blur(30px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+  backdrop-filter: blur(30px) saturate(180%) !important;
   border-radius: 16px !important;
   box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15) !important;
   border: 1px solid rgba(255, 255, 255, 0.18) !important;

@@ -2,8 +2,8 @@
 
 import React, { useState, useContext, useEffect } from 'react';
 import { analyzeCode } from './code_analyzer';
-import { Button, Modal, Select, Radio, Flex, Collapse, Descriptions, Typography } from 'antd';
-import { MessageOutlined, AreaChartOutlined } from '@ant-design/icons';
+import { Button, Modal, Select, Radio, Flex, Collapse, Descriptions, Typography, Tooltip } from 'antd';
+import { MessageOutlined, AreaChartOutlined, BarChartOutlined, LineChartOutlined, PieChartOutlined, RadarChartOutlined, ExperimentOutlined, ApiOutlined, FunctionOutlined, CodeOutlined } from '@ant-design/icons';
 import { FileContext, FileDetails } from '../contexts/FileContext';
 import styles from './feature_extraction.module.css';
 import FeatureChart from './FeatureChart';
@@ -11,6 +11,7 @@ import ParametersChart from './ParametersChart';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
 import ShinyText from '../_components/ShinyText';
+import { useTheme } from '~/context/ThemeContext';
 
 const { Title } = Typography;
 const { Panel } = Collapse;
@@ -28,10 +29,14 @@ const FeatureExtraction: React.FC = () => {
   // 状态管理
   const [isFeatureLoading, setIsFeatureLoading] = useState(false); // 控制特征提取区域的加载状态
   const [isRequestLoading, setIsRequestLoading] = useState(false); // 控制API请求和参数区域的加载状态
+  const [isHovered, setIsHovered] = useState(false); // 控制按钮悬浮状态
+
+  // 获取主题信息
+  const { theme } = useTheme();
 
   // 获取FileContext中的文件列表更新函数
   const { fileList } = useContext(FileContext)!;
-  
+
   const filesWithContent = fileList.filter(file => file.fileContent);
 
   const showModal = () => setIsModalVisible(true);
@@ -59,9 +64,9 @@ const FeatureExtraction: React.FC = () => {
   const parseParameters = (paramString: string): { numbers: Record<string, number>, strings: Record<string, string> } => {
     const numbers: Record<string, number> = {};
     const strings: Record<string, string> = {};
-    
+
     const paramArray = paramString.trim().split(/\s+/).filter(Boolean);
-    
+
     let i = 0;
     while (i < paramArray.length) {
       if (paramArray[i].startsWith('-eva-')) {
@@ -83,7 +88,7 @@ const FeatureExtraction: React.FC = () => {
         i += 1;
       }
     }
-    
+
     return { numbers, strings };
   };
 
@@ -100,17 +105,17 @@ const FeatureExtraction: React.FC = () => {
 
   const handleSend = async () => {
     if (!selectedFile?.fileContent) return;
-    
 
-    
+
+
     setIsFeatureLoading(true);
     const extractedFeatures = analyzeCode(new TextDecoder().decode(selectedFile.fileContent));
     setFeatures(extractedFeatures);
-    
+
     // 强制显示至少1秒的加载状态
     await new Promise(resolve => setTimeout(resolve, 1000));
     setIsFeatureLoading(false);
-    
+
     setIsRequestLoading(true);
     const requestBody = {
       inputs: {
@@ -147,7 +152,7 @@ const FeatureExtraction: React.FC = () => {
             const parsedParams = parseParameters(kfpData.parameters);
             setParameters(parsedParams);
             console.log('Parsed Parameters:', parsedParams);
-            
+
             // 更新文件列表中的特征和推荐参数
             // 更新IndexedDB中的文件数据
             const request = indexedDB.open('FileStorage', 3);
@@ -194,13 +199,25 @@ const FeatureExtraction: React.FC = () => {
 
   return (
     <div>
-      <Button type="primary" onClick={showModal}>
-        Feature Extraction
-      </Button>
+      <Tooltip
+        title="Feature Extraction"
+        placement="top"
+        color={theme === 'dark' ? '#2d2d2d' : '#f9efef'}
+        overlayInnerStyle={{ color: theme === 'dark' ? '#fff' : '#000' }}
+      >
+        <Button
+          className={styles.featureButton}
+          onClick={showModal}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          icon={<ExperimentOutlined style={{ fontSize: '1.2em' }} />}
+        />
+      </Tooltip>
+
       <Modal
         title="Feature Extraction"
         className={styles.modalWrapper}
-        open={isModalVisible}
+        visible={isModalVisible}
         onCancel={handleCancel}
         footer={null}
         width={800}
@@ -209,7 +226,7 @@ const FeatureExtraction: React.FC = () => {
           <div className={styles.resultArea}>
             {/* 特征提取区域 */}
             {isFeatureLoading ? (
-              <div className={styles.featureSection} style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+              <div className={`${styles.featureSection} ${styles.featureSectionLoading}`}>
                 <Stack spacing={2} direction="row" style={{alignItems:'center'}}>
                   <CircularProgress size="3em" />
                 </Stack>
@@ -217,7 +234,7 @@ const FeatureExtraction: React.FC = () => {
             ) : features ? (
               <div className={styles.featureSection}>
                 <h3>Code Features</h3>
-                <FeatureChart features={features} parameters={parameters} />
+                <FeatureChart features={features} />
               </div>
             ) : (
               <div className={styles.featureSection}>
@@ -228,17 +245,14 @@ const FeatureExtraction: React.FC = () => {
             {/* API响应区域 */}
             <div className={styles.apiResponseSection}>
               {isRequestLoading ? (
-                <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
-                  {/* <Stack spacing={2} direction="row" style={{alignItems:'center'}}>
-                    <CircularProgress size="3em" />
-                  </Stack> */}
+                <div className={styles.apiResponseLoading}>
                   <ShinyText text="Analysing Prefered Parameters" speed={3} styles={{ fontSize: "1.3em" }} />
                 </div>
               ) : (
                 <>
                   <div>
                     <h3>Predicted Optimal Initial Parameters</h3>
-                    <p style={{textAlign:'center'}}>{notes}</p>
+                    <p className={styles.notesText}>{notes}</p>
                   </div>
                   {(Object.keys(parameters.numbers).length > 0 || normalizedStringParams.length > 0) && (
                     <ParametersChart numbers={parameters.numbers} strings={normalizedStringParams} />
@@ -250,47 +264,42 @@ const FeatureExtraction: React.FC = () => {
           <div className={styles.inputArea}>
             <div className={styles.inputControls}>
               <Radio.Group
-                className={styles.modeSelect}
                 value={selectedMode}
                 onChange={handleModeChange}
                 optionType="button"
                 buttonStyle="outline"
-                options={[
-                  {
-                    value: 'chat',
-                    label: (
-                      <Flex gap="small" justify="center" align="center">
-                        <MessageOutlined style={{ fontSize: 18 }} />
-                        Chat
-                      </Flex>
-                    ),
-                  },
-                  {
-                    value: 'analyse_feature',
-                    label: (
-                      <Flex gap="small" justify="center" align="center">
-                        <AreaChartOutlined style={{ fontSize: 18 }} />
-                        Analyse
-                      </Flex>
-                    ),
-                  },
-                ]}
-              />
+                className={styles.modeSelect}
+              >
+                <Radio.Button value="chat">
+                  <Flex gap="small" justify="center" align="center">
+                    <MessageOutlined style={{ fontSize: 18 }} />
+                    Chat
+                  </Flex>
+                </Radio.Button>
+                <Radio.Button value="analyse_feature">
+                  <Flex gap="small" justify="center" align="center">
+                    <AreaChartOutlined style={{ fontSize: 18 }} />
+                    Analyse
+                  </Flex>
+                </Radio.Button>
+              </Radio.Group>
               <div className={styles.fileSelect}>
                 <Select
                   placeholder="Select a file"
                   value={selectedFile?.fileName}
-                  onChange={(_, option: any) => {
-                    const file = filesWithContent.find(f => f.fileName === option.value);
+                  onChange={(value, option: any) => {
+                    const file = filesWithContent.find(f => f.fileName === value);
                     if (file) handleFileSelect(file);
                   }}
-                  options={filesWithContent.map(file => ({
-                    value: file.fileName,
-                    label: file.fileName,
-                  }))}
-                  showSearch = {true}
+                  showSearch={true}
                   style={{ width: '15em' }}
-                />
+                >
+                  {filesWithContent.map(file => (
+                    <Select.Option key={file.fileName} value={file.fileName}>
+                      {file.fileName}
+                    </Select.Option>
+                  ))}
+                </Select>
                 {selectedFile && (
                   <Button className={styles.sendButton} onClick={handleSend}>
                     Send

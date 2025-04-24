@@ -1,0 +1,26 @@
+/* featureChart.module.css */
+.container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+
+.chartWrapper {
+  flex: 1;
+  height: 300px;
+}
+
+.wideChartWrapper {
+  flex: 4;
+  height: 300px;
+}
+
+/* 暗色模式适配 */
+:global([data-theme="dark"]) .container,
+:global([data-theme="dark"]) .container h5,
+:global([data-theme="dark"]) .container p,
+:global([data-theme="dark"]) .container span,
+:global([data-theme="dark"]) .container li {
+  color: var(--text-color) !important;
+}
