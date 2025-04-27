@@ -13,6 +13,8 @@ type AnalyseInput = {
   process: number;
   sampleNum: number;
   fileId: string;
+  // 添加特征提取参数（可选）
+  featureParams?: Record<string, number>;
 };
 
 // 定义结果类型
@@ -34,6 +36,7 @@ const analyseFolder = async ({
   process:coreCount,
   sampleNum,
   fileId,
+  featureParams,
 }: AnalyseInput): Promise<CommandResult> => {
   try {
     const project_root = process.cwd();
@@ -58,7 +61,15 @@ const analyseFolder = async ({
         throw new Error("Config file not found in the folder");
       }
 
-      const command = `opam switch 5.1.0 && eval $(opam env) && frama-c ${configContent} -parf -parf-budget ${budget} -parf-process ${coreCount} -parf-sample-num ${sampleNum}`;
+      // 构建特征参数字符串
+      let featureParamsStr = '';
+      if (featureParams && Object.keys(featureParams).length > 0) {
+        for (const [key, value] of Object.entries(featureParams)) {
+          featureParamsStr += ` -eva-${key} ${value}`;
+        }
+      }
+
+      const command = `opam switch 5.1.0 && eval $(opam env) && frama-c ${configContent} -parf -parf-budget ${budget} -parf-process ${coreCount} -parf-sample-num ${sampleNum}${featureParamsStr}`;
       const { stdout, stderr } = await new Promise<{
         stdout: string;
         stderr: string;
@@ -96,7 +107,15 @@ const analyseFolder = async ({
 
       await fs.writeFile(tempFilePath, fileContent);
 
-      const command = `opam switch 5.1.0 && eval $(opam env) && frama-c ${tempFilePath} -parf -parf-budget ${budget} -parf-process ${coreCount} -parf-sample-num ${sampleNum}`;
+      // 构建特征参数字符串
+      let featureParamsStr = '';
+      if (featureParams && Object.keys(featureParams).length > 0) {
+        for (const [key, value] of Object.entries(featureParams)) {
+          featureParamsStr += ` -eva-${key} ${value}`;
+        }
+      }
+
+      const command = `opam switch 5.1.0 && eval $(opam env) && frama-c ${tempFilePath} -parf -parf-budget ${budget} -parf-process ${coreCount} -parf-sample-num ${sampleNum}${featureParamsStr}`;
 
       const { stdout, stderr } = await new Promise<{
         stdout: string;
@@ -142,7 +161,7 @@ const analyseFolder = async ({
 const readFolderFiles = async (folderPath: string, isRoot = true): Promise<{ path: string; content: string }[]> => {
   const result: { path: string; content: string }[] = [];
   const files = await fs.readdir(folderPath, { withFileTypes: true });
-  
+
   // 如果是根目录，检查是否包含config.txt
   if (isRoot) {
     const hasConfigFile = files.some(file => file.name === 'config.txt' && !file.isDirectory());
@@ -150,10 +169,10 @@ const readFolderFiles = async (folderPath: string, isRoot = true): Promise<{ pat
       throw new Error('Root directory must include config.txt.');
     }
   }
-  
+
   for (const file of files) {
     const filePath = path.join(folderPath, file.name);
-    
+
     if (file.isDirectory()) {
       // 递归调用时，标记不是根目录
       const subFiles = await readFolderFiles(filePath, false);
@@ -169,7 +188,7 @@ const readFolderFiles = async (folderPath: string, isRoot = true): Promise<{ pat
       result.push({ path: file.name, content });
     }
   }
-  
+
   return result;
 };
 
@@ -184,6 +203,8 @@ export const analyseRouter = createTRPCRouter({
         process: z.number().min(1),
         sampleNum: z.number().min(1),
         fileId: z.string(),
+        // 添加可选的特征参数
+        featureParams: z.record(z.string(), z.number()).optional(),
       })
     )
     .output(z.object({ result: z.string() }))

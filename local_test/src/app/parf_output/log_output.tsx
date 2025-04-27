@@ -48,19 +48,19 @@ const Log_output: React.FC = () => {
         setSelectedFile(JSON.parse(event.newValue || 'null'));
       }
     };
-  
+
     window.addEventListener('storage', handleStorageChange);
-  
+
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
-  
+
   // 初始化时从 localStorage 读取
   useEffect(() => {
     const groupData = localStorage.getItem('selectedGroup');
     const fileData = localStorage.getItem('selectedFile');
-  
+
     if (groupData) {
       setSelectedGroup(JSON.parse(groupData));
     }
@@ -76,7 +76,7 @@ const Log_output: React.FC = () => {
     if (typeof window !== 'undefined') {
       if (newPath) {
         localStorage.setItem('tempPath', newPath);
-        window.dispatchEvent(new Event('tempPathUpdated')); 
+        window.dispatchEvent(new Event('tempPathUpdated'));
       } else {
         localStorage.removeItem('tempPath');
       }
@@ -86,7 +86,7 @@ const Log_output: React.FC = () => {
   const mutation = trpc.analyse.analyseFolder.useMutation();
   const positionQuery = trpc.analyse.getQueueLength.useQuery(undefined, {
     refetchInterval: loading ? 2000 : false, // 只在loading为true时才启用轮询
-    enabled: loading, 
+    enabled: loading,
   });
 
   const [abortController, setAbortController] = useState<AbortController | null>(null);
@@ -156,7 +156,7 @@ const Log_output: React.FC = () => {
     if (!result.some(file => file.path.endsWith('config.txt'))) {
       throw new Error('files must include config.txt.');
     }
-    
+
     console.log('All files loaded:', result); // 添加日志
     return result;
   };
@@ -194,6 +194,13 @@ const Log_output: React.FC = () => {
       return;
     }
 
+    // 获取特征提取参数（如果存在）
+    let featureParams: Record<string, number> | undefined = undefined;
+    if (selectedFile.preferredParameters && selectedFile.preferredParameters.numbers) {
+      featureParams = selectedFile.preferredParameters.numbers;
+      console.log("Using feature parameters:", featureParams);
+    }
+
     // 生成新的临时路径
     const folderName = `frama_c_folder_${Date.now()}`;
     const newTempPath = path.join('output', folderName);
@@ -213,6 +220,7 @@ const Log_output: React.FC = () => {
             process: selectedGroup.core,
             sampleNum: selectedGroup.sampleSize,
             fileId: selectedFile.id.toString(),
+            featureParams: featureParams, // 添加特征参数
           },
           {
             onSuccess: (response: AnalyseResponse) => {
@@ -239,6 +247,7 @@ const Log_output: React.FC = () => {
             process: selectedGroup.core,
             sampleNum: selectedGroup.sampleSize,
             fileId: selectedFile.id.toString(),
+            featureParams: featureParams, // 添加特征参数
           },
           {
             onSuccess: (response: AnalyseResponse) => {
@@ -298,7 +307,7 @@ const Log_output: React.FC = () => {
         >
           {returnMessage}
         </div>
-        
+
         <div>
           <Tooltip title={loading ? 'Cancel the current call.' : 'Click to analyse'}>
             <button

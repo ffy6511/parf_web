@@ -37,7 +37,16 @@ const FeatureExtraction: React.FC = () => {
   // 获取FileContext中的文件列表更新函数
   const { fileList } = useContext(FileContext)!;
 
-  const filesWithContent = fileList.filter(file => file.fileContent);
+  // 过滤有内容的文件，并确保路径处理正确
+  const filesWithContent = fileList.filter(file => {
+    // 确保文件有内容
+    if (!file.fileContent) return false;
+
+    // 检查文件是否为文件夹
+    if (file.isFolder) return false;
+
+    return true;
+  });
 
   const showModal = () => setIsModalVisible(true);
 
@@ -286,17 +295,18 @@ const FeatureExtraction: React.FC = () => {
               <div className={styles.fileSelect}>
                 <Select
                   placeholder="Select a file"
-                  value={selectedFile?.fileName}
+                  value={selectedFile?.id}
                   onChange={(value, option: any) => {
-                    const file = filesWithContent.find(f => f.fileName === value);
+                    const file = filesWithContent.find(f => f.id === value);
                     if (file) handleFileSelect(file);
                   }}
                   showSearch={true}
                   style={{ width: '15em' }}
+                  optionFilterProp="children"
                 >
                   {filesWithContent.map(file => (
-                    <Select.Option key={file.fileName} value={file.fileName}>
-                      {file.fileName}
+                    <Select.Option key={file.id} value={file.id}>
+                      {file.path || file.fileName}
                     </Select.Option>
                   ))}
                 </Select>

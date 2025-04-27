@@ -91,7 +91,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
         store.createIndex('isFolder', 'isFolder');
       }
     };
-  
+
     request.onsuccess = (event) => {
       setDb((event.target as IDBOpenDBRequest).result);
     };
@@ -110,15 +110,14 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
 
   // 构建文件夹树结构
   const buildFileTree = async (files: RcFile[]): Promise<FileNode> => {
-
     if (!files || files.length === 0) {
       throw new Error('No files provided');
-  }
+    }
 
-  const firstFile = files[0];
-  if (!firstFile || !firstFile.webkitRelativePath) {
+    const firstFile = files[0];
+    if (!firstFile || !firstFile.webkitRelativePath) {
       throw new Error('Invalid file structure');
-  }
+    }
 
     const rootPath = firstFile.webkitRelativePath.split('/')[0];
 
@@ -141,7 +140,7 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
       // 处理每一级路径
       for (let i = 0; i < pathParts.length; i++) {
         const part = pathParts[i];
-        currentPath = (currentPath ? `${currentPath}/${part}` : part) as string;  
+        currentPath = (currentPath ? `${currentPath}/${part}` : part) as string;
 
         if (!pathMap.has(currentPath)) {
           const isFile = i === pathParts.length - 1;
@@ -150,13 +149,16 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
             isFolder: !isFile,
             parentId: null, // 将在后续设置
             children: isFile ? undefined : [],
+            // 保存完整路径，确保路径正确
             path: currentPath,
             lastModified: new Date().toISOString()
           };
 
           if (isFile) {
-            // 如果是文件，读取内容
+            // 如果是文件，读取内容并保存
             newNode.fileContent = await readFileAsArrayBuffer(file);
+            // 确保文件内容被正确设置
+            console.log(`File content set for ${currentPath}: ${newNode.fileContent ? 'Yes' : 'No'}`);
           }
 
           // 找到父节点并添加关系
@@ -172,57 +174,70 @@ const FileUploadContainer: React.FC<FileUploadContainerProps> = ({ onFileUploadS
       }
     }
 
+    // 打印整个文件树结构以便调试
+    console.log('Complete file tree structure:', JSON.stringify(root, (key, value) => {
+      if (key === 'fileContent') return value ? 'Content exists' : 'No content';
+      return value;
+    }, 2));
+
     return root;
   };
 
   // 保存文件树到数据库
   const saveFileTree = async (node: FileNode, parentId: number | null = null, nodeId?: number): Promise<number> => {
-  if (!db) throw new Error('Database not initialized');
+    if (!db) throw new Error('Database not initialized');
 
-  const transaction = db.transaction(['files'], 'readwrite');
-  const store = transaction.objectStore('files');
+    const transaction = db.transaction(['files'], 'readwrite');
+    const store = transaction.objectStore('files');
 
-  // 检查是否已存在同路径文件
-  const pathIndex = store.index('path');
-  const existing = await new Promise<ExistingData | null>(resolve => {
-    const request = pathIndex.get(node.path as string);
-    request.onsuccess = () => resolve(request.result);
-  });
-
-  if (existing) {
-    return existing.id;
-  }
-
-  // 简化存储的数据结构，确保 id 字段存在
-  const nodeData = {
-    id: nodeId || Math.floor(Math.random() * 1000000),  // 如果没有 nodeId，生成一个随机 ID
-    fileName: node.fileName,
-    path: node.path,
-    isFolder: node.isFolder,
-    parentId: parentId
-  };
-
-  // 保存节点
-  try {
-    await new Promise((resolve, reject) => {
-      const request = store.add(nodeData);
-      request.onsuccess = () => resolve(undefined);
-      request.onerror = () => reject(request.error);
+    // 检查是否已存在同路径文件
+    const pathIndex = store.index('path');
+    const existing = await new Promise<ExistingData | null>(resolve => {
+      const request = pathIndex.get(node.path as string);
+      request.onsuccess = () => resolve(request.result);
     });
 
-    // 递归保存子节点，确保传递正确的 parentId
-    if (node.children && node.children.length > 0) {
-      for (const child of node.children) {
-        await saveFileTree(child, nodeData.id);
-      }
+    if (existing) {
+      return existing.id;
     }
 
-    return nodeData.id;
-  } catch (error) {
-    console.error('Error saving node:', error);
-    throw error;
-  }
-};
+    // 确保保存完整的节点数据，包括文件内容
+    const nodeData = {
+      id: nodeId || Math.floor(Math.random() * 1000000),  // 如果没有 nodeId，生成一个随机 ID
+      fileName: node.fileName,
+      path: node.path,
+      isFolder: node.isFolder,
+      parentId: parentId,
+      fileContent: node.fileContent || new ArrayBuffer(0),  // 确保文件内容被保存
+      lastModified: node.lastModified || new Date().toISOString()
+    };
+
+    console.log(`Saving node: ${node.path}, isFolder: ${node.isFolder}, hasContent: ${node.fileContent ? 'Yes' : 'No'}`);
+
+    // 保存节点
+    try {
+      await new Promise((resolve, reject) => {
+        const request = store.add(nodeData);
+        request.onsuccess = () => resolve(undefined);
+        request.onerror = (e) => {
+          console.error('Error saving node:', e);
+          reject(request.error);
+        };
+      });
+
+      // 递归保存子节点，确保传递正确的 parentId
+      if (node.children && node.children.length > 0) {
+        for (const child of node.children) {
+          await saveFileTree(child, nodeData.id);
+        }
+      }
+
+      return nodeData.id;
+    } catch (error) {
+      console.error('Error saving node:', error);
+      throw error;
+    }
+  };
 
   // 处理文件夹上传
 const handleFolderUpload = async (files: RcFile[]) => {
@@ -256,10 +271,11 @@ const handleFolderUpload = async (files: RcFile[]) => {
     // 整理文件数据
     const folderFiles = filesArray.map(async (file) => {
       const content = await readFileAsArrayBuffer(file);
-      const uniquePath = file.webkitRelativePath.split("/").slice(1).join("/");
+      // 保留完整路径，包括根文件夹名称
+      const fullPath = file.webkitRelativePath;
       return {
         content: new TextDecoder().decode(content),
-        path: uniquePath,
+        path: fullPath,
         isFolder: false,
       };
     });
@@ -281,7 +297,7 @@ const handleFolderUpload = async (files: RcFile[]) => {
     });
 
     console.log("Response Status:", response.status); // 检查响应状态
-    
+
     if (!response.ok) {
       throw new Error("Failed to upload folder");
     }
